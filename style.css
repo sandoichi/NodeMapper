@@ -1,0 +1,82 @@
+.divMainContainer {
+            background-color : #2B2B2B;
+            overflow : auto;
+            min-height : 700px;
+            color : #CCCCCC;
+            border : 2px solid teal; 
+        }         
+
+.divLeftPanel {
+            width : 275px;
+            border-right : 1px solid #787878; 
+            float : left; 
+      }
+
+.divRightPanel {
+            border : 5px solid green ;
+            width : auto ;
+            overflow : auto ;
+        }
+
+.divSvgPanel {
+            height : 625px;
+            border : 2px solid orange ;
+        }
+
+.svg {
+    height : 100%;
+    width: 100%;
+  }
+ 
+.divPropertyPanel {
+            height : 275px ;
+            border-top : 1px solid #787878;
+            border : 2px solid yellow ;
+        }
+
+.debugPanel {
+    margin-top: 20px;
+    border-top: 2px solid orange;
+   }
+
+.selectedNodeListDiv {
+        border : 1px solid #004157;
+        margin-bottom : 2px;
+        background-color : #024A00;
+    }
+
+.nodeListDiv {
+        border : 1px solid #004157;
+        margin-bottom : 2px;
+    }
+
+.connectorLine {
+    stroke: rgb(255,0,0);
+    stroke-width: 2;
+}
+
+
+.svg .rect {
+    fill: orange;
+}
+
+.svg .selectedPrimary {
+    stroke: teal;
+    stroke-width: 5px;
+}
+
+.svg .selectedSecondary {
+    stroke: yellow;
+    stroke-width: 5px;
+}
+
+.svg .text {
+    fill: green;
+    -webkit-touch-callout: none;
+    -webkit-user-select:none;
+    -khtml-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -o-user-select:none;
+    user-select:none;
+}

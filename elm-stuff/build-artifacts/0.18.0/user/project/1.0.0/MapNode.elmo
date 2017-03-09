@@ -1,0 +1,15 @@
+var _user$project$MapNode$unwrapConnectors = function (connectors) {
+	var _p0 = connectors;
+	return _p0._0;
+};
+var _user$project$MapNode$Connector = F2(
+	function (a, b) {
+		return {nodeId: a, cost: b};
+	});
+var _user$project$MapNode$MapNode = F5(
+	function (a, b, c, d, e) {
+		return {id: a, displayText: b, px: c, py: d, connectors: e};
+	});
+var _user$project$MapNode$Connectors = function (a) {
+	return {ctor: 'Connectors', _0: a};
+};

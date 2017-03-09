@@ -1,0 +1,210 @@
+var _user$project$Test$calculatePosition = F2(
+	function (mousePos, offSet) {
+		var _p0 = offSet;
+		if (_p0.ctor === 'Just') {
+			var _p1 = _p0._0;
+			return {x: mousePos.x - _p1.x, y: mousePos.y - _p1.y};
+		} else {
+			return {x: mousePos.x, y: mousePos.y};
+		}
+	});
+var _user$project$Test$updateHelp = F2(
+	function (msg, model) {
+		var _p2 = msg;
+		switch (_p2.ctor) {
+			case 'StartDrag':
+				var _p5 = _p2._0._1;
+				var _p4 = _p2._0._0;
+				var _p3 = model.offSet;
+				if (_p3.ctor === 'Just') {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							dragNode: true,
+							selectedNode: _elm_lang$core$Maybe$Just(_p5)
+						});
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							dragNode: true,
+							offSet: _elm_lang$core$Maybe$Just(
+								{x: _p4.x, y: _p4.y}),
+							selectedNode: _elm_lang$core$Maybe$Just(_p5)
+						});
+				}
+			case 'DragAt':
+				var _p10 = _p2._0;
+				var _p6 = model.selectedNode;
+				if (_p6.ctor === 'Nothing') {
+					return model;
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							nodes: A2(
+								_elm_lang$core$List$map,
+								function (n) {
+									var _p7 = _elm_lang$core$Native_Utils.eq(n.id, _p6._0.id);
+									if (_p7 === true) {
+										return function (_p8) {
+											var _p9 = _p8;
+											return _elm_lang$core$Native_Utils.update(
+												n,
+												{px: _p9.x, py: _p9.y});
+										}(
+											A2(
+												_user$project$Test$calculatePosition,
+												{x: _p10.x, y: _p10.y},
+												model.offSet));
+									} else {
+										return n;
+									}
+								},
+								model.nodes)
+						});
+				}
+			case 'DragEnd':
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{dragNode: false});
+			case 'CreateNode':
+				var _p11 = model.tempNode;
+				if (_p11.ctor === 'Nothing') {
+					return model;
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							nodeCounter: model.nodeCounter + 1,
+							nodes: A2(
+								_elm_lang$core$List$append,
+								model.nodes,
+								{
+									ctor: '::',
+									_0: _p11._0,
+									_1: {ctor: '[]'}
+								})
+						});
+				}
+			case 'SelectNode':
+				var _p13 = _p2._0;
+				var _p12 = model.selectedNode;
+				if (_p12.ctor === 'Just') {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							editMode: _user$project$MapMsg$Normal,
+							selectedNode2: _elm_lang$core$Maybe$Just(_p13)
+						});
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							editMode: _user$project$MapMsg$Normal,
+							selectedNode: _elm_lang$core$Maybe$Just(_p13)
+						});
+				}
+			case 'ChangeMode':
+				var _p15 = _p2._0;
+				var _p14 = _p15;
+				if (_p14.ctor === 'Create') {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							editMode: _p15,
+							tempNode: _elm_lang$core$Maybe$Just(
+								{
+									id: model.nodeCounter + 1,
+									displayText: A2(
+										_elm_lang$core$Basics_ops['++'],
+										'Node ',
+										_elm_lang$core$Basics$toString(model.nodeCounter + 1)),
+									px: 10,
+									py: 10,
+									connectors: _user$project$MapNode$Connectors(
+										{ctor: '[]'})
+								})
+						});
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{editMode: _p15});
+				}
+			case 'AddConnector':
+				var _p16 = {ctor: '_Tuple2', _0: model.selectedNode, _1: model.selectedNode2};
+				if (((_p16.ctor === '_Tuple2') && (_p16._0.ctor === 'Just')) && (_p16._1.ctor === 'Just')) {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							nodes: A2(
+								_elm_lang$core$List$map,
+								function (n) {
+									var _p17 = _elm_lang$core$Native_Utils.eq(n.id, _p16._0._0.id);
+									if (_p17 === true) {
+										return _elm_lang$core$Native_Utils.update(
+											n,
+											{
+												connectors: _user$project$MapNode$Connectors(
+													A2(
+														_elm_lang$core$List$append,
+														_user$project$MapNode$unwrapConnectors(n.connectors),
+														{
+															ctor: '::',
+															_0: {nodeId: _p16._1._0.id, cost: _p2._0},
+															_1: {ctor: '[]'}
+														}))
+											});
+									} else {
+										return n;
+									}
+								},
+								model.nodes)
+						});
+				} else {
+					return model;
+				}
+			default:
+				var _p18 = _p2._0;
+				var _p19 = model.tempNode;
+				if (_p19.ctor === 'Nothing') {
+					return model;
+				} else {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							tempNode: _elm_lang$core$Maybe$Just(
+								_elm_lang$core$Native_Utils.update(
+									_p19._0,
+									{displayText: _p18._0}))
+						});
+				}
+		}
+	});
+var _user$project$Test$update = F2(
+	function (msg, model) {
+		return {
+			ctor: '_Tuple2',
+			_0: A2(_user$project$Test$updateHelp, msg, model),
+			_1: _elm_lang$core$Platform_Cmd$none
+		};
+	});
+var _user$project$Test$subscriptions = function (model) {
+	var _p20 = model.dragNode;
+	if (_p20 === false) {
+		return _elm_lang$core$Platform_Sub$none;
+	} else {
+		return _elm_lang$core$Platform_Sub$batch(
+			{
+				ctor: '::',
+				_0: _elm_lang$mouse$Mouse$moves(_user$project$MapMsg$DragAt),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$mouse$Mouse$ups(_user$project$MapMsg$DragEnd),
+					_1: {ctor: '[]'}
+				}
+			});
+	}
+};
+var _user$project$Test$main = _elm_lang$html$Html$program(
+	{init: _user$project$MapModel$init, view: _user$project$MapView$view, update: _user$project$Test$update, subscriptions: _user$project$Test$subscriptions})();

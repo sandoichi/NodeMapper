@@ -1,0 +1,344 @@
+var _user$project$UIHelper$getSvgPanel = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('divSvgPanel'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(_user$project$MapSvg$genSvg, model.nodes, model),
+			_1: {ctor: '[]'}
+		});
+};
+var _user$project$UIHelper$debugPanel = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('debugPanel'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('editMode'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(model.editMode)),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('selectedNode'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_elm_lang$core$Basics$toString(model.selectedNode)),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('selectedNode2'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(model.selectedNode2)),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('dragNode'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										_elm_lang$core$Basics$toString(model.dragNode)),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('offset'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(model.offSet)),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		});
+};
+var _user$project$UIHelper$propertyPanelSelectedNode = function (node) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('divPropertyPanel'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('propName'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Id: '),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('propValue'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(node.id)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('propName'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('DisplayText: '),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('propValue'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(node.displayText),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$UIHelper$propertyPanelNormal = A2(
+	_elm_lang$html$Html$div,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('divPropertyPanel'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Property Panel'),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$MapMsg$ChangeMode(_user$project$MapMsg$Create)),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Add Node'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		}
+	});
+var _user$project$UIHelper$createButton = A2(
+	_elm_lang$html$Html$button,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$CreateNode),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Create Node'),
+		_1: {ctor: '[]'}
+	});
+var _user$project$UIHelper$propertyPanelCreate = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('divPropertyPanel'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Id: '),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_elm_lang$core$Basics$toString(
+								_elm_lang$core$List$length(model.nodes) + 1)),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onInput(
+							function (x) {
+								return _user$project$MapMsg$PanelEvent(
+									_user$project$MapMsg$DisplayTxt(x));
+							}),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Display Text: '),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$input,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$placeholder('Display Txt'),
+									_1: {ctor: '[]'}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: _user$project$UIHelper$createButton,
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _user$project$UIHelper$getLeftPanelNodeAttributes = F3(
+	function (model, node, clickMsg) {
+		var _p0 = model.selectedNode;
+		if (_p0.ctor === 'Just') {
+			var _p1 = _elm_lang$core$Native_Utils.eq(_p0._0.id, node.id);
+			if (_p1 === true) {
+				return {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$MapMsg$SelectNode(node)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('selectedNodeListDiv'),
+						_1: {ctor: '[]'}
+					}
+				};
+			} else {
+				return {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_user$project$MapMsg$SelectNode(node)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('nodeListDiv'),
+						_1: {ctor: '[]'}
+					}
+				};
+			}
+		} else {
+			return {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					_user$project$MapMsg$SelectNode(node)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('nodeListDiv'),
+					_1: {ctor: '[]'}
+				}
+			};
+		}
+	});
+var _user$project$UIHelper$getPropertyPanel = function (model) {
+	var _p2 = model.editMode;
+	if (_p2.ctor === 'Normal') {
+		var _p3 = model.selectedNode;
+		if (_p3.ctor === 'Just') {
+			return _user$project$UIHelper$propertyPanelSelectedNode(_p3._0);
+		} else {
+			return _user$project$UIHelper$propertyPanelNormal;
+		}
+	} else {
+		return _user$project$UIHelper$propertyPanelCreate(model);
+	}
+};

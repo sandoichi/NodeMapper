@@ -1,0 +1,27 @@
+var _user$project$MapMsg$Create = {ctor: 'Create'};
+var _user$project$MapMsg$Normal = {ctor: 'Normal'};
+var _user$project$MapMsg$DisplayTxt = function (a) {
+	return {ctor: 'DisplayTxt', _0: a};
+};
+var _user$project$MapMsg$PanelEvent = function (a) {
+	return {ctor: 'PanelEvent', _0: a};
+};
+var _user$project$MapMsg$DragEnd = function (a) {
+	return {ctor: 'DragEnd', _0: a};
+};
+var _user$project$MapMsg$DragAt = function (a) {
+	return {ctor: 'DragAt', _0: a};
+};
+var _user$project$MapMsg$StartDrag = function (a) {
+	return {ctor: 'StartDrag', _0: a};
+};
+var _user$project$MapMsg$AddConnector = function (a) {
+	return {ctor: 'AddConnector', _0: a};
+};
+var _user$project$MapMsg$SelectNode = function (a) {
+	return {ctor: 'SelectNode', _0: a};
+};
+var _user$project$MapMsg$CreateNode = {ctor: 'CreateNode'};
+var _user$project$MapMsg$ChangeMode = function (a) {
+	return {ctor: 'ChangeMode', _0: a};
+};
