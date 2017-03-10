@@ -17,9 +17,10 @@ main =
 subscriptions : Model -> Sub Msg
 subscriptions model =
   case model.dragNode of
-    False ->
+    Just x -> 
+        Sub.batch [ Mouse.moves DragAt, Mouse.ups DragEnd ]
+
+    _ ->
       Sub.none
 
-    True ->
-      Sub.batch [ Mouse.moves DragAt, Mouse.ups DragEnd ]
 

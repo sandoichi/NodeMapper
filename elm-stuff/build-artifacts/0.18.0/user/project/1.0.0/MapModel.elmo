@@ -1,18 +1,26 @@
+var _user$project$MapModel$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {nodes: a, nodeCounter: b, dragNode: c, offSet: d, actionState: e, lastMsg: f};
+	});
+var _user$project$MapModel$InspectingNode = function (a) {
+	return {ctor: 'InspectingNode', _0: a};
+};
+var _user$project$MapModel$CreatingNode = function (a) {
+	return {ctor: 'CreatingNode', _0: a};
+};
+var _user$project$MapModel$Connecting = function (a) {
+	return {ctor: 'Connecting', _0: a};
+};
+var _user$project$MapModel$Idle = {ctor: 'Idle'};
 var _user$project$MapModel$init = {
 	ctor: '_Tuple2',
 	_0: {
-		editMode: _user$project$MapMsg$Normal,
 		nodes: {ctor: '[]'},
-		selectedNode: _elm_lang$core$Maybe$Nothing,
-		selectedNode2: _elm_lang$core$Maybe$Nothing,
 		nodeCounter: 0,
-		dragNode: false,
+		dragNode: _elm_lang$core$Maybe$Nothing,
 		offSet: _elm_lang$core$Maybe$Nothing,
-		tempNode: _elm_lang$core$Maybe$Nothing
+		actionState: _user$project$MapModel$Idle,
+		lastMsg: _elm_lang$core$Maybe$Nothing
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
-var _user$project$MapModel$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {editMode: a, nodes: b, selectedNode: c, selectedNode2: d, nodeCounter: e, dragNode: f, offSet: g, tempNode: h};
-	});

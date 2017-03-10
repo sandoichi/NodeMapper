@@ -13,3 +13,13 @@ var _user$project$MapNode$MapNode = F5(
 var _user$project$MapNode$Connectors = function (a) {
 	return {ctor: 'Connectors', _0: a};
 };
+var _user$project$MapNode$getInit = function (identifier) {
+	return {
+		id: identifier,
+		displayText: 'NewNode',
+		px: 5,
+		py: 5,
+		connectors: _user$project$MapNode$Connectors(
+			{ctor: '[]'})
+	};
+};

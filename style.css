@@ -1,37 +1,43 @@
 .divMainContainer {
-            background-color : #2B2B2B;
+            background-color : #1F1F1F;
             overflow : auto;
             min-height : 700px;
             color : #CCCCCC;
             border : 2px solid teal; 
         }         
 
+.statusPanel {
+    color: orange;
+    clear: both;
+    padding: 10px;
+    font-size: 10px;
+    border-bottom: 1px solid #787878;
+}
 .divLeftPanel {
             width : 275px;
-            border-right : 1px solid #787878; 
             float : left; 
+            padding-top: 5px;
       }
 
 .divRightPanel {
-            border : 5px solid green ;
             width : auto ;
             overflow : auto ;
+            border-left : 1px solid #787878; 
         }
 
 .divSvgPanel {
             height : 625px;
-            border : 2px solid orange ;
         }
 
 .svg {
     height : 100%;
     width: 100%;
+    background-color: #21190B;
   }
  
 .divPropertyPanel {
             height : 275px ;
             border-top : 1px solid #787878;
-            border : 2px solid yellow ;
         }
 
 .debugPanel {
@@ -57,21 +63,19 @@
 
 
 .svg .rect {
-    fill: orange;
+    fill: #070629;
+    stroke: lime;
+    stroke-width: 2px;
 }
 
-.svg .selectedPrimary {
-    stroke: teal;
-    stroke-width: 5px;
-}
-
-.svg .selectedSecondary {
+.svg .selected {
     stroke: yellow;
-    stroke-width: 5px;
+    stroke-width: 3px;
 }
 
 .svg .text {
-    fill: green;
+    font-size: 17px;
+    fill: lime;
     -webkit-touch-callout: none;
     -webkit-user-select:none;
     -khtml-user-select:none;

@@ -9401,53 +9401,70 @@ var _user$project$MapNode$MapNode = F5(
 var _user$project$MapNode$Connectors = function (a) {
 	return {ctor: 'Connectors', _0: a};
 };
+var _user$project$MapNode$getInit = function (identifier) {
+	return {
+		id: identifier,
+		displayText: 'NewNode',
+		px: 5,
+		py: 5,
+		connectors: _user$project$MapNode$Connectors(
+			{ctor: '[]'})
+	};
+};
 
-var _user$project$MapMsg$Create = {ctor: 'Create'};
-var _user$project$MapMsg$Normal = {ctor: 'Normal'};
+var _user$project$MapMsg$Finish = {ctor: 'Finish'};
 var _user$project$MapMsg$DisplayTxt = function (a) {
 	return {ctor: 'DisplayTxt', _0: a};
 };
-var _user$project$MapMsg$PanelEvent = function (a) {
-	return {ctor: 'PanelEvent', _0: a};
-};
+var _user$project$MapMsg$Init = {ctor: 'Init'};
+var _user$project$MapMsg$StartConnecting = {ctor: 'StartConnecting'};
 var _user$project$MapMsg$DragEnd = function (a) {
 	return {ctor: 'DragEnd', _0: a};
 };
 var _user$project$MapMsg$DragAt = function (a) {
 	return {ctor: 'DragAt', _0: a};
 };
-var _user$project$MapMsg$StartDrag = function (a) {
-	return {ctor: 'StartDrag', _0: a};
-};
-var _user$project$MapMsg$AddConnector = function (a) {
-	return {ctor: 'AddConnector', _0: a};
+var _user$project$MapMsg$InspectNode = function (a) {
+	return {ctor: 'InspectNode', _0: a};
 };
 var _user$project$MapMsg$SelectNode = function (a) {
 	return {ctor: 'SelectNode', _0: a};
 };
-var _user$project$MapMsg$CreateNode = {ctor: 'CreateNode'};
-var _user$project$MapMsg$ChangeMode = function (a) {
-	return {ctor: 'ChangeMode', _0: a};
+var _user$project$MapMsg$CreateNode = function (a) {
+	return {ctor: 'CreateNode', _0: a};
 };
 
+var _user$project$NodeConnectors$FirstSelected = function (a) {
+	return {ctor: 'FirstSelected', _0: a};
+};
+var _user$project$NodeConnectors$Waiting = {ctor: 'Waiting'};
+
+var _user$project$MapModel$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {nodes: a, nodeCounter: b, dragNode: c, offSet: d, actionState: e, lastMsg: f};
+	});
+var _user$project$MapModel$InspectingNode = function (a) {
+	return {ctor: 'InspectingNode', _0: a};
+};
+var _user$project$MapModel$CreatingNode = function (a) {
+	return {ctor: 'CreatingNode', _0: a};
+};
+var _user$project$MapModel$Connecting = function (a) {
+	return {ctor: 'Connecting', _0: a};
+};
+var _user$project$MapModel$Idle = {ctor: 'Idle'};
 var _user$project$MapModel$init = {
 	ctor: '_Tuple2',
 	_0: {
-		editMode: _user$project$MapMsg$Normal,
 		nodes: {ctor: '[]'},
-		selectedNode: _elm_lang$core$Maybe$Nothing,
-		selectedNode2: _elm_lang$core$Maybe$Nothing,
 		nodeCounter: 0,
-		dragNode: false,
+		dragNode: _elm_lang$core$Maybe$Nothing,
 		offSet: _elm_lang$core$Maybe$Nothing,
-		tempNode: _elm_lang$core$Maybe$Nothing
+		actionState: _user$project$MapModel$Idle,
+		lastMsg: _elm_lang$core$Maybe$Nothing
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
-var _user$project$MapModel$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {editMode: a, nodes: b, selectedNode: c, selectedNode2: d, nodeCounter: e, dragNode: f, offSet: g, tempNode: h};
-	});
 
 var _user$project$MapSvg$connectorsContainsId = F2(
 	function (connectors, id) {
@@ -9533,37 +9550,19 @@ var _user$project$MapSvg$mapConnectors = function (nodes) {
 				nodes)));
 };
 var _user$project$MapSvg$Regular = {ctor: 'Regular'};
-var _user$project$MapSvg$SelectedSecondary = {ctor: 'SelectedSecondary'};
-var _user$project$MapSvg$SelectedPrimary = {ctor: 'SelectedPrimary'};
+var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
 	function (node, model) {
-		var _p1 = model.selectedNode;
-		if (_p1.ctor === 'Nothing') {
-			return _user$project$MapSvg$Regular;
-		} else {
+		var _p1 = model.actionState;
+		if (_p1.ctor === 'InspectingNode') {
 			var _p2 = _elm_lang$core$Native_Utils.eq(_p1._0.id, node.id);
 			if (_p2 === true) {
-				return _user$project$MapSvg$SelectedPrimary;
+				return _user$project$MapSvg$Selected;
 			} else {
-				return function (x) {
-					var _p3 = x;
-					if (_p3.ctor === 'Regular') {
-						var _p4 = model.selectedNode2;
-						if (_p4.ctor === 'Nothing') {
-							return _user$project$MapSvg$Regular;
-						} else {
-							var _p5 = _elm_lang$core$Native_Utils.eq(_p4._0.id, node.id);
-							if (_p5 === true) {
-								return _user$project$MapSvg$SelectedSecondary;
-							} else {
-								return _user$project$MapSvg$Regular;
-							}
-						}
-					} else {
-						return _user$project$MapSvg$SelectedPrimary;
-					}
-				}(_user$project$MapSvg$Regular);
+				return _user$project$MapSvg$Regular;
 			}
+		} else {
+			return _user$project$MapSvg$Regular;
 		}
 	});
 var _user$project$MapSvg$genGraphic = F2(
@@ -9578,7 +9577,7 @@ var _user$project$MapSvg$genGraphic = F2(
 					A2(
 						_elm_lang$core$Json_Decode$map,
 						function (x) {
-							return _user$project$MapMsg$StartDrag(
+							return _user$project$MapMsg$SelectNode(
 								{ctor: '_Tuple2', _0: x, _1: mapNode});
 						},
 						_elm_lang$mouse$Mouse$position)),
@@ -9590,47 +9589,39 @@ var _user$project$MapSvg$genGraphic = F2(
 					_elm_lang$svg$Svg$rect,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(
-							_user$project$MapMsg$SelectNode(mapNode)),
+						_0: _elm_lang$svg$Svg_Attributes$class(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'rect ',
+								function () {
+									var _p3 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
+									if (_p3.ctor === 'Selected') {
+										return 'selected';
+									} else {
+										return '';
+									}
+								}())),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$class(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'rect ',
-									function () {
-										var _p6 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
-										switch (_p6.ctor) {
-											case 'SelectedPrimary':
-												return 'selectedPrimary';
-											case 'SelectedSecondary':
-												return 'selectedSecondary';
-											default:
-												return '';
-										}
-									}())),
+							_0: _elm_lang$svg$Svg_Attributes$width('100'),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$width('100'),
+								_0: _elm_lang$svg$Svg_Attributes$height('100'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$height('100'),
+									_0: _elm_lang$svg$Svg_Attributes$rx('5'),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$rx('5'),
+										_0: _elm_lang$svg$Svg_Attributes$ry('5'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$ry('5'),
+											_0: _elm_lang$svg$Svg_Attributes$x(
+												_elm_lang$core$Basics$toString(mapNode.px)),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$x(
-													_elm_lang$core$Basics$toString(mapNode.px)),
-												_1: {
-													ctor: '::',
-													_0: _elm_lang$svg$Svg_Attributes$y(
-														_elm_lang$core$Basics$toString(mapNode.py)),
-													_1: {ctor: '[]'}
-												}
+												_0: _elm_lang$svg$Svg_Attributes$y(
+													_elm_lang$core$Basics$toString(mapNode.py)),
+												_1: {ctor: '[]'}
 											}
 										}
 									}
@@ -9648,17 +9639,13 @@ var _user$project$MapSvg$genGraphic = F2(
 							_0: _elm_lang$svg$Svg_Attributes$class('text'),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$fontSize('30'),
+								_0: _elm_lang$svg$Svg_Attributes$x(
+									_elm_lang$core$Basics$toString(mapNode.px + 5)),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$x(
-										_elm_lang$core$Basics$toString(mapNode.px + 5)),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$y(
-											_elm_lang$core$Basics$toString(mapNode.py + 40)),
-										_1: {ctor: '[]'}
-									}
+									_0: _elm_lang$svg$Svg_Attributes$y(
+										_elm_lang$core$Basics$toString(mapNode.py + 40)),
+									_1: {ctor: '[]'}
 								}
 							}
 						},
@@ -9707,96 +9694,6 @@ var _user$project$UIHelper$getSvgPanel = function (model) {
 			ctor: '::',
 			_0: A2(_user$project$MapSvg$genSvg, model.nodes, model),
 			_1: {ctor: '[]'}
-		});
-};
-var _user$project$UIHelper$debugPanel = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('debugPanel'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('editMode'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(model.editMode)),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('selectedNode'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(model.selectedNode)),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('selectedNode2'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(model.selectedNode2)),
-								_1: {ctor: '[]'}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('dragNode'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(
-										_elm_lang$core$Basics$toString(model.dragNode)),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('offset'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											_elm_lang$core$Basics$toString(model.offSet)),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}
-				}
-			}
 		});
 };
 var _user$project$UIHelper$propertyPanelSelectedNode = function (node) {
@@ -9894,29 +9791,14 @@ var _user$project$UIHelper$propertyPanelNormal = A2(
 	{
 		ctor: '::',
 		_0: _elm_lang$html$Html$text('Property Panel'),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_user$project$MapMsg$ChangeMode(_user$project$MapMsg$Create)),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Add Node'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		}
+		_1: {ctor: '[]'}
 	});
 var _user$project$UIHelper$createButton = A2(
 	_elm_lang$html$Html$button,
 	{
 		ctor: '::',
-		_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$CreateNode),
+		_0: _elm_lang$html$Html_Events$onClick(
+			_user$project$MapMsg$CreateNode(_user$project$MapMsg$Finish)),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -9924,7 +9806,7 @@ var _user$project$UIHelper$createButton = A2(
 		_0: _elm_lang$html$Html$text('Create Node'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$UIHelper$propertyPanelCreate = function (model) {
+var _user$project$UIHelper$propertyPanelCreate = function (node) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -9943,8 +9825,7 @@ var _user$project$UIHelper$propertyPanelCreate = function (model) {
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(
-								_elm_lang$core$List$length(model.nodes) + 1)),
+							_elm_lang$core$Basics$toString(node.id)),
 						_1: {ctor: '[]'}
 					}
 				}),
@@ -9956,7 +9837,7 @@ var _user$project$UIHelper$propertyPanelCreate = function (model) {
 						ctor: '::',
 						_0: _elm_lang$html$Html_Events$onInput(
 							function (x) {
-								return _user$project$MapMsg$PanelEvent(
+								return _user$project$MapMsg$CreateNode(
 									_user$project$MapMsg$DisplayTxt(x));
 							}),
 						_1: {ctor: '[]'}
@@ -9985,58 +9866,41 @@ var _user$project$UIHelper$propertyPanelCreate = function (model) {
 			}
 		});
 };
-var _user$project$UIHelper$getLeftPanelNodeAttributes = F3(
-	function (model, node, clickMsg) {
-		var _p0 = model.selectedNode;
-		if (_p0.ctor === 'Just') {
-			var _p1 = _elm_lang$core$Native_Utils.eq(_p0._0.id, node.id);
-			if (_p1 === true) {
-				return {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_user$project$MapMsg$SelectNode(node)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('selectedNodeListDiv'),
-						_1: {ctor: '[]'}
-					}
-				};
-			} else {
-				return {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_user$project$MapMsg$SelectNode(node)),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('nodeListDiv'),
-						_1: {ctor: '[]'}
-					}
-				};
-			}
-		} else {
-			return {
+var _user$project$UIHelper$getLeftPanelNodeAttributes = F2(
+	function (model, node) {
+		return {
+			ctor: '::',
+			_0: _elm_lang$html$Html_Events$onClick(
+				_user$project$MapMsg$InspectNode(node)),
+			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(
-					_user$project$MapMsg$SelectNode(node)),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('nodeListDiv'),
-					_1: {ctor: '[]'}
-				}
-			};
-		}
+				_0: _elm_lang$html$Html_Attributes$class(
+					function () {
+						var _p0 = model.actionState;
+						if (_p0.ctor === 'InspectingNode') {
+							var _p1 = _elm_lang$core$Native_Utils.eq(_p0._0.id, node.id);
+							if (_p1 === true) {
+								return 'selectedNodeListDiv';
+							} else {
+								return 'nodeListDiv';
+							}
+						} else {
+							return 'nodeListDiv';
+						}
+					}()),
+				_1: {ctor: '[]'}
+			}
+		};
 	});
 var _user$project$UIHelper$getPropertyPanel = function (model) {
-	var _p2 = model.editMode;
-	if (_p2.ctor === 'Normal') {
-		var _p3 = model.selectedNode;
-		if (_p3.ctor === 'Just') {
-			return _user$project$UIHelper$propertyPanelSelectedNode(_p3._0);
-		} else {
+	var _p2 = model.actionState;
+	switch (_p2.ctor) {
+		case 'InspectingNode':
+			return _user$project$UIHelper$propertyPanelSelectedNode(_p2._0);
+		case 'CreatingNode':
+			return _user$project$UIHelper$propertyPanelCreate(_p2._0);
+		default:
 			return _user$project$UIHelper$propertyPanelNormal;
-		}
-	} else {
-		return _user$project$UIHelper$propertyPanelCreate(model);
 	}
 };
 
@@ -10059,86 +9923,25 @@ var _user$project$MapView$view = function (model) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('divLeftPanel'),
+							_0: _elm_lang$html$Html_Attributes$class('statusPanel'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Map Nodes'),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$button,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$MapMsg$ChangeMode(_user$project$MapMsg$Create)),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Add'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$button,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(
-														_user$project$MapMsg$AddConnector(5)),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Connect'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
-								}),
+							_0: _elm_lang$html$Html$text('Mode: '),
 							_1: {
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									A2(
-										_elm_lang$core$List$map,
-										function (x) {
-											return A2(
-												_elm_lang$html$Html$div,
-												A3(_user$project$UIHelper$getLeftPanelNodeAttributes, model, x, _user$project$MapMsg$SelectNode),
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															x.displayText,
-															A2(
-																_elm_lang$core$Basics_ops['++'],
-																' | x: ',
-																A2(
-																	_elm_lang$core$Basics_ops['++'],
-																	_elm_lang$core$Basics$toString(x.px),
-																	A2(
-																		_elm_lang$core$Basics_ops['++'],
-																		' y: ',
-																		_elm_lang$core$Basics$toString(x.py)))))),
-													_1: {ctor: '[]'}
-												});
-										},
-										model.nodes)),
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(model.actionState)),
 								_1: {
 									ctor: '::',
-									_0: _user$project$UIHelper$debugPanel(model),
-									_1: {ctor: '[]'}
+									_0: _elm_lang$html$Html$text('| LastMsg: '),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(model.lastMsg)),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						}),
@@ -10148,221 +9951,311 @@ var _user$project$MapView$view = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('divRightPanel'),
+								_0: _elm_lang$html$Html_Attributes$class('divLeftPanel'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: _user$project$UIHelper$getSvgPanel(model),
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Map Nodes'),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_user$project$MapMsg$CreateNode(_user$project$MapMsg$Init)),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Add'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('StartConnect'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}),
 								_1: {
 									ctor: '::',
-									_0: _user$project$UIHelper$getPropertyPanel(model),
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{ctor: '[]'},
+										A2(
+											_elm_lang$core$List$map,
+											function (x) {
+												return A2(
+													_elm_lang$html$Html$div,
+													A2(_user$project$UIHelper$getLeftPanelNodeAttributes, model, x),
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																x.displayText,
+																A2(
+																	_elm_lang$core$Basics_ops['++'],
+																	' | x: ',
+																	A2(
+																		_elm_lang$core$Basics_ops['++'],
+																		_elm_lang$core$Basics$toString(x.px),
+																		A2(
+																			_elm_lang$core$Basics_ops['++'],
+																			' y: ',
+																			_elm_lang$core$Basics$toString(x.py)))))),
+														_1: {ctor: '[]'}
+													});
+											},
+											model.nodes)),
 									_1: {ctor: '[]'}
 								}
 							}),
-						_1: {ctor: '[]'}
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('divRightPanel'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _user$project$UIHelper$getSvgPanel(model),
+									_1: {
+										ctor: '::',
+										_0: _user$project$UIHelper$getPropertyPanel(model),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}
 				}),
 			_1: {ctor: '[]'}
 		});
 };
 
-var _user$project$Test$calculatePosition = F2(
-	function (mousePos, offSet) {
-		var _p0 = offSet;
+var _user$project$Update$getOffset = F2(
+	function (model, pos) {
+		var _p0 = model.offSet;
 		if (_p0.ctor === 'Just') {
-			var _p1 = _p0._0;
-			return {x: mousePos.x - _p1.x, y: mousePos.y - _p1.y};
+			return _p0._0;
+		} else {
+			return {x: pos.x, y: pos.y};
+		}
+	});
+var _user$project$Update$calculatePosition = F2(
+	function (mousePos, offSet) {
+		var _p1 = offSet;
+		if (_p1.ctor === 'Just') {
+			var _p2 = _p1._0;
+			return {x: mousePos.x - _p2.x, y: mousePos.y - _p2.y};
 		} else {
 			return {x: mousePos.x, y: mousePos.y};
 		}
 	});
-var _user$project$Test$updateHelp = F2(
+var _user$project$Update$updateHelp = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
-			case 'StartDrag':
-				var _p5 = _p2._0._1;
-				var _p4 = _p2._0._0;
-				var _p3 = model.offSet;
-				if (_p3.ctor === 'Just') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							dragNode: true,
-							selectedNode: _elm_lang$core$Maybe$Just(_p5)
-						});
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							dragNode: true,
-							offSet: _elm_lang$core$Maybe$Just(
-								{x: _p4.x, y: _p4.y}),
-							selectedNode: _elm_lang$core$Maybe$Just(_p5)
-						});
-				}
+		var _p3 = msg;
+		switch (_p3.ctor) {
 			case 'DragAt':
-				var _p10 = _p2._0;
-				var _p6 = model.selectedNode;
-				if (_p6.ctor === 'Nothing') {
-					return model;
-				} else {
+				var _p8 = _p3._0;
+				var _p4 = model.dragNode;
+				if (_p4.ctor === 'Just') {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							nodes: A2(
 								_elm_lang$core$List$map,
 								function (n) {
-									var _p7 = _elm_lang$core$Native_Utils.eq(n.id, _p6._0.id);
-									if (_p7 === true) {
-										return function (_p8) {
-											var _p9 = _p8;
+									var _p5 = _elm_lang$core$Native_Utils.eq(n.id, _p4._0.id);
+									if (_p5 === true) {
+										return function (_p6) {
+											var _p7 = _p6;
 											return _elm_lang$core$Native_Utils.update(
 												n,
-												{px: _p9.x, py: _p9.y});
+												{px: _p7.x, py: _p7.y});
 										}(
 											A2(
-												_user$project$Test$calculatePosition,
-												{x: _p10.x, y: _p10.y},
+												_user$project$Update$calculatePosition,
+												{x: _p8.x, y: _p8.y},
 												model.offSet));
 									} else {
 										return n;
 									}
 								},
-								model.nodes)
+								model.nodes),
+							lastMsg: _elm_lang$core$Maybe$Just(
+								_user$project$MapMsg$DragAt(
+									{x: _p8.x, y: _p8.y}))
 						});
+				} else {
+					return model;
 				}
 			case 'DragEnd':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{dragNode: false});
-			case 'CreateNode':
-				var _p11 = model.tempNode;
-				if (_p11.ctor === 'Nothing') {
-					return model;
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							nodeCounter: model.nodeCounter + 1,
-							nodes: A2(
-								_elm_lang$core$List$append,
-								model.nodes,
-								{
-									ctor: '::',
-									_0: _p11._0,
-									_1: {ctor: '[]'}
-								})
-						});
-				}
+					{
+						dragNode: _elm_lang$core$Maybe$Nothing,
+						lastMsg: _elm_lang$core$Maybe$Just(
+							_user$project$MapMsg$DragEnd(
+								{x: 1, y: 1}))
+					});
+			case 'InspectNode':
+				var _p9 = _p3._0;
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						actionState: _user$project$MapModel$InspectingNode(_p9),
+						lastMsg: _elm_lang$core$Maybe$Just(
+							_user$project$MapMsg$InspectNode(_p9))
+					});
 			case 'SelectNode':
-				var _p13 = _p2._0;
-				var _p12 = model.selectedNode;
-				if (_p12.ctor === 'Just') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							editMode: _user$project$MapMsg$Normal,
-							selectedNode2: _elm_lang$core$Maybe$Just(_p13)
-						});
+				var _p14 = _p3._0._1;
+				var _p10 = model.actionState;
+				if (_p10.ctor === 'Connecting') {
+					var _p11 = _p10._0;
+					if (_p11.ctor === 'Waiting') {
+						return _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								actionState: _user$project$MapModel$Connecting(
+									_user$project$NodeConnectors$FirstSelected(_p14))
+							});
+					} else {
+						var _p13 = _p11._0;
+						return _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								actionState: _user$project$MapModel$InspectingNode(_p13),
+								nodes: A2(
+									_elm_lang$core$List$map,
+									function (n) {
+										var _p12 = _elm_lang$core$Native_Utils.eq(n.id, _p13.id);
+										if (_p12 === true) {
+											return _elm_lang$core$Native_Utils.update(
+												n,
+												{
+													connectors: _user$project$MapNode$Connectors(
+														A2(
+															_elm_lang$core$List$append,
+															_user$project$MapNode$unwrapConnectors(n.connectors),
+															{
+																ctor: '::',
+																_0: {nodeId: _p14.id, cost: 5},
+																_1: {ctor: '[]'}
+															}))
+												});
+										} else {
+											return n;
+										}
+									},
+									model.nodes)
+							});
+					}
 				} else {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							editMode: _user$project$MapMsg$Normal,
-							selectedNode: _elm_lang$core$Maybe$Just(_p13)
+							actionState: _user$project$MapModel$InspectingNode(_p14),
+							offSet: _elm_lang$core$Maybe$Just(
+								A2(_user$project$Update$getOffset, model, _p3._0._0)),
+							dragNode: _elm_lang$core$Maybe$Just(_p14),
+							lastMsg: _elm_lang$core$Maybe$Just(
+								_user$project$MapMsg$SelectNode(
+									{
+										ctor: '_Tuple2',
+										_0: {x: 1, y: 1},
+										_1: _p14
+									}))
 						});
 				}
-			case 'ChangeMode':
-				var _p15 = _p2._0;
-				var _p14 = _p15;
-				if (_p14.ctor === 'Create') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							editMode: _p15,
-							tempNode: _elm_lang$core$Maybe$Just(
+			case 'CreateNode':
+				var _p15 = model.actionState;
+				if (_p15.ctor === 'CreatingNode') {
+					var _p17 = _p15._0;
+					var _p16 = _p3._0;
+					switch (_p16.ctor) {
+						case 'Init':
+							return _elm_lang$core$Native_Utils.update(
+								model,
 								{
-									id: model.nodeCounter + 1,
-									displayText: A2(
-										_elm_lang$core$Basics_ops['++'],
-										'Node ',
-										_elm_lang$core$Basics$toString(model.nodeCounter + 1)),
-									px: 10,
-									py: 10,
-									connectors: _user$project$MapNode$Connectors(
-										{ctor: '[]'})
-								})
-						});
+									actionState: _user$project$MapModel$CreatingNode(
+										_user$project$MapNode$getInit(model.nodeCounter + 1))
+								});
+						case 'DisplayTxt':
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									actionState: _user$project$MapModel$CreatingNode(
+										_elm_lang$core$Native_Utils.update(
+											_p17,
+											{displayText: _p16._0}))
+								});
+						default:
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									nodeCounter: model.nodeCounter + 1,
+									actionState: _user$project$MapModel$InspectingNode(_p17),
+									nodes: A2(
+										_elm_lang$core$List$append,
+										model.nodes,
+										{
+											ctor: '::',
+											_0: _p17,
+											_1: {ctor: '[]'}
+										})
+								});
+					}
 				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{editMode: _p15});
-				}
-			case 'AddConnector':
-				var _p16 = {ctor: '_Tuple2', _0: model.selectedNode, _1: model.selectedNode2};
-				if (((_p16.ctor === '_Tuple2') && (_p16._0.ctor === 'Just')) && (_p16._1.ctor === 'Just')) {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							nodes: A2(
-								_elm_lang$core$List$map,
-								function (n) {
-									var _p17 = _elm_lang$core$Native_Utils.eq(n.id, _p16._0._0.id);
-									if (_p17 === true) {
-										return _elm_lang$core$Native_Utils.update(
-											n,
-											{
-												connectors: _user$project$MapNode$Connectors(
-													A2(
-														_elm_lang$core$List$append,
-														_user$project$MapNode$unwrapConnectors(n.connectors),
-														{
-															ctor: '::',
-															_0: {nodeId: _p16._1._0.id, cost: _p2._0},
-															_1: {ctor: '[]'}
-														}))
-											});
-									} else {
-										return n;
-									}
-								},
-								model.nodes)
+							actionState: _user$project$MapModel$CreatingNode(
+								_user$project$MapNode$getInit(model.nodeCounter + 1))
 						});
-				} else {
-					return model;
 				}
 			default:
-				var _p18 = _p2._0;
-				var _p19 = model.tempNode;
-				if (_p19.ctor === 'Nothing') {
-					return model;
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							tempNode: _elm_lang$core$Maybe$Just(
-								_elm_lang$core$Native_Utils.update(
-									_p19._0,
-									{displayText: _p18._0}))
-						});
-				}
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{
+						actionState: _user$project$MapModel$Connecting(_user$project$NodeConnectors$Waiting)
+					});
 		}
 	});
-var _user$project$Test$update = F2(
+var _user$project$Update$update = F2(
 	function (msg, model) {
 		return {
 			ctor: '_Tuple2',
-			_0: A2(_user$project$Test$updateHelp, msg, model),
+			_0: A2(_user$project$Update$updateHelp, msg, model),
 			_1: _elm_lang$core$Platform_Cmd$none
 		};
 	});
-var _user$project$Test$subscriptions = function (model) {
-	var _p20 = model.dragNode;
-	if (_p20 === false) {
-		return _elm_lang$core$Platform_Sub$none;
-	} else {
+
+var _user$project$Main$subscriptions = function (model) {
+	var _p0 = model.dragNode;
+	if (_p0.ctor === 'Just') {
 		return _elm_lang$core$Platform_Sub$batch(
 			{
 				ctor: '::',
@@ -10373,15 +10266,17 @@ var _user$project$Test$subscriptions = function (model) {
 					_1: {ctor: '[]'}
 				}
 			});
+	} else {
+		return _elm_lang$core$Platform_Sub$none;
 	}
 };
-var _user$project$Test$main = _elm_lang$html$Html$program(
-	{init: _user$project$MapModel$init, view: _user$project$MapView$view, update: _user$project$Test$update, subscriptions: _user$project$Test$subscriptions})();
+var _user$project$Main$main = _elm_lang$html$Html$program(
+	{init: _user$project$MapModel$init, view: _user$project$MapView$view, update: _user$project$Update$update, subscriptions: _user$project$Main$subscriptions})();
 
 var Elm = {};
-Elm['Test'] = Elm['Test'] || {};
-if (typeof _user$project$Test$main !== 'undefined') {
-    _user$project$Test$main(Elm['Test'], 'Test', undefined);
+Elm['Main'] = Elm['Main'] || {};
+if (typeof _user$project$Main$main !== 'undefined') {
+    _user$project$Main$main(Elm['Main'], 'Main', undefined);
 }
 
 if (typeof define === "function" && define['amd'])

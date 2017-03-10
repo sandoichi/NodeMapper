@@ -2,30 +2,31 @@ module MapModel exposing (..)
 
 import MapMsg exposing (..)
 import MapNode exposing (..)
+import NodeConnectors exposing (..)
 
+type ActionState =
+        Idle
+        | Connecting NodeConnectors.State
+        | CreatingNode MapNode
+        | InspectingNode MapNode
 
 type alias Model = { 
-    editMode : EditMode
-    ,nodes : List MapNode 
-    ,selectedNode : Maybe MapNode
-    ,selectedNode2 : Maybe MapNode
+    nodes : List MapNode 
     ,nodeCounter : Int
-    ,dragNode : Bool
+    ,dragNode : Maybe MapNode
     ,offSet : Maybe { x : Int, y : Int }
-    ,tempNode : Maybe MapNode
+    ,actionState : ActionState
+    ,lastMsg : Maybe Msg
 }
 
 init : ( Model, Cmd Msg )
-init =
-   ({
-       editMode = Normal
-       ,nodes = []
-       ,selectedNode = Nothing
-       ,selectedNode2 = Nothing
+init = ({
+       nodes = []
        ,nodeCounter = 0
-       ,dragNode = False
+       ,dragNode = Nothing
        ,offSet = Nothing
-       ,tempNode = Nothing
+       ,actionState = Idle 
+       ,lastMsg = Nothing
    }, Cmd.none)     
 
 

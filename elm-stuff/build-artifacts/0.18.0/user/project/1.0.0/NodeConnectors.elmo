@@ -1,0 +1,4 @@
+var _user$project$NodeConnectors$FirstSelected = function (a) {
+	return {ctor: 'FirstSelected', _0: a};
+};
+var _user$project$NodeConnectors$Waiting = {ctor: 'Waiting'};

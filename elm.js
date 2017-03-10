@@ -1,6 +1,4 @@
-<!DOCTYPE HTML>
-<html><head><meta charset="UTF-8"><title>Test</title><style>html,head,body { padding:0; margin:0; }
-body { font-family: calibri, helvetica, arial, sans-serif; }</style><script type="text/javascript">
+
 (function() {
 'use strict';
 
@@ -136,6 +134,7 @@ function A9(fun, a, b, c, d, e, f, g, h, i)
     ? fun.func(a, b, c, d, e, f, g, h, i)
     : fun(a)(b)(c)(d)(e)(f)(g)(h)(i);
 }
+
 //import Native.List //
 
 var _elm_lang$core$Native_Array = function() {
@@ -1102,7 +1101,8 @@ return {
 	fromJSArray: fromJSArray
 };
 
-}();//import Native.Utils //
+}();
+//import Native.Utils //
 
 var _elm_lang$core$Native_Basics = function() {
 
@@ -1242,7 +1242,8 @@ return {
 	isInfinite: isInfinite
 };
 
-}();//import //
+}();
+//import //
 
 var _elm_lang$core$Native_Utils = function() {
 
@@ -1729,7 +1730,8 @@ return {
 	toString: toString
 };
 
-}();var _elm_lang$core$Basics$never = function (_p0) {
+}();
+var _elm_lang$core$Basics$never = function (_p0) {
 	never:
 	while (true) {
 		var _p1 = _p0;
@@ -1854,6 +1856,7 @@ var _elm_lang$core$Basics$LT = {ctor: 'LT'};
 var _elm_lang$core$Basics$JustOneMore = function (a) {
 	return {ctor: 'JustOneMore', _0: a};
 };
+
 var _elm_lang$core$Maybe$withDefault = F2(
 	function ($default, maybe) {
 		var _p0 = maybe;
@@ -1926,6 +1929,7 @@ var _elm_lang$core$Maybe$map5 = F6(
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	});
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_List = function() {
@@ -2062,7 +2066,8 @@ return {
 	sortWith: F2(sortWith)
 };
 
-}();var _elm_lang$core$List$sortWith = _elm_lang$core$Native_List.sortWith;
+}();
+var _elm_lang$core$List$sortWith = _elm_lang$core$Native_List.sortWith;
 var _elm_lang$core$List$sortBy = _elm_lang$core$Native_List.sortBy;
 var _elm_lang$core$List$sort = function (xs) {
 	return A2(_elm_lang$core$List$sortBy, _elm_lang$core$Basics$identity, xs);
@@ -2614,6 +2619,7 @@ var _elm_lang$core$List$indexedMap = F2(
 				_elm_lang$core$List$length(xs) - 1),
 			xs);
 	});
+
 var _elm_lang$core$Array$append = _elm_lang$core$Native_Array.append;
 var _elm_lang$core$Array$length = _elm_lang$core$Native_Array.length;
 var _elm_lang$core$Array$isEmpty = function (array) {
@@ -2668,6 +2674,7 @@ var _elm_lang$core$Array$repeat = F2(
 			_elm_lang$core$Basics$always(e));
 	});
 var _elm_lang$core$Array$Array = {ctor: 'Array'};
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Char = function() {
@@ -2681,7 +2688,8 @@ return {
 	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
 };
 
-}();var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
+}();
+var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
 var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
 var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
 var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
@@ -2723,6 +2731,7 @@ var _elm_lang$core$Char$isHexDigit = function ($char) {
 		_elm_lang$core$Native_Utils.chr('F'),
 		$char));
 };
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Scheduler = function() {
@@ -3003,7 +3012,8 @@ return {
 	rawSend: rawSend
 };
 
-}();//import //
+}();
+//import //
 
 var _elm_lang$core$Native_Platform = function() {
 
@@ -3562,6 +3572,7 @@ return {
 };
 
 }();
+
 var _elm_lang$core$Platform_Cmd$batch = _elm_lang$core$Native_Platform.batch;
 var _elm_lang$core$Platform_Cmd$none = _elm_lang$core$Platform_Cmd$batch(
 	{ctor: '[]'});
@@ -3576,11 +3587,13 @@ _elm_lang$core$Platform_Cmd_ops['!'] = F2(
 	});
 var _elm_lang$core$Platform_Cmd$map = _elm_lang$core$Native_Platform.map;
 var _elm_lang$core$Platform_Cmd$Cmd = {ctor: 'Cmd'};
+
 var _elm_lang$core$Platform_Sub$batch = _elm_lang$core$Native_Platform.batch;
 var _elm_lang$core$Platform_Sub$none = _elm_lang$core$Platform_Sub$batch(
 	{ctor: '[]'});
 var _elm_lang$core$Platform_Sub$map = _elm_lang$core$Native_Platform.map;
 var _elm_lang$core$Platform_Sub$Sub = {ctor: 'Sub'};
+
 var _elm_lang$core$Platform$hack = _elm_lang$core$Native_Scheduler.succeed;
 var _elm_lang$core$Platform$sendToSelf = _elm_lang$core$Native_Platform.sendToSelf;
 var _elm_lang$core$Platform$sendToApp = _elm_lang$core$Native_Platform.sendToApp;
@@ -3590,6 +3603,7 @@ var _elm_lang$core$Platform$Program = {ctor: 'Program'};
 var _elm_lang$core$Platform$Task = {ctor: 'Task'};
 var _elm_lang$core$Platform$ProcessId = {ctor: 'ProcessId'};
 var _elm_lang$core$Platform$Router = {ctor: 'Router'};
+
 var _elm_lang$core$Result$toMaybe = function (result) {
 	var _p0 = result;
 	if (_p0.ctor === 'Ok') {
@@ -3731,6 +3745,7 @@ var _elm_lang$core$Result$fromMaybe = F2(
 			return _elm_lang$core$Result$Err(err);
 		}
 	});
+
 var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
 var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
 var _elm_lang$core$Task$spawnCmd = F2(
@@ -3927,6 +3942,7 @@ var _elm_lang$core$Task$cmdMap = F2(
 			A2(_elm_lang$core$Task$map, tagger, _p11._0));
 	});
 _elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
+
 //import Native.Utils //
 
 var _elm_lang$core$Native_Debug = function() {
@@ -3956,7 +3972,8 @@ return {
 	log: F2(log)
 };
 
-}();//import Maybe, Native.List, Native.Utils, Result //
+}();
+//import Maybe, Native.List, Native.Utils, Result //
 
 var _elm_lang$core$Native_String = function() {
 
@@ -4295,6 +4312,7 @@ return {
 };
 
 }();
+
 var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
 var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
 var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
@@ -4338,6 +4356,7 @@ var _elm_lang$core$String$fromChar = function ($char) {
 	return A2(_elm_lang$core$String$cons, $char, '');
 };
 var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
+
 var _elm_lang$core$Dict$foldr = F3(
 	function (f, acc, t) {
 		foldr:
@@ -5254,6 +5273,7 @@ var _elm_lang$core$Dict$diff = F2(
 			t1,
 			t2);
 	});
+
 //import Native.Scheduler //
 
 var _elm_lang$core$Native_Time = function() {
@@ -5280,7 +5300,8 @@ return {
 	setInterval_: F2(setInterval_)
 };
 
-}();var _elm_lang$core$Time$setInterval = _elm_lang$core$Native_Time.setInterval_;
+}();
+var _elm_lang$core$Time$setInterval = _elm_lang$core$Native_Time.setInterval_;
 var _elm_lang$core$Time$spawnHelp = F3(
 	function (router, intervals, processes) {
 		var _p0 = intervals;
@@ -5467,8 +5488,10 @@ var _elm_lang$core$Time$subMap = F2(
 			});
 	});
 _elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
+
 var _elm_lang$core$Debug$crash = _elm_lang$core$Native_Debug.crash;
 var _elm_lang$core$Debug$log = _elm_lang$core$Native_Debug.log;
+
 //import Maybe, Native.Array, Native.List, Native.Utils, Result //
 
 var _elm_lang$core$Native_Json = function() {
@@ -6044,6 +6067,7 @@ return {
 };
 
 }();
+
 var _elm_lang$core$Json_Encode$list = _elm_lang$core$Native_Json.encodeList;
 var _elm_lang$core$Json_Encode$array = _elm_lang$core$Native_Json.encodeArray;
 var _elm_lang$core$Json_Encode$object = _elm_lang$core$Native_Json.encodeObject;
@@ -6054,6 +6078,7 @@ var _elm_lang$core$Json_Encode$int = _elm_lang$core$Native_Json.identity;
 var _elm_lang$core$Json_Encode$string = _elm_lang$core$Native_Json.identity;
 var _elm_lang$core$Json_Encode$encode = _elm_lang$core$Native_Json.encode;
 var _elm_lang$core$Json_Encode$Value = {ctor: 'Value'};
+
 var _elm_lang$core$Json_Decode$null = _elm_lang$core$Native_Json.decodeNull;
 var _elm_lang$core$Json_Decode$value = _elm_lang$core$Native_Json.decodePrimitive('value');
 var _elm_lang$core$Json_Decode$andThen = _elm_lang$core$Native_Json.andThen;
@@ -6116,9 +6141,11 @@ var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive(
 var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
 var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
+
 var _elm_lang$core$Process$kill = _elm_lang$core$Native_Scheduler.kill;
 var _elm_lang$core$Process$sleep = _elm_lang$core$Native_Scheduler.sleep;
 var _elm_lang$core$Process$spawn = _elm_lang$core$Native_Scheduler.spawn;
+
 var _elm_lang$core$Tuple$mapSecond = F2(
 	function (func, _p0) {
 		var _p1 = _p0;
@@ -6145,6 +6172,7 @@ var _elm_lang$core$Tuple$first = function (_p6) {
 	var _p7 = _p6;
 	return _p7._0;
 };
+
 var _elm_lang$dom$Native_Dom = function() {
 
 var fakeNode = {
@@ -6327,8 +6355,10 @@ return {
 };
 
 }();
+
 var _elm_lang$dom$Dom_LowLevel$onWindow = _elm_lang$dom$Native_Dom.onWindow;
 var _elm_lang$dom$Dom_LowLevel$onDocument = _elm_lang$dom$Native_Dom.onDocument;
+
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrap;
 var _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags;
 
@@ -8210,6 +8240,7 @@ return {
 };
 
 }();
+
 var _elm_lang$virtual_dom$VirtualDom$programWithFlags = function (impl) {
 	return A2(_elm_lang$virtual_dom$Native_VirtualDom.programWithFlags, _elm_lang$virtual_dom$VirtualDom_Debug$wrapWithFlags, impl);
 };
@@ -8240,6 +8271,7 @@ var _elm_lang$virtual_dom$VirtualDom$Options = F2(
 	});
 var _elm_lang$virtual_dom$VirtualDom$Node = {ctor: 'Node'};
 var _elm_lang$virtual_dom$VirtualDom$Property = {ctor: 'Property'};
+
 var _elm_lang$html$Html$programWithFlags = _elm_lang$virtual_dom$VirtualDom$programWithFlags;
 var _elm_lang$html$Html$program = _elm_lang$virtual_dom$VirtualDom$program;
 var _elm_lang$html$Html$beginnerProgram = function (_p0) {
@@ -8364,6 +8396,7 @@ var _elm_lang$html$Html$details = _elm_lang$html$Html$node('details');
 var _elm_lang$html$Html$summary = _elm_lang$html$Html$node('summary');
 var _elm_lang$html$Html$menuitem = _elm_lang$html$Html$node('menuitem');
 var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
+
 var _elm_lang$html$Html_Attributes$map = _elm_lang$virtual_dom$VirtualDom$mapProperty;
 var _elm_lang$html$Html_Attributes$attribute = _elm_lang$virtual_dom$VirtualDom$attribute;
 var _elm_lang$html$Html_Attributes$contextmenu = function (value) {
@@ -8713,6 +8746,7 @@ var _elm_lang$html$Html_Attributes$classList = function (list) {
 				A2(_elm_lang$core$List$filter, _elm_lang$core$Tuple$second, list))));
 };
 var _elm_lang$html$Html_Attributes$style = _elm_lang$virtual_dom$VirtualDom$style;
+
 var _elm_lang$html$Html_Events$keyCode = A2(_elm_lang$core$Json_Decode$field, 'keyCode', _elm_lang$core$Json_Decode$int);
 var _elm_lang$html$Html_Events$targetChecked = A2(
 	_elm_lang$core$Json_Decode$at,
@@ -8827,6 +8861,7 @@ var _elm_lang$html$Html_Events$Options = F2(
 	function (a, b) {
 		return {stopPropagation: a, preventDefault: b};
 	});
+
 var _elm_lang$mouse$Mouse_ops = _elm_lang$mouse$Mouse_ops || {};
 _elm_lang$mouse$Mouse_ops['&>'] = F2(
 	function (t1, t2) {
@@ -9009,6 +9044,7 @@ var _elm_lang$mouse$Mouse$subMap = F2(
 			});
 	});
 _elm_lang$core$Native_Platform.effectManagers['Mouse'] = {pkg: 'elm-lang/mouse', init: _elm_lang$mouse$Mouse$init, onEffects: _elm_lang$mouse$Mouse$onEffects, onSelfMsg: _elm_lang$mouse$Mouse$onSelfMsg, tag: 'sub', subMap: _elm_lang$mouse$Mouse$subMap};
+
 var _elm_lang$svg$Svg$map = _elm_lang$virtual_dom$VirtualDom$map;
 var _elm_lang$svg$Svg$text = _elm_lang$virtual_dom$VirtualDom$text;
 var _elm_lang$svg$Svg$svgNamespace = A2(
@@ -9095,6 +9131,7 @@ var _elm_lang$svg$Svg$filter = _elm_lang$svg$Svg$node('filter');
 var _elm_lang$svg$Svg$script = _elm_lang$svg$Svg$node('script');
 var _elm_lang$svg$Svg$style = _elm_lang$svg$Svg$node('style');
 var _elm_lang$svg$Svg$view = _elm_lang$svg$Svg$node('view');
+
 var _elm_lang$svg$Svg_Attributes$writingMode = _elm_lang$virtual_dom$VirtualDom$attribute('writing-mode');
 var _elm_lang$svg$Svg_Attributes$wordSpacing = _elm_lang$virtual_dom$VirtualDom$attribute('word-spacing');
 var _elm_lang$svg$Svg_Attributes$visibility = _elm_lang$virtual_dom$VirtualDom$attribute('visibility');
@@ -9348,6 +9385,7 @@ var _elm_lang$svg$Svg_Attributes$additive = _elm_lang$virtual_dom$VirtualDom$att
 var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$attribute('accumulate');
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
+
 var _user$project$MapNode$unwrapConnectors = function (connectors) {
 	var _p0 = connectors;
 	return _p0._0;
@@ -9363,11 +9401,13 @@ var _user$project$MapNode$MapNode = F5(
 var _user$project$MapNode$Connectors = function (a) {
 	return {ctor: 'Connectors', _0: a};
 };
+
 var _user$project$MapMsg$Create = {ctor: 'Create'};
 var _user$project$MapMsg$Normal = {ctor: 'Normal'};
 var _user$project$MapMsg$DisplayTxt = function (a) {
 	return {ctor: 'DisplayTxt', _0: a};
 };
+var _user$project$MapMsg$StartConnecting = {ctor: 'StartConnecting'};
 var _user$project$MapMsg$PanelEvent = function (a) {
 	return {ctor: 'PanelEvent', _0: a};
 };
@@ -9380,9 +9420,6 @@ var _user$project$MapMsg$DragAt = function (a) {
 var _user$project$MapMsg$StartDrag = function (a) {
 	return {ctor: 'StartDrag', _0: a};
 };
-var _user$project$MapMsg$AddConnector = function (a) {
-	return {ctor: 'AddConnector', _0: a};
-};
 var _user$project$MapMsg$SelectNode = function (a) {
 	return {ctor: 'SelectNode', _0: a};
 };
@@ -9390,24 +9427,38 @@ var _user$project$MapMsg$CreateNode = {ctor: 'CreateNode'};
 var _user$project$MapMsg$ChangeMode = function (a) {
 	return {ctor: 'ChangeMode', _0: a};
 };
+
+var _user$project$NodeConnectors$BothSelected = function (a) {
+	return {ctor: 'BothSelected', _0: a};
+};
+var _user$project$NodeConnectors$FirstSelected = function (a) {
+	return {ctor: 'FirstSelected', _0: a};
+};
+var _user$project$NodeConnectors$Waiting = {ctor: 'Waiting'};
+
+var _user$project$MapModel$Model = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {editMode: a, nodes: b, selectedNode: c, nodeCounter: d, dragNode: e, offSet: f, tempNode: g, actionState: h};
+	});
+var _user$project$MapModel$Connecting = function (a) {
+	return {ctor: 'Connecting', _0: a};
+};
+var _user$project$MapModel$Idle = {ctor: 'Idle'};
 var _user$project$MapModel$init = {
 	ctor: '_Tuple2',
 	_0: {
 		editMode: _user$project$MapMsg$Normal,
 		nodes: {ctor: '[]'},
 		selectedNode: _elm_lang$core$Maybe$Nothing,
-		selectedNode2: _elm_lang$core$Maybe$Nothing,
 		nodeCounter: 0,
 		dragNode: false,
 		offSet: _elm_lang$core$Maybe$Nothing,
-		tempNode: _elm_lang$core$Maybe$Nothing
+		tempNode: _elm_lang$core$Maybe$Nothing,
+		actionState: _user$project$MapModel$Idle
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
-var _user$project$MapModel$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {editMode: a, nodes: b, selectedNode: c, selectedNode2: d, nodeCounter: e, dragNode: f, offSet: g, tempNode: h};
-	});
+
 var _user$project$MapSvg$connectorsContainsId = F2(
 	function (connectors, id) {
 		return A2(
@@ -9492,8 +9543,7 @@ var _user$project$MapSvg$mapConnectors = function (nodes) {
 				nodes)));
 };
 var _user$project$MapSvg$Regular = {ctor: 'Regular'};
-var _user$project$MapSvg$SelectedSecondary = {ctor: 'SelectedSecondary'};
-var _user$project$MapSvg$SelectedPrimary = {ctor: 'SelectedPrimary'};
+var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
 	function (node, model) {
 		var _p1 = model.selectedNode;
@@ -9502,26 +9552,9 @@ var _user$project$MapSvg$getNodeType = F2(
 		} else {
 			var _p2 = _elm_lang$core$Native_Utils.eq(_p1._0.id, node.id);
 			if (_p2 === true) {
-				return _user$project$MapSvg$SelectedPrimary;
+				return _user$project$MapSvg$Selected;
 			} else {
-				return function (x) {
-					var _p3 = x;
-					if (_p3.ctor === 'Regular') {
-						var _p4 = model.selectedNode2;
-						if (_p4.ctor === 'Nothing') {
-							return _user$project$MapSvg$Regular;
-						} else {
-							var _p5 = _elm_lang$core$Native_Utils.eq(_p4._0.id, node.id);
-							if (_p5 === true) {
-								return _user$project$MapSvg$SelectedSecondary;
-							} else {
-								return _user$project$MapSvg$Regular;
-							}
-						}
-					} else {
-						return _user$project$MapSvg$SelectedPrimary;
-					}
-				}(_user$project$MapSvg$Regular);
+				return _user$project$MapSvg$Regular;
 			}
 		}
 	});
@@ -9558,14 +9591,11 @@ var _user$project$MapSvg$genGraphic = F2(
 									_elm_lang$core$Basics_ops['++'],
 									'rect ',
 									function () {
-										var _p6 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
-										switch (_p6.ctor) {
-											case 'SelectedPrimary':
-												return 'selectedPrimary';
-											case 'SelectedSecondary':
-												return 'selectedSecondary';
-											default:
-												return '';
+										var _p3 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
+										if (_p3.ctor === 'Selected') {
+											return 'selected';
+										} else {
+											return '';
 										}
 									}())),
 							_1: {
@@ -9653,6 +9683,7 @@ var _user$project$MapSvg$genSvg = F2(
 				A2(_user$project$MapSvg$mapNodeList, nodes, model),
 				_user$project$MapSvg$mapConnectors(nodes)));
 	});
+
 var _user$project$UIHelper$getSvgPanel = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
@@ -9712,11 +9743,11 @@ var _user$project$UIHelper$debugPanel = function (model) {
 						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('selectedNode2'),
+							_0: _elm_lang$html$Html$text('dragNode'),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(model.selectedNode2)),
+									_elm_lang$core$Basics$toString(model.dragNode)),
 								_1: {ctor: '[]'}
 							}
 						}),
@@ -9727,31 +9758,15 @@ var _user$project$UIHelper$debugPanel = function (model) {
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('dragNode'),
+								_0: _elm_lang$html$Html$text('offset'),
 								_1: {
 									ctor: '::',
 									_0: _elm_lang$html$Html$text(
-										_elm_lang$core$Basics$toString(model.dragNode)),
+										_elm_lang$core$Basics$toString(model.offSet)),
 									_1: {ctor: '[]'}
 								}
 							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('offset'),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											_elm_lang$core$Basics$toString(model.offSet)),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {ctor: '[]'}
-						}
+						_1: {ctor: '[]'}
 					}
 				}
 			}
@@ -9997,346 +10012,11 @@ var _user$project$UIHelper$getPropertyPanel = function (model) {
 		return _user$project$UIHelper$propertyPanelCreate(model);
 	}
 };
-var _user$project$MapView$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('divMainContainer'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('divLeftPanel'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Map Nodes'),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$button,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$MapMsg$ChangeMode(_user$project$MapMsg$Create)),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Add'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$button,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(
-														_user$project$MapMsg$AddConnector(5)),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Connect'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									A2(
-										_elm_lang$core$List$map,
-										function (x) {
-											return A2(
-												_elm_lang$html$Html$div,
-												A3(_user$project$UIHelper$getLeftPanelNodeAttributes, model, x, _user$project$MapMsg$SelectNode),
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															x.displayText,
-															A2(
-																_elm_lang$core$Basics_ops['++'],
-																' | x: ',
-																A2(
-																	_elm_lang$core$Basics_ops['++'],
-																	_elm_lang$core$Basics$toString(x.px),
-																	A2(
-																		_elm_lang$core$Basics_ops['++'],
-																		' y: ',
-																		_elm_lang$core$Basics$toString(x.py)))))),
-													_1: {ctor: '[]'}
-												});
-										},
-										model.nodes)),
-								_1: {
-									ctor: '::',
-									_0: _user$project$UIHelper$debugPanel(model),
-									_1: {ctor: '[]'}
-								}
-							}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('divRightPanel'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _user$project$UIHelper$getSvgPanel(model),
-								_1: {
-									ctor: '::',
-									_0: _user$project$UIHelper$getPropertyPanel(model),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _user$project$Test$calculatePosition = F2(
-	function (mousePos, offSet) {
-		var _p0 = offSet;
-		if (_p0.ctor === 'Just') {
-			var _p1 = _p0._0;
-			return {x: mousePos.x - _p1.x, y: mousePos.y - _p1.y};
-		} else {
-			return {x: mousePos.x, y: mousePos.y};
-		}
-	});
-var _user$project$Test$updateHelp = F2(
-	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
-			case 'StartDrag':
-				var _p5 = _p2._0._1;
-				var _p4 = _p2._0._0;
-				var _p3 = model.offSet;
-				if (_p3.ctor === 'Just') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							dragNode: true,
-							selectedNode: _elm_lang$core$Maybe$Just(_p5)
-						});
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							dragNode: true,
-							offSet: _elm_lang$core$Maybe$Just(
-								{x: _p4.x, y: _p4.y}),
-							selectedNode: _elm_lang$core$Maybe$Just(_p5)
-						});
-				}
-			case 'DragAt':
-				var _p10 = _p2._0;
-				var _p6 = model.selectedNode;
-				if (_p6.ctor === 'Nothing') {
-					return model;
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							nodes: A2(
-								_elm_lang$core$List$map,
-								function (n) {
-									var _p7 = _elm_lang$core$Native_Utils.eq(n.id, _p6._0.id);
-									if (_p7 === true) {
-										return function (_p8) {
-											var _p9 = _p8;
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{px: _p9.x, py: _p9.y});
-										}(
-											A2(
-												_user$project$Test$calculatePosition,
-												{x: _p10.x, y: _p10.y},
-												model.offSet));
-									} else {
-										return n;
-									}
-								},
-								model.nodes)
-						});
-				}
-			case 'DragEnd':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{dragNode: false});
-			case 'CreateNode':
-				var _p11 = model.tempNode;
-				if (_p11.ctor === 'Nothing') {
-					return model;
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							nodeCounter: model.nodeCounter + 1,
-							nodes: A2(
-								_elm_lang$core$List$append,
-								model.nodes,
-								{
-									ctor: '::',
-									_0: _p11._0,
-									_1: {ctor: '[]'}
-								})
-						});
-				}
-			case 'SelectNode':
-				var _p13 = _p2._0;
-				var _p12 = model.selectedNode;
-				if (_p12.ctor === 'Just') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							editMode: _user$project$MapMsg$Normal,
-							selectedNode2: _elm_lang$core$Maybe$Just(_p13)
-						});
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							editMode: _user$project$MapMsg$Normal,
-							selectedNode: _elm_lang$core$Maybe$Just(_p13)
-						});
-				}
-			case 'ChangeMode':
-				var _p15 = _p2._0;
-				var _p14 = _p15;
-				if (_p14.ctor === 'Create') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							editMode: _p15,
-							tempNode: _elm_lang$core$Maybe$Just(
-								{
-									id: model.nodeCounter + 1,
-									displayText: A2(
-										_elm_lang$core$Basics_ops['++'],
-										'Node ',
-										_elm_lang$core$Basics$toString(model.nodeCounter + 1)),
-									px: 10,
-									py: 10,
-									connectors: _user$project$MapNode$Connectors(
-										{ctor: '[]'})
-								})
-						});
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{editMode: _p15});
-				}
-			case 'AddConnector':
-				var _p16 = {ctor: '_Tuple2', _0: model.selectedNode, _1: model.selectedNode2};
-				if (((_p16.ctor === '_Tuple2') && (_p16._0.ctor === 'Just')) && (_p16._1.ctor === 'Just')) {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							nodes: A2(
-								_elm_lang$core$List$map,
-								function (n) {
-									var _p17 = _elm_lang$core$Native_Utils.eq(n.id, _p16._0._0.id);
-									if (_p17 === true) {
-										return _elm_lang$core$Native_Utils.update(
-											n,
-											{
-												connectors: _user$project$MapNode$Connectors(
-													A2(
-														_elm_lang$core$List$append,
-														_user$project$MapNode$unwrapConnectors(n.connectors),
-														{
-															ctor: '::',
-															_0: {nodeId: _p16._1._0.id, cost: _p2._0},
-															_1: {ctor: '[]'}
-														}))
-											});
-									} else {
-										return n;
-									}
-								},
-								model.nodes)
-						});
-				} else {
-					return model;
-				}
-			default:
-				var _p18 = _p2._0;
-				var _p19 = model.tempNode;
-				if (_p19.ctor === 'Nothing') {
-					return model;
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							tempNode: _elm_lang$core$Maybe$Just(
-								_elm_lang$core$Native_Utils.update(
-									_p19._0,
-									{displayText: _p18._0}))
-						});
-				}
-		}
-	});
-var _user$project$Test$update = F2(
-	function (msg, model) {
-		return {
-			ctor: '_Tuple2',
-			_0: A2(_user$project$Test$updateHelp, msg, model),
-			_1: _elm_lang$core$Platform_Cmd$none
-		};
-	});
-var _user$project$Test$subscriptions = function (model) {
-	var _p20 = model.dragNode;
-	if (_p20 === false) {
-		return _elm_lang$core$Platform_Sub$none;
-	} else {
-		return _elm_lang$core$Platform_Sub$batch(
-			{
-				ctor: '::',
-				_0: _elm_lang$mouse$Mouse$moves(_user$project$MapMsg$DragAt),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$mouse$Mouse$ups(_user$project$MapMsg$DragEnd),
-					_1: {ctor: '[]'}
-				}
-			});
-	}
-};
-var _user$project$Test$main = _elm_lang$html$Html$program(
-	{init: _user$project$MapModel$init, view: _user$project$MapView$view, update: _user$project$Test$update, subscriptions: _user$project$Test$subscriptions})();
+
 var Elm = {};
-Elm['Test'] = Elm['Test'] || {};
-if (typeof _user$project$Test$main !== 'undefined') {
-    _user$project$Test$main(Elm['Test'], 'Test', undefined);
+Elm['UIHelper'] = Elm['UIHelper'] || {};
+if (typeof _user$project$UIHelper$main !== 'undefined') {
+    _user$project$UIHelper$main(Elm['UIHelper'], 'UIHelper', undefined);
 }
 
 if (typeof define === "function" && define['amd'])
@@ -10368,4 +10048,4 @@ for (var publicModule in Elm)
 }
 
 }).call(this);
-</script></head><body><script type="text/javascript">Elm.Test.fullscreen()</script></body></html>
+

@@ -12,35 +12,25 @@ import Mouse exposing (Position)
 import Json.Decode as Decode
 
 type NodeType =
-    SelectedPrimary
-    | SelectedSecondary
+    Selected
     | Regular
 
 getNodeType : MapNode -> Model -> NodeType
 getNodeType node model =
-    case model.selectedNode of
-        Nothing -> Regular
-        Just x -> 
+    case model.actionState of
+        InspectingNode x ->
             case x.id == node.id of
-                True -> SelectedPrimary
+                True -> Selected
                 False -> Regular
-    |> (\x -> case x of
-                Regular -> 
-                    case model.selectedNode2 of
-                        Nothing -> Regular
-                        Just x -> case x.id == node.id of
-                            True -> SelectedSecondary
-                            False -> Regular
-                _ -> SelectedPrimary)
+        _ -> Regular
 
 genGraphic : MapNode -> Model -> Svg Msg
 genGraphic mapNode model =
-      g [ on "mousedown" ((Decode.map (\x -> StartDrag (x, mapNode)) Mouse.position))
+      g [ on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position))
         ] [ 
-              rect [ onClick (SelectNode mapNode)
-                  ,class ("rect " ++ case getNodeType mapNode model of
-                            SelectedPrimary -> "selectedPrimary"
-                            SelectedSecondary -> "selectedSecondary"
+              rect [
+                  class ("rect " ++ case getNodeType mapNode model of
+                            Selected -> "selected"
                             Regular -> "")
                   ,Svg.Attributes.width "100"
                   ,Svg.Attributes.height "100" 
@@ -51,7 +41,6 @@ genGraphic mapNode model =
                   ] [] 
               ,Svg.text_ [ 
                   class "text"
-                  ,fontSize "30"
                   ,x (toString (mapNode.px + 5))
                   ,y (toString (mapNode.py + 40))
               ] [ Html.text mapNode.displayText ] 
