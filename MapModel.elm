@@ -2,11 +2,16 @@ module MapModel exposing (..)
 
 import MapMsg exposing (..)
 import MapNode exposing (..)
-import NodeConnectors exposing (..)
+import Connectors
+
+type ConnectorState =
+  Waiting
+  | FirstSelected MapNode
+  | BothSelected (MapNode, MapNode, Connectors.Connector)
 
 type ActionState =
         Idle
-        | Connecting NodeConnectors.State
+        | Connecting ConnectorState
         | CreatingNode MapNode
         | InspectingNode MapNode
 

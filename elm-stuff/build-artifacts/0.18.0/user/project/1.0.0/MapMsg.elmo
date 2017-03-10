@@ -1,8 +1,11 @@
-var _user$project$MapMsg$Finish = {ctor: 'Finish'};
+var _user$project$MapMsg$FinishNode = {ctor: 'FinishNode'};
 var _user$project$MapMsg$DisplayTxt = function (a) {
 	return {ctor: 'DisplayTxt', _0: a};
 };
-var _user$project$MapMsg$Init = {ctor: 'Init'};
+var _user$project$MapMsg$InitNode = {ctor: 'InitNode'};
+var _user$project$MapMsg$CreateConnector = function (a) {
+	return {ctor: 'CreateConnector', _0: a};
+};
 var _user$project$MapMsg$StartConnecting = {ctor: 'StartConnecting'};
 var _user$project$MapMsg$DragEnd = function (a) {
 	return {ctor: 'DragEnd', _0: a};

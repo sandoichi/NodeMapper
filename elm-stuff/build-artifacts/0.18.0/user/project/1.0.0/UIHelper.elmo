@@ -93,7 +93,47 @@ var _user$project$UIHelper$propertyPanelSelectedNode = function (node) {
 							_1: {ctor: '[]'}
 						}
 					}),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('propName'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Connectors : '),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$span,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('propValue'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$ul,
+											{ctor: '[]'},
+											_user$project$ConnectorUI$nodeConnectorList(node)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -114,7 +154,7 @@ var _user$project$UIHelper$createButton = A2(
 	{
 		ctor: '::',
 		_0: _elm_lang$html$Html_Events$onClick(
-			_user$project$MapMsg$CreateNode(_user$project$MapMsg$Finish)),
+			_user$project$MapMsg$CreateNode(_user$project$MapMsg$FinishNode)),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -215,6 +255,8 @@ var _user$project$UIHelper$getPropertyPanel = function (model) {
 			return _user$project$UIHelper$propertyPanelSelectedNode(_p2._0);
 		case 'CreatingNode':
 			return _user$project$UIHelper$propertyPanelCreate(_p2._0);
+		case 'Connecting':
+			return _user$project$ConnectorUI$getNodeConnectionPanel(model);
 		default:
 			return _user$project$UIHelper$propertyPanelNormal;
 	}

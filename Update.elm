@@ -1,13 +1,13 @@
 module Update exposing (..)
 
-
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import UIHelper exposing (..)
+import Connectors exposing (..)
+import ConnectorUI exposing (..)
 import MapNode exposing (..)
 import MapModel exposing (..)
 import MapMsg exposing (..)
-import NodeConnectors exposing (..)
 import Mouse exposing (Position)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -42,38 +42,52 @@ updateHelp msg model =
         , lastMsg = Just (InspectNode n)}
     SelectNode (({x, y} as pos), node) ->
         case model.actionState of
-            Connecting x ->
-                case x of
-                    Waiting -> 
-                        { model | actionState = Connecting (FirstSelected node) }
-                    FirstSelected first -> 
-                      { model | 
-                       actionState = InspectingNode first
-                      , nodes = model.nodes |> List.map (\n ->
-                          case n.id == first.id of
-                              True -> 
-                                  { n | connectors = 
-                                      List.append (unwrapConnectors n.connectors) [{ nodeId = node.id, cost = 5 }]
-                                      |> Connectors
-                                  }
-                              False -> n)
-                      }
-            _ ->
-                { model | actionState = InspectingNode node 
-                 ,offSet = Just (getOffset model pos)
-                 ,dragNode = Just node
-                 ,lastMsg = Just (SelectNode ({x=1,y=1}, node))
-                }
+          Connecting x ->
+            case x of
+              Waiting -> 
+                { model | actionState = Connecting (FirstSelected node) }
+              FirstSelected first -> 
+                { model | actionState = 
+                  Connecting (BothSelected (first, node, (Connectors.getInit node.id))) }
+              BothSelected (first, second, c) -> model
+
+          _ ->
+            { model | actionState = InspectingNode node 
+             ,offSet = Just (getOffset model pos)
+             ,dragNode = Just node
+             ,lastMsg = Just (SelectNode ({x=1,y=1}, node))
+            }
+    CreateConnector evt ->
+      case model.actionState of
+        Connecting x ->
+          case x of
+            BothSelected (first, second, c) ->
+              case evt of
+                InitConnector -> model
+                ExitChanged s ->
+                  { model | actionState = Connecting (BothSelected (first,second,{c|exitSide=s} ))}
+                EnterChanged s ->
+                  { model | actionState = Connecting (BothSelected (first,second,{c|entrySide=s} ))}
+                FinishConnector ->
+                  { model | actionState = Idle ,nodes = model.nodes |> List.map (\n ->
+                     case n.id == first.id of
+                      True -> 
+                        { n | connectors = c::(n.connectors)} 
+                      False -> n)
+                  }
+                _ -> model
+            _ -> model
+        _ -> model
     CreateNode e ->
         case model.actionState of
             CreatingNode n ->
                 case e of 
-                    Init ->
+                    InitNode ->
                         { model | 
                             actionState = CreatingNode (MapNode.getInit (model.nodeCounter + 1)) }
                     DisplayTxt s ->
                         { model | actionState = CreatingNode { n | displayText = s } }
-                    Finish -> { model | nodeCounter = model.nodeCounter + 1
+                    FinishNode -> { model | nodeCounter = model.nodeCounter + 1
                                 ,actionState = InspectingNode n
                                 ,nodes = List.append model.nodes [ n ] }
             _ -> { model | 

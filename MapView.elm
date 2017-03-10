@@ -20,7 +20,7 @@ view model =
             ,div [ class "divLeftPanel" ] [ 
                 div [] [
                     text "Map Nodes"
-                    ,button [ onClick (CreateNode Init) ] [ text "Add" ]
+                    ,button [ onClick (CreateNode InitNode) ] [ text "Add" ]
                     ,button [ onClick StartConnecting ] [ text "StartConnect" ] ]
                 ,div [] (List.map (\x -> 
                     div (getLeftPanelNodeAttributes model x) 

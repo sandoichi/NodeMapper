@@ -4,6 +4,7 @@ import MapNode exposing (..)
 import MapModel exposing (..)
 import MapMsg exposing (..)
 import MapSvg exposing (..)
+import ConnectorUI exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -14,6 +15,7 @@ getPropertyPanel model =
     case model.actionState of
         InspectingNode x  -> propertyPanelSelectedNode x
         CreatingNode x -> propertyPanelCreate x
+        Connecting x -> getNodeConnectionPanel model
         _ -> propertyPanelNormal
 
 getLeftPanelNodeAttributes : Model -> MapNode -> List (Attribute Msg)
@@ -27,7 +29,7 @@ getLeftPanelNodeAttributes model node =
             _ -> "nodeListDiv") ]
 
 createButton : Html Msg
-createButton = button [ onClick (CreateNode Finish)] [ text "Create Node" ]
+createButton = button [ onClick (CreateNode FinishNode)] [ text "Create Node" ]
 
 propertyPanelNormal : Html Msg 
 propertyPanelNormal = 
@@ -42,7 +44,10 @@ propertyPanelSelectedNode node =
             ,div [] [ 
                 span [ class "propName" ] [ text "DisplayText: "]
                 ,span [ class "propValue" ] [ text node.displayText ] ]
-        ]
+            ,div [] [ 
+                span [ class "propName" ] [ text "Connectors : "]
+                ,span [ class "propValue" ] [ ul [] (ConnectorUI.nodeConnectorList node) ] ]
+                ]
 
 propertyPanelCreate : MapNode -> Html Msg 
 propertyPanelCreate node = div [ class "divPropertyPanel" ] [ 

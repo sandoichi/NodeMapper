@@ -63,7 +63,7 @@ var _user$project$MapView$view = function (model) {
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html_Events$onClick(
-														_user$project$MapMsg$CreateNode(_user$project$MapMsg$Init)),
+														_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
 													_1: {ctor: '[]'}
 												},
 												{

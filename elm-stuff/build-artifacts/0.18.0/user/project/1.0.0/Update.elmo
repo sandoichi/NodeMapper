@@ -74,72 +74,130 @@ var _user$project$Update$updateHelp = F2(
 							_user$project$MapMsg$InspectNode(_p9))
 					});
 			case 'SelectNode':
-				var _p14 = _p3._0._1;
+				var _p12 = _p3._0._1;
 				var _p10 = model.actionState;
 				if (_p10.ctor === 'Connecting') {
 					var _p11 = _p10._0;
-					if (_p11.ctor === 'Waiting') {
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$Connecting(
-									_user$project$NodeConnectors$FirstSelected(_p14))
-							});
-					} else {
-						var _p13 = _p11._0;
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$InspectingNode(_p13),
-								nodes: A2(
-									_elm_lang$core$List$map,
-									function (n) {
-										var _p12 = _elm_lang$core$Native_Utils.eq(n.id, _p13.id);
-										if (_p12 === true) {
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{
-													connectors: _user$project$MapNode$Connectors(
-														A2(
-															_elm_lang$core$List$append,
-															_user$project$MapNode$unwrapConnectors(n.connectors),
-															{
-																ctor: '::',
-																_0: {nodeId: _p14.id, cost: 5},
-																_1: {ctor: '[]'}
-															}))
-												});
-										} else {
-											return n;
-										}
-									},
-									model.nodes)
-							});
+					switch (_p11.ctor) {
+						case 'Waiting':
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									actionState: _user$project$MapModel$Connecting(
+										_user$project$MapModel$FirstSelected(_p12))
+								});
+						case 'FirstSelected':
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									actionState: _user$project$MapModel$Connecting(
+										_user$project$MapModel$BothSelected(
+											{
+												ctor: '_Tuple3',
+												_0: _p11._0,
+												_1: _p12,
+												_2: _user$project$Connectors$getInit(_p12.id)
+											}))
+								});
+						default:
+							return model;
 					}
 				} else {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							actionState: _user$project$MapModel$InspectingNode(_p14),
+							actionState: _user$project$MapModel$InspectingNode(_p12),
 							offSet: _elm_lang$core$Maybe$Just(
 								A2(_user$project$Update$getOffset, model, _p3._0._0)),
-							dragNode: _elm_lang$core$Maybe$Just(_p14),
+							dragNode: _elm_lang$core$Maybe$Just(_p12),
 							lastMsg: _elm_lang$core$Maybe$Just(
 								_user$project$MapMsg$SelectNode(
 									{
 										ctor: '_Tuple2',
 										_0: {x: 1, y: 1},
-										_1: _p14
+										_1: _p12
 									}))
 						});
 				}
+			case 'CreateConnector':
+				var _p13 = model.actionState;
+				if (_p13.ctor === 'Connecting') {
+					var _p14 = _p13._0;
+					if ((_p14.ctor === 'BothSelected') && (_p14._0.ctor === '_Tuple3')) {
+						var _p19 = _p14._0._1;
+						var _p18 = _p14._0._0;
+						var _p17 = _p14._0._2;
+						var _p15 = _p3._0;
+						switch (_p15.ctor) {
+							case 'InitConnector':
+								return model;
+							case 'ExitChanged':
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										actionState: _user$project$MapModel$Connecting(
+											_user$project$MapModel$BothSelected(
+												{
+													ctor: '_Tuple3',
+													_0: _p18,
+													_1: _p19,
+													_2: _elm_lang$core$Native_Utils.update(
+														_p17,
+														{exitSide: _p15._0})
+												}))
+									});
+							case 'EnterChanged':
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										actionState: _user$project$MapModel$Connecting(
+											_user$project$MapModel$BothSelected(
+												{
+													ctor: '_Tuple3',
+													_0: _p18,
+													_1: _p19,
+													_2: _elm_lang$core$Native_Utils.update(
+														_p17,
+														{entrySide: _p15._0})
+												}))
+									});
+							case 'FinishConnector':
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										actionState: _user$project$MapModel$Idle,
+										nodes: A2(
+											_elm_lang$core$List$map,
+											function (n) {
+												var _p16 = _elm_lang$core$Native_Utils.eq(n.id, _p18.id);
+												if (_p16 === true) {
+													return _elm_lang$core$Native_Utils.update(
+														n,
+														{
+															connectors: {ctor: '::', _0: _p17, _1: n.connectors}
+														});
+												} else {
+													return n;
+												}
+											},
+											model.nodes)
+									});
+							default:
+								return model;
+						}
+					} else {
+						return model;
+					}
+				} else {
+					return model;
+				}
 			case 'CreateNode':
-				var _p15 = model.actionState;
-				if (_p15.ctor === 'CreatingNode') {
-					var _p17 = _p15._0;
-					var _p16 = _p3._0;
-					switch (_p16.ctor) {
-						case 'Init':
+				var _p20 = model.actionState;
+				if (_p20.ctor === 'CreatingNode') {
+					var _p22 = _p20._0;
+					var _p21 = _p3._0;
+					switch (_p21.ctor) {
+						case 'InitNode':
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
@@ -152,21 +210,21 @@ var _user$project$Update$updateHelp = F2(
 								{
 									actionState: _user$project$MapModel$CreatingNode(
 										_elm_lang$core$Native_Utils.update(
-											_p17,
-											{displayText: _p16._0}))
+											_p22,
+											{displayText: _p21._0}))
 								});
 						default:
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
 									nodeCounter: model.nodeCounter + 1,
-									actionState: _user$project$MapModel$InspectingNode(_p17),
+									actionState: _user$project$MapModel$InspectingNode(_p22),
 									nodes: A2(
 										_elm_lang$core$List$append,
 										model.nodes,
 										{
 											ctor: '::',
-											_0: _p17,
+											_0: _p22,
 											_1: {ctor: '[]'}
 										})
 								});
@@ -183,7 +241,7 @@ var _user$project$Update$updateHelp = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						actionState: _user$project$MapModel$Connecting(_user$project$NodeConnectors$Waiting)
+						actionState: _user$project$MapModel$Connecting(_user$project$MapModel$Waiting)
 					});
 		}
 	});

@@ -1,4 +1,4 @@
-var _user$project$NodeConnectors$getSideText = function (side) {
+var _user$project$ConnectorUI$getSideText = function (side) {
 	var _p0 = side;
 	switch (_p0.ctor) {
 		case 'Top':
@@ -11,32 +11,49 @@ var _user$project$NodeConnectors$getSideText = function (side) {
 			return '<-';
 	}
 };
-var _user$project$NodeConnectors$getSideOptions = {
-	ctor: '::',
-	_0: A2(
-		_elm_lang$html$Html$option,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$value('Top'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Top'),
-			_1: {ctor: '[]'}
-		}),
-	_1: {
+var _user$project$ConnectorUI$stringToSide = function (s) {
+	var _p1 = s;
+	switch (_p1) {
+		case 'Top':
+			return _user$project$Connectors$Top;
+		case 'Bottom':
+			return _user$project$Connectors$Bottom;
+		case 'Left':
+			return _user$project$Connectors$Left;
+		case 'Right':
+			return _user$project$Connectors$Right;
+		default:
+			return _user$project$Connectors$Top;
+	}
+};
+var _user$project$ConnectorUI$getOptionAttrs = F2(
+	function (side, value) {
+		var _p2 = _elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$Basics$toString(side),
+			value);
+		if (_p2 === true) {
+			return {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$selected(true),
+				_1: {ctor: '[]'}
+			};
+		} else {
+			return {ctor: '[]'};
+		}
+	});
+var _user$project$ConnectorUI$getSideOptions = function (side) {
+	return {
 		ctor: '::',
 		_0: A2(
 			_elm_lang$html$Html$option,
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$value('Bottom'),
-				_1: {ctor: '[]'}
+				_0: _elm_lang$html$Html_Attributes$value('Top'),
+				_1: A2(_user$project$ConnectorUI$getOptionAttrs, side, 'Top')
 			},
 			{
 				ctor: '::',
-				_0: _elm_lang$html$Html$text('Bottom'),
+				_0: _elm_lang$html$Html$text('Top'),
 				_1: {ctor: '[]'}
 			}),
 		_1: {
@@ -45,12 +62,12 @@ var _user$project$NodeConnectors$getSideOptions = {
 				_elm_lang$html$Html$option,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$value('Left'),
+					_0: _elm_lang$html$Html_Attributes$value('Bottom'),
 					_1: {ctor: '[]'}
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text('Left'),
+					_0: _elm_lang$html$Html$text('Bottom'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
@@ -59,20 +76,35 @@ var _user$project$NodeConnectors$getSideOptions = {
 					_elm_lang$html$Html$option,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$value('Right'),
+						_0: _elm_lang$html$Html_Attributes$value('Left'),
 						_1: {ctor: '[]'}
 					},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Right'),
+						_0: _elm_lang$html$Html$text('Left'),
 						_1: {ctor: '[]'}
 					}),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value('Right'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Right'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
 			}
 		}
-	}
+	};
 };
-var _user$project$NodeConnectors$nodeConnectorList = function (node) {
+var _user$project$ConnectorUI$nodeConnectorList = function (node) {
 	return A2(
 		_elm_lang$core$List$map,
 		function (x) {
@@ -85,7 +117,7 @@ var _user$project$NodeConnectors$nodeConnectorList = function (node) {
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$html$Html$text(
-							_user$project$NodeConnectors$getSideText(x.exitSide)),
+							_user$project$ConnectorUI$getSideText(x.exitSide)),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$html$Html$text(
@@ -94,7 +126,7 @@ var _user$project$NodeConnectors$nodeConnectorList = function (node) {
 									' ',
 									A2(
 										_elm_lang$core$Basics_ops['++'],
-										_user$project$NodeConnectors$getSideText(x.entrySide),
+										_user$project$ConnectorUI$getSideText(x.entrySide),
 										' '))),
 							_1: {ctor: '[]'}
 						}
@@ -103,8 +135,8 @@ var _user$project$NodeConnectors$nodeConnectorList = function (node) {
 		},
 		node.connectors);
 };
-var _user$project$NodeConnectors$bothSelectedPanel = F2(
-	function (first, second) {
+var _user$project$ConnectorUI$bothSelectedPanel = F3(
+	function (first, second, c) {
 		return A2(
 			_elm_lang$html$Html$div,
 			{
@@ -180,8 +212,17 @@ var _user$project$NodeConnectors$bothSelectedPanel = F2(
 										ctor: '::',
 										_0: A2(
 											_elm_lang$html$Html$select,
-											{ctor: '[]'},
-											_user$project$NodeConnectors$getSideOptions),
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onInput(
+													function (x) {
+														return _user$project$MapMsg$CreateConnector(
+															_user$project$Connectors$ExitChanged(
+																_user$project$ConnectorUI$stringToSide(x)));
+													}),
+												_1: {ctor: '[]'}
+											},
+											_user$project$ConnectorUI$getSideOptions(c.exitSide)),
 										_1: {ctor: '[]'}
 									}),
 								_1: {ctor: '[]'}
@@ -255,8 +296,17 @@ var _user$project$NodeConnectors$bothSelectedPanel = F2(
 												ctor: '::',
 												_0: A2(
 													_elm_lang$html$Html$select,
-													{ctor: '[]'},
-													_user$project$NodeConnectors$getSideOptions),
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onInput(
+															function (x) {
+																return _user$project$MapMsg$CreateConnector(
+																	_user$project$Connectors$EnterChanged(
+																		_user$project$ConnectorUI$stringToSide(x)));
+															}),
+														_1: {ctor: '[]'}
+													},
+													_user$project$ConnectorUI$getSideOptions(c.entrySide)),
 												_1: {ctor: '[]'}
 											}),
 										_1: {ctor: '[]'}
@@ -274,7 +324,7 @@ var _user$project$NodeConnectors$bothSelectedPanel = F2(
 											{
 												ctor: '::',
 												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$MapMsg$CreateConnector(_user$project$MapNode$getInitConnector)),
+													_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
 												_1: {ctor: '[]'}
 											},
 											{
@@ -291,7 +341,7 @@ var _user$project$NodeConnectors$bothSelectedPanel = F2(
 				}
 			});
 	});
-var _user$project$NodeConnectors$firstSelectedPanel = function (node) {
+var _user$project$ConnectorUI$firstSelectedPanel = function (node) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
@@ -305,7 +355,7 @@ var _user$project$NodeConnectors$firstSelectedPanel = function (node) {
 			}
 		});
 };
-var _user$project$NodeConnectors$waitingPanel = A2(
+var _user$project$ConnectorUI$waitingPanel = A2(
 	_elm_lang$html$Html$div,
 	{ctor: '[]'},
 	{
@@ -313,23 +363,23 @@ var _user$project$NodeConnectors$waitingPanel = A2(
 		_0: _elm_lang$html$Html$text('Select the start node for this connector'),
 		_1: {ctor: '[]'}
 	});
-var _user$project$NodeConnectors$determineConnectorPanel = function (model) {
-	var _p1 = model.actionState;
-	if (_p1.ctor === 'Connecting') {
-		var _p2 = _p1._0;
-		switch (_p2.ctor) {
+var _user$project$ConnectorUI$determineConnectorPanel = function (model) {
+	var _p3 = model.actionState;
+	if (_p3.ctor === 'Connecting') {
+		var _p4 = _p3._0;
+		switch (_p4.ctor) {
 			case 'Waiting':
-				return _user$project$NodeConnectors$waitingPanel;
+				return _user$project$ConnectorUI$waitingPanel;
 			case 'FirstSelected':
-				return _user$project$NodeConnectors$firstSelectedPanel(_p2._0);
+				return _user$project$ConnectorUI$firstSelectedPanel(_p4._0);
 			default:
-				return A2(_user$project$NodeConnectors$bothSelectedPanel, _p2._0._0, _p2._0._1);
+				return A3(_user$project$ConnectorUI$bothSelectedPanel, _p4._0._0, _p4._0._1, _p4._0._2);
 		}
 	} else {
-		return _user$project$NodeConnectors$waitingPanel;
+		return _user$project$ConnectorUI$waitingPanel;
 	}
 };
-var _user$project$NodeConnectors$getNodeConnectionPanel = function (model) {
+var _user$project$ConnectorUI$getNodeConnectionPanel = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -339,7 +389,7 @@ var _user$project$NodeConnectors$getNodeConnectionPanel = function (model) {
 		},
 		{
 			ctor: '::',
-			_0: _user$project$NodeConnectors$determineConnectorPanel(model),
+			_0: _user$project$ConnectorUI$determineConnectorPanel(model),
 			_1: {ctor: '[]'}
 		});
 };

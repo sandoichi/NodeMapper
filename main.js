@@ -9386,37 +9386,51 @@ var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$a
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
 
-var _user$project$MapNode$unwrapConnectors = function (connectors) {
-	var _p0 = connectors;
-	return _p0._0;
-};
-var _user$project$MapNode$Connector = F2(
-	function (a, b) {
-		return {nodeId: a, cost: b};
+var _user$project$Connectors$Connector = F4(
+	function (a, b, c, d) {
+		return {nodeId: a, cost: b, exitSide: c, entrySide: d};
 	});
-var _user$project$MapNode$MapNode = F5(
-	function (a, b, c, d, e) {
-		return {id: a, displayText: b, px: c, py: d, connectors: e};
-	});
-var _user$project$MapNode$Connectors = function (a) {
-	return {ctor: 'Connectors', _0: a};
+var _user$project$Connectors$Right = {ctor: 'Right'};
+var _user$project$Connectors$Left = {ctor: 'Left'};
+var _user$project$Connectors$Bottom = {ctor: 'Bottom'};
+var _user$project$Connectors$Top = {ctor: 'Top'};
+var _user$project$Connectors$getInit = function (id) {
+	return {nodeId: id, cost: 5, exitSide: _user$project$Connectors$Top, entrySide: _user$project$Connectors$Top};
 };
+var _user$project$Connectors$FinishConnector = {ctor: 'FinishConnector'};
+var _user$project$Connectors$CostChanged = function (a) {
+	return {ctor: 'CostChanged', _0: a};
+};
+var _user$project$Connectors$EnterChanged = function (a) {
+	return {ctor: 'EnterChanged', _0: a};
+};
+var _user$project$Connectors$ExitChanged = function (a) {
+	return {ctor: 'ExitChanged', _0: a};
+};
+var _user$project$Connectors$InitConnector = {ctor: 'InitConnector'};
+
 var _user$project$MapNode$getInit = function (identifier) {
 	return {
 		id: identifier,
 		displayText: 'NewNode',
 		px: 5,
 		py: 5,
-		connectors: _user$project$MapNode$Connectors(
-			{ctor: '[]'})
+		connectors: {ctor: '[]'}
 	};
 };
+var _user$project$MapNode$MapNode = F5(
+	function (a, b, c, d, e) {
+		return {id: a, displayText: b, px: c, py: d, connectors: e};
+	});
 
-var _user$project$MapMsg$Finish = {ctor: 'Finish'};
+var _user$project$MapMsg$FinishNode = {ctor: 'FinishNode'};
 var _user$project$MapMsg$DisplayTxt = function (a) {
 	return {ctor: 'DisplayTxt', _0: a};
 };
-var _user$project$MapMsg$Init = {ctor: 'Init'};
+var _user$project$MapMsg$InitNode = {ctor: 'InitNode'};
+var _user$project$MapMsg$CreateConnector = function (a) {
+	return {ctor: 'CreateConnector', _0: a};
+};
 var _user$project$MapMsg$StartConnecting = {ctor: 'StartConnecting'};
 var _user$project$MapMsg$DragEnd = function (a) {
 	return {ctor: 'DragEnd', _0: a};
@@ -9434,15 +9448,17 @@ var _user$project$MapMsg$CreateNode = function (a) {
 	return {ctor: 'CreateNode', _0: a};
 };
 
-var _user$project$NodeConnectors$FirstSelected = function (a) {
-	return {ctor: 'FirstSelected', _0: a};
-};
-var _user$project$NodeConnectors$Waiting = {ctor: 'Waiting'};
-
 var _user$project$MapModel$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {nodes: a, nodeCounter: b, dragNode: c, offSet: d, actionState: e, lastMsg: f};
 	});
+var _user$project$MapModel$BothSelected = function (a) {
+	return {ctor: 'BothSelected', _0: a};
+};
+var _user$project$MapModel$FirstSelected = function (a) {
+	return {ctor: 'FirstSelected', _0: a};
+};
+var _user$project$MapModel$Waiting = {ctor: 'Waiting'};
 var _user$project$MapModel$InspectingNode = function (a) {
 	return {ctor: 'InspectingNode', _0: a};
 };
@@ -9466,6 +9482,402 @@ var _user$project$MapModel$init = {
 	_1: _elm_lang$core$Platform_Cmd$none
 };
 
+var _user$project$ConnectorUI$getSideText = function (side) {
+	var _p0 = side;
+	switch (_p0.ctor) {
+		case 'Top':
+			return '^';
+		case 'Bottom':
+			return 'v';
+		case 'Left':
+			return '->';
+		default:
+			return '<-';
+	}
+};
+var _user$project$ConnectorUI$stringToSide = function (s) {
+	var _p1 = s;
+	switch (_p1) {
+		case 'Top':
+			return _user$project$Connectors$Top;
+		case 'Bottom':
+			return _user$project$Connectors$Bottom;
+		case 'Left':
+			return _user$project$Connectors$Left;
+		case 'Right':
+			return _user$project$Connectors$Right;
+		default:
+			return _user$project$Connectors$Top;
+	}
+};
+var _user$project$ConnectorUI$getOptionAttrs = F2(
+	function (side, value) {
+		var _p2 = _elm_lang$core$Native_Utils.eq(
+			_elm_lang$core$Basics$toString(side),
+			value);
+		if (_p2 === true) {
+			return {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$selected(true),
+				_1: {ctor: '[]'}
+			};
+		} else {
+			return {ctor: '[]'};
+		}
+	});
+var _user$project$ConnectorUI$getSideOptions = function (side) {
+	return {
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$option,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$value('Top'),
+				_1: A2(_user$project$ConnectorUI$getOptionAttrs, side, 'Top')
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text('Top'),
+				_1: {ctor: '[]'}
+			}),
+		_1: {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$option,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$value('Bottom'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('Bottom'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$option,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$value('Left'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Left'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$option,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$value('Right'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Right'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	};
+};
+var _user$project$ConnectorUI$nodeConnectorList = function (node) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (x) {
+			return A2(
+				_elm_lang$html$Html$li,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(node.displayText),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(
+							_user$project$ConnectorUI$getSideText(x.exitSide)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									' ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										_user$project$ConnectorUI$getSideText(x.entrySide),
+										' '))),
+							_1: {ctor: '[]'}
+						}
+					}
+				});
+		},
+		node.connectors);
+};
+var _user$project$ConnectorUI$bothSelectedPanel = F3(
+	function (first, second, c) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('divConnectorCreation'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('propName'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Start: '),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('propValue'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(first.displayText),
+									_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('propName'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Exit: '),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$span,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('propValue'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$select,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onInput(
+													function (x) {
+														return _user$project$MapMsg$CreateConnector(
+															_user$project$Connectors$ExitChanged(
+																_user$project$ConnectorUI$stringToSide(x)));
+													}),
+												_1: {ctor: '[]'}
+											},
+											_user$project$ConnectorUI$getSideOptions(c.exitSide)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$span,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('propName'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('End: '),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('propValue'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(second.displayText),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('propName'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Enter: '),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$span,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('propValue'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$select,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onInput(
+															function (x) {
+																return _user$project$MapMsg$CreateConnector(
+																	_user$project$Connectors$EnterChanged(
+																		_user$project$ConnectorUI$stringToSide(x)));
+															}),
+														_1: {ctor: '[]'}
+													},
+													_user$project$ConnectorUI$getSideOptions(c.entrySide)),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(
+													_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Create Connector'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			});
+	});
+var _user$project$ConnectorUI$firstSelectedPanel = function (node) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text('Start Node: '),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(node.displayText),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _user$project$ConnectorUI$waitingPanel = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Select the start node for this connector'),
+		_1: {ctor: '[]'}
+	});
+var _user$project$ConnectorUI$determineConnectorPanel = function (model) {
+	var _p3 = model.actionState;
+	if (_p3.ctor === 'Connecting') {
+		var _p4 = _p3._0;
+		switch (_p4.ctor) {
+			case 'Waiting':
+				return _user$project$ConnectorUI$waitingPanel;
+			case 'FirstSelected':
+				return _user$project$ConnectorUI$firstSelectedPanel(_p4._0);
+			default:
+				return A3(_user$project$ConnectorUI$bothSelectedPanel, _p4._0._0, _p4._0._1, _p4._0._2);
+		}
+	} else {
+		return _user$project$ConnectorUI$waitingPanel;
+	}
+};
+var _user$project$ConnectorUI$getNodeConnectionPanel = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('divPropertyPanel'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: _user$project$ConnectorUI$determineConnectorPanel(model),
+			_1: {ctor: '[]'}
+		});
+};
+
 var _user$project$MapSvg$connectorsContainsId = F2(
 	function (connectors, id) {
 		return A2(
@@ -9476,7 +9888,7 @@ var _user$project$MapSvg$connectorsContainsId = F2(
 				function (x) {
 					return x.nodeId;
 				},
-				_user$project$MapNode$unwrapConnectors(connectors)));
+				connectors));
 	});
 var _user$project$MapSvg$genConnectorGraphic = F2(
 	function (start, end) {
@@ -9540,12 +9952,9 @@ var _user$project$MapSvg$mapConnectors = function (nodes) {
 			A2(
 				_elm_lang$core$List$filter,
 				function (x) {
-					var _p0 = x.connectors;
-					if (_p0._0.ctor === '[]') {
-						return false;
-					} else {
-						return true;
-					}
+					return !_elm_lang$core$Native_Utils.eq(
+						x.connectors,
+						{ctor: '[]'});
 				},
 				nodes)));
 };
@@ -9553,10 +9962,10 @@ var _user$project$MapSvg$Regular = {ctor: 'Regular'};
 var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
 	function (node, model) {
-		var _p1 = model.actionState;
-		if (_p1.ctor === 'InspectingNode') {
-			var _p2 = _elm_lang$core$Native_Utils.eq(_p1._0.id, node.id);
-			if (_p2 === true) {
+		var _p0 = model.actionState;
+		if (_p0.ctor === 'InspectingNode') {
+			var _p1 = _elm_lang$core$Native_Utils.eq(_p0._0.id, node.id);
+			if (_p1 === true) {
 				return _user$project$MapSvg$Selected;
 			} else {
 				return _user$project$MapSvg$Regular;
@@ -9594,8 +10003,8 @@ var _user$project$MapSvg$genGraphic = F2(
 								_elm_lang$core$Basics_ops['++'],
 								'rect ',
 								function () {
-									var _p3 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
-									if (_p3.ctor === 'Selected') {
+									var _p2 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
+									if (_p2.ctor === 'Selected') {
 										return 'selected';
 									} else {
 										return '';
@@ -9777,7 +10186,47 @@ var _user$project$UIHelper$propertyPanelSelectedNode = function (node) {
 							_1: {ctor: '[]'}
 						}
 					}),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('propName'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Connectors : '),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$span,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('propValue'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$ul,
+											{ctor: '[]'},
+											_user$project$ConnectorUI$nodeConnectorList(node)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
+						}),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -9798,7 +10247,7 @@ var _user$project$UIHelper$createButton = A2(
 	{
 		ctor: '::',
 		_0: _elm_lang$html$Html_Events$onClick(
-			_user$project$MapMsg$CreateNode(_user$project$MapMsg$Finish)),
+			_user$project$MapMsg$CreateNode(_user$project$MapMsg$FinishNode)),
 		_1: {ctor: '[]'}
 	},
 	{
@@ -9899,6 +10348,8 @@ var _user$project$UIHelper$getPropertyPanel = function (model) {
 			return _user$project$UIHelper$propertyPanelSelectedNode(_p2._0);
 		case 'CreatingNode':
 			return _user$project$UIHelper$propertyPanelCreate(_p2._0);
+		case 'Connecting':
+			return _user$project$ConnectorUI$getNodeConnectionPanel(model);
 		default:
 			return _user$project$UIHelper$propertyPanelNormal;
 	}
@@ -9969,7 +10420,7 @@ var _user$project$MapView$view = function (model) {
 												{
 													ctor: '::',
 													_0: _elm_lang$html$Html_Events$onClick(
-														_user$project$MapMsg$CreateNode(_user$project$MapMsg$Init)),
+														_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
 													_1: {ctor: '[]'}
 												},
 												{
@@ -10131,72 +10582,130 @@ var _user$project$Update$updateHelp = F2(
 							_user$project$MapMsg$InspectNode(_p9))
 					});
 			case 'SelectNode':
-				var _p14 = _p3._0._1;
+				var _p12 = _p3._0._1;
 				var _p10 = model.actionState;
 				if (_p10.ctor === 'Connecting') {
 					var _p11 = _p10._0;
-					if (_p11.ctor === 'Waiting') {
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$Connecting(
-									_user$project$NodeConnectors$FirstSelected(_p14))
-							});
-					} else {
-						var _p13 = _p11._0;
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$InspectingNode(_p13),
-								nodes: A2(
-									_elm_lang$core$List$map,
-									function (n) {
-										var _p12 = _elm_lang$core$Native_Utils.eq(n.id, _p13.id);
-										if (_p12 === true) {
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{
-													connectors: _user$project$MapNode$Connectors(
-														A2(
-															_elm_lang$core$List$append,
-															_user$project$MapNode$unwrapConnectors(n.connectors),
-															{
-																ctor: '::',
-																_0: {nodeId: _p14.id, cost: 5},
-																_1: {ctor: '[]'}
-															}))
-												});
-										} else {
-											return n;
-										}
-									},
-									model.nodes)
-							});
+					switch (_p11.ctor) {
+						case 'Waiting':
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									actionState: _user$project$MapModel$Connecting(
+										_user$project$MapModel$FirstSelected(_p12))
+								});
+						case 'FirstSelected':
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									actionState: _user$project$MapModel$Connecting(
+										_user$project$MapModel$BothSelected(
+											{
+												ctor: '_Tuple3',
+												_0: _p11._0,
+												_1: _p12,
+												_2: _user$project$Connectors$getInit(_p12.id)
+											}))
+								});
+						default:
+							return model;
 					}
 				} else {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							actionState: _user$project$MapModel$InspectingNode(_p14),
+							actionState: _user$project$MapModel$InspectingNode(_p12),
 							offSet: _elm_lang$core$Maybe$Just(
 								A2(_user$project$Update$getOffset, model, _p3._0._0)),
-							dragNode: _elm_lang$core$Maybe$Just(_p14),
+							dragNode: _elm_lang$core$Maybe$Just(_p12),
 							lastMsg: _elm_lang$core$Maybe$Just(
 								_user$project$MapMsg$SelectNode(
 									{
 										ctor: '_Tuple2',
 										_0: {x: 1, y: 1},
-										_1: _p14
+										_1: _p12
 									}))
 						});
 				}
+			case 'CreateConnector':
+				var _p13 = model.actionState;
+				if (_p13.ctor === 'Connecting') {
+					var _p14 = _p13._0;
+					if ((_p14.ctor === 'BothSelected') && (_p14._0.ctor === '_Tuple3')) {
+						var _p19 = _p14._0._1;
+						var _p18 = _p14._0._0;
+						var _p17 = _p14._0._2;
+						var _p15 = _p3._0;
+						switch (_p15.ctor) {
+							case 'InitConnector':
+								return model;
+							case 'ExitChanged':
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										actionState: _user$project$MapModel$Connecting(
+											_user$project$MapModel$BothSelected(
+												{
+													ctor: '_Tuple3',
+													_0: _p18,
+													_1: _p19,
+													_2: _elm_lang$core$Native_Utils.update(
+														_p17,
+														{exitSide: _p15._0})
+												}))
+									});
+							case 'EnterChanged':
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										actionState: _user$project$MapModel$Connecting(
+											_user$project$MapModel$BothSelected(
+												{
+													ctor: '_Tuple3',
+													_0: _p18,
+													_1: _p19,
+													_2: _elm_lang$core$Native_Utils.update(
+														_p17,
+														{entrySide: _p15._0})
+												}))
+									});
+							case 'FinishConnector':
+								return _elm_lang$core$Native_Utils.update(
+									model,
+									{
+										actionState: _user$project$MapModel$Idle,
+										nodes: A2(
+											_elm_lang$core$List$map,
+											function (n) {
+												var _p16 = _elm_lang$core$Native_Utils.eq(n.id, _p18.id);
+												if (_p16 === true) {
+													return _elm_lang$core$Native_Utils.update(
+														n,
+														{
+															connectors: {ctor: '::', _0: _p17, _1: n.connectors}
+														});
+												} else {
+													return n;
+												}
+											},
+											model.nodes)
+									});
+							default:
+								return model;
+						}
+					} else {
+						return model;
+					}
+				} else {
+					return model;
+				}
 			case 'CreateNode':
-				var _p15 = model.actionState;
-				if (_p15.ctor === 'CreatingNode') {
-					var _p17 = _p15._0;
-					var _p16 = _p3._0;
-					switch (_p16.ctor) {
-						case 'Init':
+				var _p20 = model.actionState;
+				if (_p20.ctor === 'CreatingNode') {
+					var _p22 = _p20._0;
+					var _p21 = _p3._0;
+					switch (_p21.ctor) {
+						case 'InitNode':
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
@@ -10209,21 +10718,21 @@ var _user$project$Update$updateHelp = F2(
 								{
 									actionState: _user$project$MapModel$CreatingNode(
 										_elm_lang$core$Native_Utils.update(
-											_p17,
-											{displayText: _p16._0}))
+											_p22,
+											{displayText: _p21._0}))
 								});
 						default:
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
 									nodeCounter: model.nodeCounter + 1,
-									actionState: _user$project$MapModel$InspectingNode(_p17),
+									actionState: _user$project$MapModel$InspectingNode(_p22),
 									nodes: A2(
 										_elm_lang$core$List$append,
 										model.nodes,
 										{
 											ctor: '::',
-											_0: _p17,
+											_0: _p22,
 											_1: {ctor: '[]'}
 										})
 								});
@@ -10240,7 +10749,7 @@ var _user$project$Update$updateHelp = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						actionState: _user$project$MapModel$Connecting(_user$project$NodeConnectors$Waiting)
+						actionState: _user$project$MapModel$Connecting(_user$project$MapModel$Waiting)
 					});
 		}
 	});

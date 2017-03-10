@@ -2,6 +2,13 @@ var _user$project$MapModel$Model = F6(
 	function (a, b, c, d, e, f) {
 		return {nodes: a, nodeCounter: b, dragNode: c, offSet: d, actionState: e, lastMsg: f};
 	});
+var _user$project$MapModel$BothSelected = function (a) {
+	return {ctor: 'BothSelected', _0: a};
+};
+var _user$project$MapModel$FirstSelected = function (a) {
+	return {ctor: 'FirstSelected', _0: a};
+};
+var _user$project$MapModel$Waiting = {ctor: 'Waiting'};
 var _user$project$MapModel$InspectingNode = function (a) {
 	return {ctor: 'InspectingNode', _0: a};
 };

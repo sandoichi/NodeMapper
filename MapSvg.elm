@@ -3,6 +3,7 @@ module MapSvg exposing (..)
 import MapNode exposing(..)
 import MapMsg exposing (..)
 import MapModel exposing (..)
+import Connectors exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (..)
@@ -60,9 +61,9 @@ genConnectors : MapNode -> List MapNode -> List (Svg Msg)
 genConnectors node connectedNodes = 
     List.map (\x -> genConnectorGraphic node x) connectedNodes
 
-connectorsContainsId : Connectors -> Int -> Bool
+connectorsContainsId : List Connector -> Int -> Bool
 connectorsContainsId connectors id =
-    unwrapConnectors connectors
+    connectors
     |> List.map (\x -> x.nodeId)
     |> List.member id
 
@@ -79,9 +80,7 @@ mapNodeList nodes model =
 mapConnectors : List MapNode -> List (Svg Msg)
 mapConnectors nodes =
     nodes 
-    |> List.filter (\x -> case x.connectors of 
-                            Connectors [] -> False
-                            _ -> True)
+    |> List.filter (\x -> x.connectors /= [])
     |> List.map (\x -> genConnectorsMap x nodes) 
     |> List.concat
 

@@ -8,7 +8,7 @@ var _user$project$MapSvg$connectorsContainsId = F2(
 				function (x) {
 					return x.nodeId;
 				},
-				_user$project$MapNode$unwrapConnectors(connectors)));
+				connectors));
 	});
 var _user$project$MapSvg$genConnectorGraphic = F2(
 	function (start, end) {
@@ -72,12 +72,9 @@ var _user$project$MapSvg$mapConnectors = function (nodes) {
 			A2(
 				_elm_lang$core$List$filter,
 				function (x) {
-					var _p0 = x.connectors;
-					if (_p0._0.ctor === '[]') {
-						return false;
-					} else {
-						return true;
-					}
+					return !_elm_lang$core$Native_Utils.eq(
+						x.connectors,
+						{ctor: '[]'});
 				},
 				nodes)));
 };
@@ -85,10 +82,10 @@ var _user$project$MapSvg$Regular = {ctor: 'Regular'};
 var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
 	function (node, model) {
-		var _p1 = model.actionState;
-		if (_p1.ctor === 'InspectingNode') {
-			var _p2 = _elm_lang$core$Native_Utils.eq(_p1._0.id, node.id);
-			if (_p2 === true) {
+		var _p0 = model.actionState;
+		if (_p0.ctor === 'InspectingNode') {
+			var _p1 = _elm_lang$core$Native_Utils.eq(_p0._0.id, node.id);
+			if (_p1 === true) {
 				return _user$project$MapSvg$Selected;
 			} else {
 				return _user$project$MapSvg$Regular;
@@ -126,8 +123,8 @@ var _user$project$MapSvg$genGraphic = F2(
 								_elm_lang$core$Basics_ops['++'],
 								'rect ',
 								function () {
-									var _p3 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
-									if (_p3.ctor === 'Selected') {
+									var _p2 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
+									if (_p2.ctor === 'Selected') {
 										return 'selected';
 									} else {
 										return '';
