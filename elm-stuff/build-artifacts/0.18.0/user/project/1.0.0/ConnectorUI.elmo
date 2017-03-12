@@ -365,7 +365,7 @@ var _user$project$ConnectorUI$waitingPanel = A2(
 	});
 var _user$project$ConnectorUI$determineConnectorPanel = function (model) {
 	var _p3 = model.actionState;
-	if (_p3.ctor === 'Connecting') {
+	if (_p3.ctor === 'ConnectingNodes') {
 		var _p4 = _p3._0;
 		switch (_p4.ctor) {
 			case 'Waiting':
@@ -373,7 +373,7 @@ var _user$project$ConnectorUI$determineConnectorPanel = function (model) {
 			case 'FirstSelected':
 				return _user$project$ConnectorUI$firstSelectedPanel(_p4._0);
 			default:
-				return A3(_user$project$ConnectorUI$bothSelectedPanel, _p4._0._0, _p4._0._1, _p4._0._2);
+				return A3(_user$project$ConnectorUI$bothSelectedPanel, _p4._0, _p4._1, model.connectorData.connector);
 		}
 	} else {
 		return _user$project$ConnectorUI$waitingPanel;

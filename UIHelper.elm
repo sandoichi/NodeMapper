@@ -12,52 +12,52 @@ import Html.Events exposing (..)
 
 getPropertyPanel : Model -> Html Msg
 getPropertyPanel model = 
-    case model.actionState of
-        InspectingNode x  -> propertyPanelSelectedNode x
-        CreatingNode x -> propertyPanelCreate x
-        Connecting x -> getNodeConnectionPanel model
-        _ -> propertyPanelNormal
+  case model.actionState of
+    InspectingNode x  -> propertyPanelSelectedNode x
+    CreatingNode -> propertyPanelCreate model.nodeData.node
+    ConnectingNodes x -> getNodeConnectionPanel model
+    _ -> propertyPanelNormal
 
 getLeftPanelNodeAttributes : Model -> MapNode -> List (Attribute Msg)
 getLeftPanelNodeAttributes model node =
-    [ onClick (InspectNode node)
-    , class (case model.actionState of
-            InspectingNode x ->
-                case x.id == node.id of
-                    True -> "selectedNodeListDiv"
-                    False -> "nodeListDiv"
-            _ -> "nodeListDiv") ]
+  [ onClick (InspectNode node)
+  , class (case model.actionState of
+    InspectingNode x ->
+      case x.id == node.id of
+        True -> "selectedNodeListDiv"
+        False -> "nodeListDiv"
+    _ -> "nodeListDiv") ]
 
 createButton : Html Msg
 createButton = button [ onClick (CreateNode FinishNode)] [ text "Create Node" ]
 
 propertyPanelNormal : Html Msg 
 propertyPanelNormal = 
-    div [ class "divPropertyPanel" ] [ text "Property Panel" ]
+  div [ class "divPropertyPanel" ] [ text "Property Panel" ]
 
 propertyPanelSelectedNode : MapNode -> Html Msg 
 propertyPanelSelectedNode node = 
-    div [ class "divPropertyPanel" ] [ 
-            div [] [ 
-                span [ class "propName" ] [ text "Id: "]
-                ,span [ class "propValue" ] [ text (toString node.id) ] ]
-            ,div [] [ 
-                span [ class "propName" ] [ text "DisplayText: "]
-                ,span [ class "propValue" ] [ text node.displayText ] ]
-            ,div [] [ 
-                span [ class "propName" ] [ text "Connectors : "]
-                ,span [ class "propValue" ] [ ul [] (ConnectorUI.nodeConnectorList node) ] ]
-                ]
+  div [ class "divPropertyPanel" ] [ 
+    div [] [ 
+      span [ class "propName" ] [ text "Id: "]
+        ,span [ class "propValue" ] [ text (toString node.id) ] ]
+      ,div [] [ 
+        span [ class "propName" ] [ text "DisplayText: "]
+        ,span [ class "propValue" ] [ text node.displayText ] ]
+      ,div [] [ 
+        span [ class "propName" ] [ text "Connectors : "]
+        ,span [ class "propValue" ] [ ul [] (ConnectorUI.nodeConnectorList node) ] ]
+        ]
 
 propertyPanelCreate : MapNode -> Html Msg 
 propertyPanelCreate node = div [ class "divPropertyPanel" ] [ 
-        div [] [ text "Id: ", text (toString node.id) ]
-        ,div [ onInput (\x -> CreateNode (DisplayTxt x)) ] [ text "Display Text: ", input [ placeholder "Display Txt" ] [] ]
-        ,createButton 
-    ]
+  div [] [ text "Id: ", text (toString node.id) ]
+  ,div [ onInput (\x -> CreateNode (DisplayTxt x)) ] [ text "Display Text: ", input [ placeholder "Display Txt" ] [] ]
+  ,createButton 
+  ]
 
 getSvgPanel : Model -> Html Msg 
 getSvgPanel model = div [ class "divSvgPanel" ] [ 
-        genSvg model.nodes model 
-    ] 
+  genSvg model.nodes model 
+  ] 
 

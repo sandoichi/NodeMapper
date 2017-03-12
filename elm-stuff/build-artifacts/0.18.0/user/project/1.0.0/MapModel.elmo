@@ -1,10 +1,11 @@
-var _user$project$MapModel$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {nodes: a, nodeCounter: b, dragNode: c, offSet: d, actionState: e, lastMsg: f};
+var _user$project$MapModel$Model = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, lastMsg: h};
 	});
-var _user$project$MapModel$BothSelected = function (a) {
-	return {ctor: 'BothSelected', _0: a};
-};
+var _user$project$MapModel$BothSelected = F2(
+	function (a, b) {
+		return {ctor: 'BothSelected', _0: a, _1: b};
+	});
 var _user$project$MapModel$FirstSelected = function (a) {
 	return {ctor: 'FirstSelected', _0: a};
 };
@@ -12,17 +13,17 @@ var _user$project$MapModel$Waiting = {ctor: 'Waiting'};
 var _user$project$MapModel$InspectingNode = function (a) {
 	return {ctor: 'InspectingNode', _0: a};
 };
-var _user$project$MapModel$CreatingNode = function (a) {
-	return {ctor: 'CreatingNode', _0: a};
-};
-var _user$project$MapModel$Connecting = function (a) {
-	return {ctor: 'Connecting', _0: a};
+var _user$project$MapModel$CreatingNode = {ctor: 'CreatingNode'};
+var _user$project$MapModel$ConnectingNodes = function (a) {
+	return {ctor: 'ConnectingNodes', _0: a};
 };
 var _user$project$MapModel$Idle = {ctor: 'Idle'};
 var _user$project$MapModel$init = {
 	ctor: '_Tuple2',
 	_0: {
 		nodes: {ctor: '[]'},
+		connectorData: _user$project$Connectors$getPanelInit(0),
+		nodeData: _user$project$MapNode$getPanelInit(0),
 		nodeCounter: 0,
 		dragNode: _elm_lang$core$Maybe$Nothing,
 		offSet: _elm_lang$core$Maybe$Nothing,

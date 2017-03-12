@@ -23,3 +23,13 @@ getInit identifier =
   }
 
 
+type alias UIPanelData = { 
+  node : MapNode
+}
+
+getPanelInit : Int -> UIPanelData
+getPanelInit id =
+  {
+    node = getInit id
+  }
+

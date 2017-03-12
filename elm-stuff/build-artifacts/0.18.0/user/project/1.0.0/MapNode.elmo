@@ -7,7 +7,15 @@ var _user$project$MapNode$getInit = function (identifier) {
 		connectors: {ctor: '[]'}
 	};
 };
+var _user$project$MapNode$getPanelInit = function (id) {
+	return {
+		node: _user$project$MapNode$getInit(id)
+	};
+};
 var _user$project$MapNode$MapNode = F5(
 	function (a, b, c, d, e) {
 		return {id: a, displayText: b, px: c, py: d, connectors: e};
 	});
+var _user$project$MapNode$UIPanelData = function (a) {
+	return {node: a};
+};

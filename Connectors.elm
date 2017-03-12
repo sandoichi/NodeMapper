@@ -27,5 +27,15 @@ type Event =
   InitConnector
   | ExitChanged Side
   | EnterChanged Side
-  | CostChanged Side
+  | CostChanged Int
   | FinishConnector
+
+type alias UIPanelData = {
+  connector : Connector
+}
+
+getPanelInit : Int -> UIPanelData
+getPanelInit id =
+  {
+    connector = getInit id
+  }

@@ -7,16 +7,19 @@ import Connectors
 type ConnectorState =
   Waiting
   | FirstSelected MapNode
-  | BothSelected (MapNode, MapNode, Connectors.Connector)
+  | BothSelected MapNode MapNode
 
 type ActionState =
         Idle
-        | Connecting ConnectorState
-        | CreatingNode MapNode
+        | ConnectingNodes ConnectorState
+        | CreatingNode
         | InspectingNode MapNode
+
 
 type alias Model = { 
     nodes : List MapNode 
+    ,connectorData : Connectors.UIPanelData
+    ,nodeData : MapNode.UIPanelData
     ,nodeCounter : Int
     ,dragNode : Maybe MapNode
     ,offSet : Maybe { x : Int, y : Int }
@@ -24,14 +27,17 @@ type alias Model = {
     ,lastMsg : Maybe Msg
 }
 
+
 init : ( Model, Cmd Msg )
 init = ({
-       nodes = []
-       ,nodeCounter = 0
-       ,dragNode = Nothing
-       ,offSet = Nothing
-       ,actionState = Idle 
-       ,lastMsg = Nothing
+   nodes = []
+  ,connectorData = Connectors.getPanelInit 0
+  ,nodeData = MapNode.getPanelInit 0
+  ,nodeCounter = 0
+  ,dragNode = Nothing
+  ,offSet = Nothing
+  ,actionState = Idle 
+  ,lastMsg = Nothing
    }, Cmd.none)     
 
 

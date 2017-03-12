@@ -16,11 +16,12 @@ getNodeConnectionPanel model =
 determineConnectorPanel : Model -> Html Msg
 determineConnectorPanel model =
   case model.actionState of
-    Connecting x ->
+    ConnectingNodes x ->
       case x of
         Waiting -> waitingPanel
         FirstSelected first -> firstSelectedPanel first
-        BothSelected (first, second, c) -> bothSelectedPanel first second c
+        BothSelected first second -> 
+          bothSelectedPanel first second model.connectorData.connector
     _ -> waitingPanel
 
 waitingPanel : Html Msg

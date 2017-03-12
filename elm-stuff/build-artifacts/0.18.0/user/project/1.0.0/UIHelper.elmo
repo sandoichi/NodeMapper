@@ -254,8 +254,8 @@ var _user$project$UIHelper$getPropertyPanel = function (model) {
 		case 'InspectingNode':
 			return _user$project$UIHelper$propertyPanelSelectedNode(_p2._0);
 		case 'CreatingNode':
-			return _user$project$UIHelper$propertyPanelCreate(_p2._0);
-		case 'Connecting':
+			return _user$project$UIHelper$propertyPanelCreate(model.nodeData.node);
+		case 'ConnectingNodes':
 			return _user$project$ConnectorUI$getNodeConnectionPanel(model);
 		default:
 			return _user$project$UIHelper$propertyPanelNormal;
