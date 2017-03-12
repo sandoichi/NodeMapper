@@ -3,9 +3,12 @@ body { background-color: #0A0A0A; }
 .divMainContainer {
             background-color : #1F1F1F;
             overflow : auto;
-            min-height : 700px;
             color : #CCCCCC;
             border : 2px solid teal; 
+            height: 98%;
+            width: 95%
+            margin: auto
+            margin-top: 40px
         }         
 
 .statusPanel {
@@ -28,7 +31,7 @@ body { background-color: #0A0A0A; }
         }
 
 .divSvgPanel {
-            height : 625px;
+            min-height : 500px;
         }
 
 .svg {
@@ -38,7 +41,9 @@ body { background-color: #0A0A0A; }
   }
  
 .divPropertyPanel {
-            height : 275px ;
+            position: absolute;
+            bottom: 0;
+            height : 200px ;
             border-top : 1px solid #787878;
         }
 

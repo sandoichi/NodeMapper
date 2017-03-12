@@ -32,10 +32,12 @@ type Event =
 
 type alias UIPanelData = {
   connector : Connector
+  ,nodeId : Int
 }
 
 getPanelInit : Int -> UIPanelData
 getPanelInit id =
   {
-    connector = getInit id
+    nodeId = 0
+    ,connector = getInit id
   }

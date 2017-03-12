@@ -2,13 +2,8 @@ var _user$project$MapModel$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, lastMsg: h};
 	});
-var _user$project$MapModel$BothSelected = F2(
-	function (a, b) {
-		return {ctor: 'BothSelected', _0: a, _1: b};
-	});
-var _user$project$MapModel$FirstSelected = function (a) {
-	return {ctor: 'FirstSelected', _0: a};
-};
+var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
+var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
 var _user$project$MapModel$Waiting = {ctor: 'Waiting'};
 var _user$project$MapModel$InspectingNode = function (a) {
 	return {ctor: 'InspectingNode', _0: a};

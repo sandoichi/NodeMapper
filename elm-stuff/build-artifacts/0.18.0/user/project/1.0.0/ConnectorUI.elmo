@@ -135,16 +135,63 @@ var _user$project$ConnectorUI$nodeConnectorList = function (node) {
 		},
 		node.connectors);
 };
-var _user$project$ConnectorUI$bothSelectedPanel = F3(
-	function (first, second, c) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('divConnectorCreation'),
-				_1: {ctor: '[]'}
-			},
-			{
+var _user$project$ConnectorUI$bothSelectedPanel = function (c) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('divConnectorCreation'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('propName'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Exit: '),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('propValue'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$select,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(
+											function (x) {
+												return _user$project$MapMsg$CreateConnector(
+													_user$project$Connectors$ExitChanged(
+														_user$project$ConnectorUI$stringToSide(x)));
+											}),
+										_1: {ctor: '[]'}
+									},
+									_user$project$ConnectorUI$getSideOptions(c.exitSide)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$div,
@@ -160,7 +207,7 @@ var _user$project$ConnectorUI$bothSelectedPanel = F3(
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Start: '),
+								_0: _elm_lang$html$Html$text('Enter: '),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -174,7 +221,19 @@ var _user$project$ConnectorUI$bothSelectedPanel = F3(
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text(first.displayText),
+									_0: A2(
+										_elm_lang$html$Html$select,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onInput(
+												function (x) {
+													return _user$project$MapMsg$CreateConnector(
+														_user$project$Connectors$EnterChanged(
+															_user$project$ConnectorUI$stringToSide(x)));
+												}),
+											_1: {ctor: '[]'}
+										},
+										_user$project$ConnectorUI$getSideOptions(c.entrySide)),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
@@ -188,173 +247,33 @@ var _user$project$ConnectorUI$bothSelectedPanel = F3(
 						{
 							ctor: '::',
 							_0: A2(
-								_elm_lang$html$Html$span,
+								_elm_lang$html$Html$button,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('propName'),
+									_0: _elm_lang$html$Html_Events$onClick(
+										_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
 									_1: {ctor: '[]'}
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Exit: '),
+									_0: _elm_lang$html$Html$text('Create Connector'),
 									_1: {ctor: '[]'}
 								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$span,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('propValue'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$select,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(
-													function (x) {
-														return _user$project$MapMsg$CreateConnector(
-															_user$project$Connectors$ExitChanged(
-																_user$project$ConnectorUI$stringToSide(x)));
-													}),
-												_1: {ctor: '[]'}
-											},
-											_user$project$ConnectorUI$getSideOptions(c.exitSide)),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
+							_1: {ctor: '[]'}
 						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$span,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('propName'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('End: '),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$span,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('propValue'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text(second.displayText),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$span,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('propName'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Enter: '),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$span,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('propValue'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$select,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onInput(
-															function (x) {
-																return _user$project$MapMsg$CreateConnector(
-																	_user$project$Connectors$EnterChanged(
-																		_user$project$ConnectorUI$stringToSide(x)));
-															}),
-														_1: {ctor: '[]'}
-													},
-													_user$project$ConnectorUI$getSideOptions(c.entrySide)),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$button,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Create Connector'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
+					_1: {ctor: '[]'}
 				}
-			});
-	});
-var _user$project$ConnectorUI$firstSelectedPanel = function (node) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Start Node: '),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(node.displayText),
-				_1: {ctor: '[]'}
 			}
 		});
 };
+var _user$project$ConnectorUI$firstSelectedPanel = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Select the connecting node'),
+		_1: {ctor: '[]'}
+	});
 var _user$project$ConnectorUI$waitingPanel = A2(
 	_elm_lang$html$Html$div,
 	{ctor: '[]'},
@@ -371,9 +290,9 @@ var _user$project$ConnectorUI$determineConnectorPanel = function (model) {
 			case 'Waiting':
 				return _user$project$ConnectorUI$waitingPanel;
 			case 'FirstSelected':
-				return _user$project$ConnectorUI$firstSelectedPanel(_p4._0);
+				return _user$project$ConnectorUI$firstSelectedPanel;
 			default:
-				return A3(_user$project$ConnectorUI$bothSelectedPanel, _p4._0, _p4._1, model.connectorData.connector);
+				return _user$project$ConnectorUI$bothSelectedPanel(model.connectorData.connector);
 		}
 	} else {
 		return _user$project$ConnectorUI$waitingPanel;

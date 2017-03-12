@@ -9390,9 +9390,10 @@ var _user$project$Connectors$Connector = F4(
 	function (a, b, c, d) {
 		return {nodeId: a, cost: b, exitSide: c, entrySide: d};
 	});
-var _user$project$Connectors$UIPanelData = function (a) {
-	return {connector: a};
-};
+var _user$project$Connectors$UIPanelData = F2(
+	function (a, b) {
+		return {connector: a, nodeId: b};
+	});
 var _user$project$Connectors$Right = {ctor: 'Right'};
 var _user$project$Connectors$Left = {ctor: 'Left'};
 var _user$project$Connectors$Bottom = {ctor: 'Bottom'};
@@ -9402,6 +9403,7 @@ var _user$project$Connectors$getInit = function (id) {
 };
 var _user$project$Connectors$getPanelInit = function (id) {
 	return {
+		nodeId: 0,
 		connector: _user$project$Connectors$getInit(id)
 	};
 };
@@ -9468,13 +9470,8 @@ var _user$project$MapModel$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
 		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, lastMsg: h};
 	});
-var _user$project$MapModel$BothSelected = F2(
-	function (a, b) {
-		return {ctor: 'BothSelected', _0: a, _1: b};
-	});
-var _user$project$MapModel$FirstSelected = function (a) {
-	return {ctor: 'FirstSelected', _0: a};
-};
+var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
+var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
 var _user$project$MapModel$Waiting = {ctor: 'Waiting'};
 var _user$project$MapModel$InspectingNode = function (a) {
 	return {ctor: 'InspectingNode', _0: a};
@@ -9636,16 +9633,63 @@ var _user$project$ConnectorUI$nodeConnectorList = function (node) {
 		},
 		node.connectors);
 };
-var _user$project$ConnectorUI$bothSelectedPanel = F3(
-	function (first, second, c) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('divConnectorCreation'),
-				_1: {ctor: '[]'}
-			},
-			{
+var _user$project$ConnectorUI$bothSelectedPanel = function (c) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('divConnectorCreation'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('propName'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Exit: '),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$span,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('propValue'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$select,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(
+											function (x) {
+												return _user$project$MapMsg$CreateConnector(
+													_user$project$Connectors$ExitChanged(
+														_user$project$ConnectorUI$stringToSide(x)));
+											}),
+										_1: {ctor: '[]'}
+									},
+									_user$project$ConnectorUI$getSideOptions(c.exitSide)),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {
 				ctor: '::',
 				_0: A2(
 					_elm_lang$html$Html$div,
@@ -9661,7 +9705,7 @@ var _user$project$ConnectorUI$bothSelectedPanel = F3(
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Start: '),
+								_0: _elm_lang$html$Html$text('Enter: '),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -9675,7 +9719,19 @@ var _user$project$ConnectorUI$bothSelectedPanel = F3(
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text(first.displayText),
+									_0: A2(
+										_elm_lang$html$Html$select,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onInput(
+												function (x) {
+													return _user$project$MapMsg$CreateConnector(
+														_user$project$Connectors$EnterChanged(
+															_user$project$ConnectorUI$stringToSide(x)));
+												}),
+											_1: {ctor: '[]'}
+										},
+										_user$project$ConnectorUI$getSideOptions(c.entrySide)),
 									_1: {ctor: '[]'}
 								}),
 							_1: {ctor: '[]'}
@@ -9689,173 +9745,33 @@ var _user$project$ConnectorUI$bothSelectedPanel = F3(
 						{
 							ctor: '::',
 							_0: A2(
-								_elm_lang$html$Html$span,
+								_elm_lang$html$Html$button,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('propName'),
+									_0: _elm_lang$html$Html_Events$onClick(
+										_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
 									_1: {ctor: '[]'}
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Exit: '),
+									_0: _elm_lang$html$Html$text('Create Connector'),
 									_1: {ctor: '[]'}
 								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$span,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('propValue'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$select,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onInput(
-													function (x) {
-														return _user$project$MapMsg$CreateConnector(
-															_user$project$Connectors$ExitChanged(
-																_user$project$ConnectorUI$stringToSide(x)));
-													}),
-												_1: {ctor: '[]'}
-											},
-											_user$project$ConnectorUI$getSideOptions(c.exitSide)),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
+							_1: {ctor: '[]'}
 						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$span,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('propName'),
-										_1: {ctor: '[]'}
-									},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('End: '),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$span,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('propValue'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text(second.displayText),
-											_1: {ctor: '[]'}
-										}),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{ctor: '[]'},
-								{
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$span,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('propName'),
-											_1: {ctor: '[]'}
-										},
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html$text('Enter: '),
-											_1: {ctor: '[]'}
-										}),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$span,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('propValue'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$select,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onInput(
-															function (x) {
-																return _user$project$MapMsg$CreateConnector(
-																	_user$project$Connectors$EnterChanged(
-																		_user$project$ConnectorUI$stringToSide(x)));
-															}),
-														_1: {ctor: '[]'}
-													},
-													_user$project$ConnectorUI$getSideOptions(c.entrySide)),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$button,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Create Connector'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
-									}),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
+					_1: {ctor: '[]'}
 				}
-			});
-	});
-var _user$project$ConnectorUI$firstSelectedPanel = function (node) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{ctor: '[]'},
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html$text('Start Node: '),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(node.displayText),
-				_1: {ctor: '[]'}
 			}
 		});
 };
+var _user$project$ConnectorUI$firstSelectedPanel = A2(
+	_elm_lang$html$Html$div,
+	{ctor: '[]'},
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html$text('Select the connecting node'),
+		_1: {ctor: '[]'}
+	});
 var _user$project$ConnectorUI$waitingPanel = A2(
 	_elm_lang$html$Html$div,
 	{ctor: '[]'},
@@ -9872,9 +9788,9 @@ var _user$project$ConnectorUI$determineConnectorPanel = function (model) {
 			case 'Waiting':
 				return _user$project$ConnectorUI$waitingPanel;
 			case 'FirstSelected':
-				return _user$project$ConnectorUI$firstSelectedPanel(_p4._0);
+				return _user$project$ConnectorUI$firstSelectedPanel;
 			default:
-				return A3(_user$project$ConnectorUI$bothSelectedPanel, _p4._0, _p4._1, model.connectorData.connector);
+				return _user$project$ConnectorUI$bothSelectedPanel(model.connectorData.connector);
 		}
 	} else {
 		return _user$project$ConnectorUI$waitingPanel;
@@ -10391,25 +10307,72 @@ var _user$project$MapView$view = function (model) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('statusPanel'),
+							_0: _elm_lang$html$Html_Attributes$class('divLeftPanel'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Mode: '),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									_elm_lang$core$Basics$toString(model.actionState)),
-								_1: {
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{ctor: '[]'},
+								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('| LastMsg: '),
+									_0: _elm_lang$html$Html$text('Map Nodes'),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											_elm_lang$core$Basics$toString(model.lastMsg)),
-										_1: {ctor: '[]'}
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(
+													_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Add'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('StartConnect'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
 									}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{ctor: '[]'},
+									A2(
+										_elm_lang$core$List$map,
+										function (x) {
+											return A2(
+												_elm_lang$html$Html$div,
+												A2(_user$project$UIHelper$getLeftPanelNodeAttributes, model, x),
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text(x.displayText),
+													_1: {ctor: '[]'}
+												});
+										},
+										model.nodes)),
+								_1: {
+									ctor: '::',
+									_0: _user$project$UIHelper$getPropertyPanel(model),
+									_1: {ctor: '[]'}
 								}
 							}
 						}),
@@ -10419,104 +10382,15 @@ var _user$project$MapView$view = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('divLeftPanel'),
+								_0: _elm_lang$html$Html_Attributes$class('divRightPanel'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text('Map Nodes'),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$button,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(
-														_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('Add'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$button,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('StartConnect'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {ctor: '[]'}
-											}
-										}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$div,
-										{ctor: '[]'},
-										A2(
-											_elm_lang$core$List$map,
-											function (x) {
-												return A2(
-													_elm_lang$html$Html$div,
-													A2(_user$project$UIHelper$getLeftPanelNodeAttributes, model, x),
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text(
-															A2(
-																_elm_lang$core$Basics_ops['++'],
-																x.displayText,
-																A2(
-																	_elm_lang$core$Basics_ops['++'],
-																	' | x: ',
-																	A2(
-																		_elm_lang$core$Basics_ops['++'],
-																		_elm_lang$core$Basics$toString(x.px),
-																		A2(
-																			_elm_lang$core$Basics_ops['++'],
-																			' y: ',
-																			_elm_lang$core$Basics$toString(x.py)))))),
-														_1: {ctor: '[]'}
-													});
-											},
-											model.nodes)),
-									_1: {ctor: '[]'}
-								}
+								_0: _user$project$UIHelper$getSvgPanel(model),
+								_1: {ctor: '[]'}
 							}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('divRightPanel'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _user$project$UIHelper$getSvgPanel(model),
-									_1: {
-										ctor: '::',
-										_0: _user$project$UIHelper$getPropertyPanel(model),
-										_1: {ctor: '[]'}
-									}
-								}),
-							_1: {ctor: '[]'}
-						}
+						_1: {ctor: '[]'}
 					}
 				}),
 			_1: {ctor: '[]'}
@@ -10544,6 +10418,10 @@ var _user$project$Update$calculatePosition = F2(
 	});
 var _user$project$Update$updateHelp = F2(
 	function (msg, model) {
+		var nod = model.nodeData.node;
+		var ndata = model.nodeData;
+		var con = model.connectorData.connector;
+		var cdata = model.connectorData;
 		var _p3 = msg;
 		switch (_p3.ctor) {
 			case 'DragAt':
@@ -10597,18 +10475,30 @@ var _user$project$Update$updateHelp = F2(
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									actionState: _user$project$MapModel$ConnectingNodes(
-										_user$project$MapModel$FirstSelected(_p11))
+									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$FirstSelected),
+									connectorData: _elm_lang$core$Native_Utils.update(
+										cdata,
+										{nodeId: _p11.id})
 								});
 						case 'FirstSelected':
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									actionState: _user$project$MapModel$ConnectingNodes(
-										A2(_user$project$MapModel$BothSelected, _p10._0, _p11))
+									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$SecondSelected),
+									connectorData: _elm_lang$core$Native_Utils.update(
+										cdata,
+										{
+											connector: _elm_lang$core$Native_Utils.update(
+												con,
+												{nodeId: _p11.id})
+										})
 								});
 						default:
-							return model;
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									actionState: _user$project$MapModel$InspectingNode(_p11)
+								});
 					}
 				} else {
 					return _elm_lang$core$Native_Utils.update(
@@ -10621,8 +10511,6 @@ var _user$project$Update$updateHelp = F2(
 						});
 				}
 			case 'CreateConnector':
-				var c = model.connectorData.connector;
-				var cd = model.connectorData;
 				var _p12 = _p3._0;
 				switch (_p12.ctor) {
 					case 'InitConnector':
@@ -10636,10 +10524,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								connectorData: _elm_lang$core$Native_Utils.update(
-									cd,
+									cdata,
 									{
 										connector: _elm_lang$core$Native_Utils.update(
-											c,
+											con,
 											{exitSide: _p12._0})
 									})
 							});
@@ -10648,10 +10536,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								connectorData: _elm_lang$core$Native_Utils.update(
-									cd,
+									cdata,
 									{
 										connector: _elm_lang$core$Native_Utils.update(
-											c,
+											con,
 											{exitSide: _p12._0})
 									})
 							});
@@ -10660,10 +10548,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								connectorData: _elm_lang$core$Native_Utils.update(
-									cd,
+									cdata,
 									{
 										connector: _elm_lang$core$Native_Utils.update(
-											c,
+											con,
 											{cost: _p12._0})
 									})
 							});
@@ -10675,12 +10563,12 @@ var _user$project$Update$updateHelp = F2(
 								nodes: A2(
 									_elm_lang$core$List$map,
 									function (n) {
-										var _p13 = _elm_lang$core$Native_Utils.eq(n.id, cd.connector.nodeId);
+										var _p13 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
 										if (_p13 === true) {
 											return _elm_lang$core$Native_Utils.update(
 												n,
 												{
-													connectors: {ctor: '::', _0: c, _1: n.connectors}
+													connectors: {ctor: '::', _0: con, _1: n.connectors}
 												});
 										} else {
 											return n;
@@ -10690,14 +10578,13 @@ var _user$project$Update$updateHelp = F2(
 							});
 				}
 			case 'CreateNode':
-				var n = model.nodeData.node;
-				var nd = model.nodeData;
 				var _p14 = _p3._0;
 				switch (_p14.ctor) {
 					case 'InitNode':
 						return _elm_lang$core$Native_Utils.update(
 							model,
 							{
+								actionState: _user$project$MapModel$CreatingNode,
 								nodeData: _user$project$MapNode$getPanelInit(model.nodeCounter + 1)
 							});
 					case 'DisplayTxt':
@@ -10705,10 +10592,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								nodeData: _elm_lang$core$Native_Utils.update(
-									nd,
+									ndata,
 									{
 										node: _elm_lang$core$Native_Utils.update(
-											n,
+											nod,
 											{displayText: _p14._0})
 									})
 							});
@@ -10717,13 +10604,13 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								nodeCounter: model.nodeCounter + 1,
-								actionState: _user$project$MapModel$InspectingNode(n),
+								actionState: _user$project$MapModel$InspectingNode(nod),
 								nodes: A2(
 									_elm_lang$core$List$append,
 									model.nodes,
 									{
 										ctor: '::',
-										_0: n,
+										_0: nod,
 										_1: {ctor: '[]'}
 									})
 							});

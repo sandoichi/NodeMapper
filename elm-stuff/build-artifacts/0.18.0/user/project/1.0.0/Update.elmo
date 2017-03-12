@@ -19,6 +19,10 @@ var _user$project$Update$calculatePosition = F2(
 	});
 var _user$project$Update$updateHelp = F2(
 	function (msg, model) {
+		var nod = model.nodeData.node;
+		var ndata = model.nodeData;
+		var con = model.connectorData.connector;
+		var cdata = model.connectorData;
 		var _p3 = msg;
 		switch (_p3.ctor) {
 			case 'DragAt':
@@ -72,18 +76,30 @@ var _user$project$Update$updateHelp = F2(
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									actionState: _user$project$MapModel$ConnectingNodes(
-										_user$project$MapModel$FirstSelected(_p11))
+									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$FirstSelected),
+									connectorData: _elm_lang$core$Native_Utils.update(
+										cdata,
+										{nodeId: _p11.id})
 								});
 						case 'FirstSelected':
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									actionState: _user$project$MapModel$ConnectingNodes(
-										A2(_user$project$MapModel$BothSelected, _p10._0, _p11))
+									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$SecondSelected),
+									connectorData: _elm_lang$core$Native_Utils.update(
+										cdata,
+										{
+											connector: _elm_lang$core$Native_Utils.update(
+												con,
+												{nodeId: _p11.id})
+										})
 								});
 						default:
-							return model;
+							return _elm_lang$core$Native_Utils.update(
+								model,
+								{
+									actionState: _user$project$MapModel$InspectingNode(_p11)
+								});
 					}
 				} else {
 					return _elm_lang$core$Native_Utils.update(
@@ -96,8 +112,6 @@ var _user$project$Update$updateHelp = F2(
 						});
 				}
 			case 'CreateConnector':
-				var c = model.connectorData.connector;
-				var cd = model.connectorData;
 				var _p12 = _p3._0;
 				switch (_p12.ctor) {
 					case 'InitConnector':
@@ -111,10 +125,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								connectorData: _elm_lang$core$Native_Utils.update(
-									cd,
+									cdata,
 									{
 										connector: _elm_lang$core$Native_Utils.update(
-											c,
+											con,
 											{exitSide: _p12._0})
 									})
 							});
@@ -123,10 +137,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								connectorData: _elm_lang$core$Native_Utils.update(
-									cd,
+									cdata,
 									{
 										connector: _elm_lang$core$Native_Utils.update(
-											c,
+											con,
 											{exitSide: _p12._0})
 									})
 							});
@@ -135,10 +149,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								connectorData: _elm_lang$core$Native_Utils.update(
-									cd,
+									cdata,
 									{
 										connector: _elm_lang$core$Native_Utils.update(
-											c,
+											con,
 											{cost: _p12._0})
 									})
 							});
@@ -150,12 +164,12 @@ var _user$project$Update$updateHelp = F2(
 								nodes: A2(
 									_elm_lang$core$List$map,
 									function (n) {
-										var _p13 = _elm_lang$core$Native_Utils.eq(n.id, cd.connector.nodeId);
+										var _p13 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
 										if (_p13 === true) {
 											return _elm_lang$core$Native_Utils.update(
 												n,
 												{
-													connectors: {ctor: '::', _0: c, _1: n.connectors}
+													connectors: {ctor: '::', _0: con, _1: n.connectors}
 												});
 										} else {
 											return n;
@@ -165,14 +179,13 @@ var _user$project$Update$updateHelp = F2(
 							});
 				}
 			case 'CreateNode':
-				var n = model.nodeData.node;
-				var nd = model.nodeData;
 				var _p14 = _p3._0;
 				switch (_p14.ctor) {
 					case 'InitNode':
 						return _elm_lang$core$Native_Utils.update(
 							model,
 							{
+								actionState: _user$project$MapModel$CreatingNode,
 								nodeData: _user$project$MapNode$getPanelInit(model.nodeCounter + 1)
 							});
 					case 'DisplayTxt':
@@ -180,10 +193,10 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								nodeData: _elm_lang$core$Native_Utils.update(
-									nd,
+									ndata,
 									{
 										node: _elm_lang$core$Native_Utils.update(
-											n,
+											nod,
 											{displayText: _p14._0})
 									})
 							});
@@ -192,13 +205,13 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								nodeCounter: model.nodeCounter + 1,
-								actionState: _user$project$MapModel$InspectingNode(n),
+								actionState: _user$project$MapModel$InspectingNode(nod),
 								nodes: A2(
 									_elm_lang$core$List$append,
 									model.nodes,
 									{
 										ctor: '::',
-										_0: n,
+										_0: nod,
 										_1: {ctor: '[]'}
 									})
 							});

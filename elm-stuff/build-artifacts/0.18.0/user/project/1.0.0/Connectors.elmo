@@ -2,9 +2,10 @@ var _user$project$Connectors$Connector = F4(
 	function (a, b, c, d) {
 		return {nodeId: a, cost: b, exitSide: c, entrySide: d};
 	});
-var _user$project$Connectors$UIPanelData = function (a) {
-	return {connector: a};
-};
+var _user$project$Connectors$UIPanelData = F2(
+	function (a, b) {
+		return {connector: a, nodeId: b};
+	});
 var _user$project$Connectors$Right = {ctor: 'Right'};
 var _user$project$Connectors$Left = {ctor: 'Left'};
 var _user$project$Connectors$Bottom = {ctor: 'Bottom'};
@@ -14,6 +15,7 @@ var _user$project$Connectors$getInit = function (id) {
 };
 var _user$project$Connectors$getPanelInit = function (id) {
 	return {
+		nodeId: 0,
 		connector: _user$project$Connectors$getInit(id)
 	};
 };

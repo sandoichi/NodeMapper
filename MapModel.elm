@@ -6,25 +6,25 @@ import Connectors
 
 type ConnectorState =
   Waiting
-  | FirstSelected MapNode
-  | BothSelected MapNode MapNode
+  | FirstSelected
+  | SecondSelected
 
 type ActionState =
-        Idle
-        | ConnectingNodes ConnectorState
-        | CreatingNode
-        | InspectingNode MapNode
+  Idle
+  | ConnectingNodes ConnectorState
+  | CreatingNode
+  | InspectingNode MapNode
 
 
 type alias Model = { 
-    nodes : List MapNode 
-    ,connectorData : Connectors.UIPanelData
-    ,nodeData : MapNode.UIPanelData
-    ,nodeCounter : Int
-    ,dragNode : Maybe MapNode
-    ,offSet : Maybe { x : Int, y : Int }
-    ,actionState : ActionState
-    ,lastMsg : Maybe Msg
+  nodes : List MapNode 
+  ,connectorData : Connectors.UIPanelData
+  ,nodeData : MapNode.UIPanelData
+  ,nodeCounter : Int
+  ,dragNode : Maybe MapNode
+  ,offSet : Maybe { x : Int, y : Int }
+  ,actionState : ActionState
+  ,lastMsg : Maybe Msg
 }
 
 

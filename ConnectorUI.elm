@@ -19,28 +19,23 @@ determineConnectorPanel model =
     ConnectingNodes x ->
       case x of
         Waiting -> waitingPanel
-        FirstSelected first -> firstSelectedPanel first
-        BothSelected first second -> 
-          bothSelectedPanel first second model.connectorData.connector
+        FirstSelected -> firstSelectedPanel
+        SecondSelected -> bothSelectedPanel model.connectorData.connector
     _ -> waitingPanel
 
 waitingPanel : Html Msg
 waitingPanel =
   div [] [ text "Select the start node for this connector" ]
   
-firstSelectedPanel : MapNode -> Html Msg
-firstSelectedPanel node =
-  div [] [ text "Start Node: ", text node.displayText ]
+firstSelectedPanel : Html Msg
+firstSelectedPanel =
+  div [] [ text "Select the connecting node" ]
 
-bothSelectedPanel : MapNode -> MapNode -> Connector -> Html Msg
-bothSelectedPanel first second c =
+bothSelectedPanel : Connector -> Html Msg
+bothSelectedPanel c =
   div [ class "divConnectorCreation" ] [ 
-    div [] [ span [ class "propName" ] [ text "Start: " ], 
-      span [ class "propValue" ] [ text first.displayText ] ]
-    ,div [] [ span [ class "propName" ] [ text "Exit: " ], 
+    div [] [ span [ class "propName" ] [ text "Exit: " ], 
       span [ class "propValue" ] [ select [ onInput (\x -> (CreateConnector (ExitChanged (stringToSide x))))] (getSideOptions c.exitSide) ] ]
-    ,div [] [ span [ class "propName" ] [ text "End: " ], 
-      span [ class "propValue" ] [ text second.displayText ] ]
     ,div [] [ span [ class "propName" ] [ text "Enter: " ], 
       span [ class "propValue" ] [ select [ onInput (\x -> (CreateConnector (EnterChanged (stringToSide x))))] (getSideOptions c.entrySide) ] ]
     ,div [] [ button [ onClick (CreateConnector FinishConnector) ] [ text "Create Connector" ] ] 

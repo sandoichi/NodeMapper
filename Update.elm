@@ -17,6 +17,11 @@ update msg model =
 
 updateHelp : Msg -> Model -> Model
 updateHelp msg model =
+  let 
+    cdata = model.connectorData
+    con = model.connectorData.connector
+    ndata = model.nodeData
+    nod = model.nodeData.node in
   case msg of
     DragAt ({x,y} as d) ->
       case model.dragNode of
@@ -38,46 +43,45 @@ updateHelp msg model =
         ConnectingNodes x ->
           case x of
             Waiting -> 
-              { model | actionState = ConnectingNodes (FirstSelected node) }
-            FirstSelected first -> 
-              { model | actionState = ConnectingNodes (BothSelected first node) }
-            BothSelected first second -> model
+              { model | actionState = ConnectingNodes FirstSelected
+                ,connectorData = { cdata | nodeId = node.id } }
+            FirstSelected -> 
+              { model | actionState = ConnectingNodes SecondSelected
+                ,connectorData = { cdata | connector = { con | nodeId = node.id } } }
+            SecondSelected -> 
+              { model | actionState = InspectingNode node }
         _ ->
           { model | actionState = InspectingNode node 
            ,offSet = Just (getOffset model pos)
            ,dragNode = Just node
           }
     CreateConnector evt ->
-      let 
-        cd = model.connectorData
-        c = model.connectorData.connector in
       case evt of
         InitConnector -> 
           { model | connectorData = Connectors.getPanelInit 0 }
         ExitChanged s ->
-          { model | connectorData = { cd | connector = { c | exitSide = s } } }
+          { model | connectorData = { cdata | connector = { con | exitSide = s } } }
         EnterChanged s ->
-          { model | connectorData = { cd | connector = { c | exitSide = s } } }
+          { model | connectorData = { cdata | connector = { con | exitSide = s } } }
         CostChanged cost ->
-          { model | connectorData = { cd | connector = { c | cost = cost } } }
+          { model | connectorData = { cdata | connector = { con | cost = cost } } }
         FinishConnector ->
           { model | actionState = Idle ,nodes = model.nodes |> List.map (\n ->
-             case n.id == cd.connector.nodeId of
-               True -> { n | connectors = c::(n.connectors) } 
+             case n.id == cdata.nodeId of
+               True -> { n | connectors = con::(n.connectors) } 
                False -> n) }
     CreateNode e ->
-      let 
-        nd = model.nodeData
-        n = model.nodeData.node in
       case e of
         InitNode ->
-          { model | nodeData = MapNode.getPanelInit (model.nodeCounter + 1) }
+          { model | 
+            actionState = CreatingNode
+            ,nodeData = MapNode.getPanelInit (model.nodeCounter + 1) }
         DisplayTxt s ->
-          { model | nodeData = { nd | node = { n | displayText = s } } }
+          { model | nodeData = { ndata | node = { nod | displayText = s } } }
         FinishNode -> 
           { model | nodeCounter = model.nodeCounter + 1
-            ,actionState = InspectingNode n
-            ,nodes = List.append model.nodes [ n ] }
+            ,actionState = InspectingNode nod
+            ,nodes = List.append model.nodes [ nod ] }
     StartConnecting ->
         { model | actionState = ConnectingNodes Waiting }
 

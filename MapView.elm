@@ -13,19 +13,15 @@ view model =
   div []
     [ 
         div [ class "divMainContainer" ] [ 
-            div [ class "statusPanel" ] [
-                text "Mode: ", text (toString model.actionState)
-                ,text "| LastMsg: ", text (toString model.lastMsg)
-            ]
-            ,div [ class "divLeftPanel" ] [ 
+            div [ class "divLeftPanel" ] [ 
                 div [] [
                     text "Map Nodes"
                     ,button [ onClick (CreateNode InitNode) ] [ text "Add" ]
                     ,button [ onClick StartConnecting ] [ text "StartConnect" ] ]
                 ,div [] (List.map (\x -> 
-                    div (getLeftPanelNodeAttributes model x) 
-                        [text (x.displayText ++ " | x: " ++ (toString x.px) ++ " y: " ++ (toString x.py))]) model.nodes) 
+                    div (getLeftPanelNodeAttributes model x) [ text x.displayText ]) model.nodes) 
+                ,getPropertyPanel model
             ]
-            ,div [ class "divRightPanel" ] [ getSvgPanel model, getPropertyPanel model ]
+            ,div [ class "divRightPanel" ] [ getSvgPanel model ]
         ] 
     ]
