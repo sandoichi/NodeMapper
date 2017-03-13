@@ -10397,7 +10397,7 @@ var _user$project$MapView$view = function (model) {
 		});
 };
 
-var _user$project$Update$getOffset = F2(
+var _user$project$UpdateHelpers$getOffset = F2(
 	function (model, pos) {
 		var _p0 = model.offSet;
 		if (_p0.ctor === 'Just') {
@@ -10406,7 +10406,7 @@ var _user$project$Update$getOffset = F2(
 			return {x: pos.x, y: pos.y};
 		}
 	});
-var _user$project$Update$calculatePosition = F2(
+var _user$project$UpdateHelpers$calculatePosition = F2(
 	function (mousePos, offSet) {
 		var _p1 = offSet;
 		if (_p1.ctor === 'Just') {
@@ -10416,35 +10416,36 @@ var _user$project$Update$calculatePosition = F2(
 			return {x: mousePos.x, y: mousePos.y};
 		}
 	});
+
 var _user$project$Update$updateHelp = F2(
 	function (msg, model) {
 		var nod = model.nodeData.node;
 		var ndata = model.nodeData;
 		var con = model.connectorData.connector;
 		var cdata = model.connectorData;
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p0 = msg;
+		switch (_p0.ctor) {
 			case 'DragAt':
-				var _p8 = _p3._0;
-				var _p4 = model.dragNode;
-				if (_p4.ctor === 'Just') {
+				var _p5 = _p0._0;
+				var _p1 = model.dragNode;
+				if (_p1.ctor === 'Just') {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							nodes: A2(
 								_elm_lang$core$List$map,
 								function (n) {
-									var _p5 = _elm_lang$core$Native_Utils.eq(n.id, _p4._0.id);
-									if (_p5 === true) {
-										return function (_p6) {
-											var _p7 = _p6;
+									var _p2 = _elm_lang$core$Native_Utils.eq(n.id, _p1._0.id);
+									if (_p2 === true) {
+										return function (_p3) {
+											var _p4 = _p3;
 											return _elm_lang$core$Native_Utils.update(
 												n,
-												{px: _p7.x, py: _p7.y});
+												{px: _p4.x, py: _p4.y});
 										}(
 											A2(
-												_user$project$Update$calculatePosition,
-												{x: _p8.x, y: _p8.y},
+												_user$project$UpdateHelpers$calculatePosition,
+												{x: _p5.x, y: _p5.y},
 												model.offSet));
 									} else {
 										return n;
@@ -10463,14 +10464,14 @@ var _user$project$Update$updateHelp = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						actionState: _user$project$MapModel$InspectingNode(_p3._0)
+						actionState: _user$project$MapModel$InspectingNode(_p0._0)
 					});
 			case 'SelectNode':
-				var _p11 = _p3._0._1;
-				var _p9 = model.actionState;
-				if (_p9.ctor === 'ConnectingNodes') {
-					var _p10 = _p9._0;
-					switch (_p10.ctor) {
+				var _p8 = _p0._0._1;
+				var _p6 = model.actionState;
+				if (_p6.ctor === 'ConnectingNodes') {
+					var _p7 = _p6._0;
+					switch (_p7.ctor) {
 						case 'Waiting':
 							return _elm_lang$core$Native_Utils.update(
 								model,
@@ -10478,7 +10479,7 @@ var _user$project$Update$updateHelp = F2(
 									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$FirstSelected),
 									connectorData: _elm_lang$core$Native_Utils.update(
 										cdata,
-										{nodeId: _p11.id})
+										{nodeId: _p8.id})
 								});
 						case 'FirstSelected':
 							return _elm_lang$core$Native_Utils.update(
@@ -10490,29 +10491,29 @@ var _user$project$Update$updateHelp = F2(
 										{
 											connector: _elm_lang$core$Native_Utils.update(
 												con,
-												{nodeId: _p11.id})
+												{nodeId: _p8.id})
 										})
 								});
 						default:
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									actionState: _user$project$MapModel$InspectingNode(_p11)
+									actionState: _user$project$MapModel$InspectingNode(_p8)
 								});
 					}
 				} else {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							actionState: _user$project$MapModel$InspectingNode(_p11),
+							actionState: _user$project$MapModel$InspectingNode(_p8),
 							offSet: _elm_lang$core$Maybe$Just(
-								A2(_user$project$Update$getOffset, model, _p3._0._0)),
-							dragNode: _elm_lang$core$Maybe$Just(_p11)
+								A2(_user$project$UpdateHelpers$getOffset, model, _p0._0._0)),
+							dragNode: _elm_lang$core$Maybe$Just(_p8)
 						});
 				}
 			case 'CreateConnector':
-				var _p12 = _p3._0;
-				switch (_p12.ctor) {
+				var _p9 = _p0._0;
+				switch (_p9.ctor) {
 					case 'InitConnector':
 						return _elm_lang$core$Native_Utils.update(
 							model,
@@ -10528,7 +10529,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										connector: _elm_lang$core$Native_Utils.update(
 											con,
-											{exitSide: _p12._0})
+											{exitSide: _p9._0})
 									})
 							});
 					case 'EnterChanged':
@@ -10540,7 +10541,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										connector: _elm_lang$core$Native_Utils.update(
 											con,
-											{exitSide: _p12._0})
+											{exitSide: _p9._0})
 									})
 							});
 					case 'CostChanged':
@@ -10552,7 +10553,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										connector: _elm_lang$core$Native_Utils.update(
 											con,
-											{cost: _p12._0})
+											{cost: _p9._0})
 									})
 							});
 					default:
@@ -10563,8 +10564,8 @@ var _user$project$Update$updateHelp = F2(
 								nodes: A2(
 									_elm_lang$core$List$map,
 									function (n) {
-										var _p13 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
-										if (_p13 === true) {
+										var _p10 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
+										if (_p10 === true) {
 											return _elm_lang$core$Native_Utils.update(
 												n,
 												{
@@ -10578,8 +10579,8 @@ var _user$project$Update$updateHelp = F2(
 							});
 				}
 			case 'CreateNode':
-				var _p14 = _p3._0;
-				switch (_p14.ctor) {
+				var _p11 = _p0._0;
+				switch (_p11.ctor) {
 					case 'InitNode':
 						return _elm_lang$core$Native_Utils.update(
 							model,
@@ -10596,7 +10597,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										node: _elm_lang$core$Native_Utils.update(
 											nod,
-											{displayText: _p14._0})
+											{displayText: _p11._0})
 									})
 							});
 					default:

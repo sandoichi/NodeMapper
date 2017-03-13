@@ -1,13 +1,15 @@
 module Update exposing (..)
 
-import Html exposing (..)
-import Html.Attributes exposing (..)
 import UIHelper exposing (..)
 import Connectors exposing (..)
 import ConnectorUI exposing (..)
 import MapNode exposing (..)
 import MapModel exposing (..)
 import MapMsg exposing (..)
+import UpdateHelpers
+
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Mouse exposing (Position)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -30,7 +32,7 @@ updateHelp msg model =
           | nodes = model.nodes |> List.map (\n ->
             case n.id == sn.id of
               True -> 
-                 calculatePosition {x=d.x,y=d.y} model.offSet
+                 UpdateHelpers.calculatePosition {x=d.x,y=d.y} model.offSet
                  |> \{x,y} -> { n | px = x, py = y } 
               False -> n) }
         Nothing ->  model
@@ -52,7 +54,7 @@ updateHelp msg model =
               { model | actionState = InspectingNode node }
         _ ->
           { model | actionState = InspectingNode node 
-           ,offSet = Just (getOffset model pos)
+           ,offSet = Just (UpdateHelpers.getOffset model pos)
            ,dragNode = Just node
           }
     CreateConnector evt ->
@@ -86,16 +88,3 @@ updateHelp msg model =
         { model | actionState = ConnectingNodes Waiting }
 
 
-calculatePosition : {x:Int,y:Int} -> Maybe {x:Int,y:Int} -> {x:Int,y:Int}
-calculatePosition mousePos offSet =
-  case offSet of 
-    Just off ->
-      {x = mousePos.x - off.x, y = mousePos.y - off.y}
-    Nothing ->
-      {x = mousePos.x, y = mousePos.y}
-
-getOffset : Model -> Position -> Position
-getOffset model pos =
-  case model.offSet of
-    Just x -> x
-    Nothing -> {x=pos.x,y=pos.y}

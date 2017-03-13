@@ -1,0 +1,19 @@
+var _user$project$UpdateHelpers$getOffset = F2(
+	function (model, pos) {
+		var _p0 = model.offSet;
+		if (_p0.ctor === 'Just') {
+			return _p0._0;
+		} else {
+			return {x: pos.x, y: pos.y};
+		}
+	});
+var _user$project$UpdateHelpers$calculatePosition = F2(
+	function (mousePos, offSet) {
+		var _p1 = offSet;
+		if (_p1.ctor === 'Just') {
+			var _p2 = _p1._0;
+			return {x: mousePos.x - _p2.x, y: mousePos.y - _p2.y};
+		} else {
+			return {x: mousePos.x, y: mousePos.y};
+		}
+	});
