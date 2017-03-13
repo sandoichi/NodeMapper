@@ -28,12 +28,11 @@ updateHelp msg model =
     DragAt ({x,y} as d) ->
       case model.dragNode of
         Just sn ->
-          { model 
-          | nodes = model.nodes |> List.map (\n ->
+          { model | nodes = model.nodes |> List.map (\n ->
             case n.id == sn.id of
               True -> 
-                 UpdateHelpers.calculatePosition {x=d.x,y=d.y} model.offSet
-                 |> \{x,y} -> { n | px = x, py = y } 
+                UpdateHelpers.calculatePosition {x=d.x,y=d.y} model.offSet
+                |> \{x,y} -> { n | px = x, py = y } 
               False -> n) }
         Nothing ->  model
     DragEnd _ ->
@@ -75,8 +74,7 @@ updateHelp msg model =
     CreateNode e ->
       case e of
         InitNode ->
-          { model | 
-            actionState = CreatingNode
+          { model | actionState = CreatingNode
             ,nodeData = MapNode.getPanelInit (model.nodeCounter + 1) }
         DisplayTxt s ->
           { model | nodeData = { ndata | node = { nod | displayText = s } } }

@@ -10318,38 +10318,7 @@ var _user$project$MapView$view = function (model) {
 								{
 									ctor: '::',
 									_0: _elm_lang$html$Html$text('Map Nodes'),
-									_1: {
-										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$button,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html$text('Add'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {
-											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$button,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text('StartConnect'),
-													_1: {ctor: '[]'}
-												}),
-											_1: {ctor: '[]'}
-										}
-									}
+									_1: {ctor: '[]'}
 								}),
 							_1: {
 								ctor: '::',
@@ -10387,8 +10356,50 @@ var _user$project$MapView$view = function (model) {
 							},
 							{
 								ctor: '::',
-								_0: _user$project$UIHelper$getSvgPanel(model),
-								_1: {ctor: '[]'}
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('toolbar'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(
+													_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Add'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('StartConnect'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}),
+								_1: {
+									ctor: '::',
+									_0: _user$project$UIHelper$getSvgPanel(model),
+									_1: {ctor: '[]'}
+								}
 							}),
 						_1: {ctor: '[]'}
 					}
