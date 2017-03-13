@@ -35,9 +35,14 @@ bothSelectedPanel : Connector -> Html Msg
 bothSelectedPanel c =
   div [ class "divConnectorCreation" ] [ 
     div [] [ span [ class "propName" ] [ text "Exit: " ], 
-      span [ class "propValue" ] [ select [ onInput (\x -> (CreateConnector (ExitChanged (stringToSide x))))] (getSideOptions c.exitSide) ] ]
+      span [ class "propValue" ] [ select [ onInput (\x -> 
+        (CreateConnector (ExitChanged (stringToSide x))))] (getSideOptions c.exitSide) ] ]
     ,div [] [ span [ class "propName" ] [ text "Enter: " ], 
-      span [ class "propValue" ] [ select [ onInput (\x -> (CreateConnector (EnterChanged (stringToSide x))))] (getSideOptions c.entrySide) ] ]
+      span [ class "propValue" ] [ select [ onInput (\x -> 
+        (CreateConnector (EnterChanged (stringToSide x))))] (getSideOptions c.entrySide) ] ]
+    ,div [] [ span [ class "propName" ] [ text "Cost: " ], 
+      span [ class "propValue" ] [ input [ onInput (\x -> 
+        (CreateConnector (CostChanged x)))] ] ]
     ,div [] [ button [ onClick (CreateConnector FinishConnector) ] [ text "Create Connector" ] ] 
   ]
 
