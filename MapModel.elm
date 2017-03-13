@@ -24,7 +24,7 @@ type alias Model = {
   ,dragNode : Maybe MapNode
   ,offSet : Maybe { x : Int, y : Int }
   ,actionState : ActionState
-  ,lastMsg : Maybe Msg
+  ,toolbarText : String
 }
 
 
@@ -37,7 +37,7 @@ init = ({
   ,dragNode = Nothing
   ,offSet = Nothing
   ,actionState = Idle 
-  ,lastMsg = Nothing
+  ,toolbarText = ""
    }, Cmd.none)     
 
 

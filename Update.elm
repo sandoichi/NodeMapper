@@ -45,9 +45,11 @@ updateHelp msg model =
           case x of
             Waiting -> 
               { model | actionState = ConnectingNodes FirstSelected
+                ,toolbarText = "Select the second node to create connector"
                 ,connectorData = { cdata | nodeId = node.id } }
             FirstSelected -> 
               { model | actionState = ConnectingNodes SecondSelected
+                ,toolbarText = "Set connector properties in property panel"
                 ,connectorData = { cdata | connector = { con | nodeId = node.id } } }
             SecondSelected -> 
               { model | actionState = InspectingNode node }
@@ -67,7 +69,9 @@ updateHelp msg model =
         CostChanged cost ->
           { model | connectorData = { cdata | connector = { con | cost = cost } } }
         FinishConnector ->
-          { model | actionState = Idle ,nodes = model.nodes |> List.map (\n ->
+          { model | actionState = Idle 
+            ,toolbarText = "Connector successfully created" 
+            ,nodes = model.nodes |> List.map (\n ->
              case n.id == cdata.nodeId of
                True -> { n | connectors = con::(n.connectors) } 
                False -> n) }
@@ -75,14 +79,18 @@ updateHelp msg model =
       case e of
         InitNode ->
           { model | actionState = CreatingNode
+            ,toolbarText = "Set node properties in property panel"
             ,nodeData = MapNode.getPanelInit (model.nodeCounter + 1) }
         DisplayTxt s ->
           { model | nodeData = { ndata | node = { nod | displayText = s } } }
         FinishNode -> 
           { model | nodeCounter = model.nodeCounter + 1
+            ,toolbarText = "Node successfully created" 
             ,actionState = InspectingNode nod
             ,nodes = List.append model.nodes [ nod ] }
     StartConnecting ->
-        { model | actionState = ConnectingNodes Waiting }
+        { model | actionState = ConnectingNodes Waiting
+          ,connectorData = Connectors.getPanelInit 0
+          ,toolbarText = "Select the first node to create connector" }
 
 

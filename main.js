@@ -9468,7 +9468,7 @@ var _user$project$MapMsg$CreateNode = function (a) {
 
 var _user$project$MapModel$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
-		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, lastMsg: h};
+		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, toolbarText: h};
 	});
 var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
 var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
@@ -9491,7 +9491,7 @@ var _user$project$MapModel$init = {
 		dragNode: _elm_lang$core$Maybe$Nothing,
 		offSet: _elm_lang$core$Maybe$Nothing,
 		actionState: _user$project$MapModel$Idle,
-		lastMsg: _elm_lang$core$Maybe$Nothing
+		toolbarText: ''
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
@@ -10366,30 +10366,56 @@ var _user$project$MapView$view = function (model) {
 									{
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$button,
+											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Events$onClick(
-													_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
+												_0: _elm_lang$html$Html_Attributes$class('toolbarButtons'),
 												_1: {ctor: '[]'}
 											},
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Add'),
-												_1: {ctor: '[]'}
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(
+															_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Add'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$button,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('StartConnect'),
+															_1: {ctor: '[]'}
+														}),
+													_1: {ctor: '[]'}
+												}
 											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$button,
+												_elm_lang$html$Html$div,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
+													_0: _elm_lang$html$Html_Attributes$class('toolbarText'),
 													_1: {ctor: '[]'}
 												},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text('StartConnect'),
+													_0: _elm_lang$html$Html$text(model.toolbarText),
 													_1: {ctor: '[]'}
 												}),
 											_1: {ctor: '[]'}
@@ -10488,6 +10514,7 @@ var _user$project$Update$updateHelp = F2(
 								model,
 								{
 									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$FirstSelected),
+									toolbarText: 'Select the second node to create connector',
 									connectorData: _elm_lang$core$Native_Utils.update(
 										cdata,
 										{nodeId: _p8.id})
@@ -10497,6 +10524,7 @@ var _user$project$Update$updateHelp = F2(
 								model,
 								{
 									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$SecondSelected),
+									toolbarText: 'Set connector properties in property panel',
 									connectorData: _elm_lang$core$Native_Utils.update(
 										cdata,
 										{
@@ -10572,6 +10600,7 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								actionState: _user$project$MapModel$Idle,
+								toolbarText: 'Connector successfully created',
 								nodes: A2(
 									_elm_lang$core$List$map,
 									function (n) {
@@ -10597,6 +10626,7 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								actionState: _user$project$MapModel$CreatingNode,
+								toolbarText: 'Set node properties in property panel',
 								nodeData: _user$project$MapNode$getPanelInit(model.nodeCounter + 1)
 							});
 					case 'DisplayTxt':
@@ -10616,6 +10646,7 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								nodeCounter: model.nodeCounter + 1,
+								toolbarText: 'Node successfully created',
 								actionState: _user$project$MapModel$InspectingNode(nod),
 								nodes: A2(
 									_elm_lang$core$List$append,
@@ -10631,7 +10662,9 @@ var _user$project$Update$updateHelp = F2(
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$Waiting)
+						actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$Waiting),
+						connectorData: _user$project$Connectors$getPanelInit(0),
+						toolbarText: 'Select the first node to create connector'
 					});
 		}
 	});
