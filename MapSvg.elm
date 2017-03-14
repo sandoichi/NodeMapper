@@ -9,7 +9,7 @@ import Html exposing (..)
 import Html.Events exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Mouse exposing (Position)
+import Mouse exposing (..)
 import Json.Decode as Decode
 
 type NodeType =
@@ -37,8 +37,9 @@ genGraphic mapNode model =
                   ,Svg.Attributes.height "100" 
                   ,rx "5"
                   ,ry "5"
-                  ,x (toString mapNode.px)
-                  ,y (toString mapNode.py)
+                  --,x (toString mapNode.px)
+                  --,y (toString mapNode.py)
+                  ,Svg.Attributes.style (getTransformStyle model mapNode)
                   ] [] 
               ,Svg.text_ [ 
                   class "text"
@@ -46,6 +47,12 @@ genGraphic mapNode model =
                   ,y (toString (mapNode.py + 40))
               ] [ Html.text mapNode.displayText ] 
           ]
+
+getTransformStyle : Model -> MapNode -> String
+getTransformStyle model node =
+  "transform: translate(" ++ (toString node.px) ++ "px," ++ (toString node.py) ++ "px)"
+    ++ " scale(" ++ (toString model.svgScale) ++ ")"
+    ++ " translate(" ++ (toString -node.px) ++ "px," ++ (toString -node.py) ++ "px)"
 
 genConnectorGraphic : MapNode -> MapNode -> Svg Msg
 genConnectorGraphic start end =
@@ -87,13 +94,23 @@ mapConnectors nodes =
 genSvg : List MapNode -> Model -> Html Msg
 genSvg nodes model =
     svg [ class "svg" 
-      ,transform ("scale(" ++ (toString model.svgScale) ++ ")")
-      , on "mousewheel" (Decode.map (\x -> wheelZoom x))
+      ,transform ("scale(5)")
     ] (List.append (mapNodeList nodes model) (mapConnectors nodes))
 
-wheelZoom : Float -> Msg
-wheelZoom delta  = 
-  ZoomChange delta 
 
-  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

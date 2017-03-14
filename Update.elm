@@ -90,9 +90,10 @@ updateHelp msg model =
             ,actionState = InspectingNode nod
             ,nodes = List.append model.nodes [ nod ] }
     StartConnecting ->
-        { model | actionState = ConnectingNodes Waiting
-          ,connectorData = Connectors.getPanelInit 0
-          ,toolbarText = "Select the first node to create connector" }
-    ZoomChange x -> { model | svgScale = model.svgScale + x }
+      { model | actionState = ConnectingNodes Waiting
+        ,connectorData = Connectors.getPanelInit 0
+        ,toolbarText = "Select the first node to create connector" }
+    ZoomChange x -> { model | svgScale = model.svgScale + x 
+      ,toolbarText = "Scale : " ++ (toString (model.svgScale + x)) }
 
 

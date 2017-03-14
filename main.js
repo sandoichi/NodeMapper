@@ -9877,9 +9877,6 @@ var _user$project$ConnectorUI$getNodeConnectionPanel = function (model) {
 		});
 };
 
-var _user$project$MapSvg$wheelZoom = function (delta) {
-	return _user$project$MapMsg$ZoomChange(delta);
-};
 var _user$project$MapSvg$connectorsContainsId = F2(
 	function (connectors, id) {
 		return A2(
@@ -9960,6 +9957,46 @@ var _user$project$MapSvg$mapConnectors = function (nodes) {
 				},
 				nodes)));
 };
+var _user$project$MapSvg$getTransformStyle = F2(
+	function (model, node) {
+		return A2(
+			_elm_lang$core$Basics_ops['++'],
+			'transform: translate(',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(node.px),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'px,',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(node.py),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'px)',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' scale(',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(model.svgScale),
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										')',
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											' translate(',
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												_elm_lang$core$Basics$toString(0 - node.px),
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													'px,',
+													A2(
+														_elm_lang$core$Basics_ops['++'],
+														_elm_lang$core$Basics$toString(0 - node.py),
+														'px)'))))))))))));
+	});
 var _user$project$MapSvg$Regular = {ctor: 'Regular'};
 var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
@@ -10026,14 +10063,9 @@ var _user$project$MapSvg$genGraphic = F2(
 										_0: _elm_lang$svg$Svg_Attributes$ry('5'),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$x(
-												_elm_lang$core$Basics$toString(mapNode.px)),
-											_1: {
-												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$y(
-													_elm_lang$core$Basics$toString(mapNode.py)),
-												_1: {ctor: '[]'}
-											}
+											_0: _elm_lang$svg$Svg_Attributes$style(
+												A2(_user$project$MapSvg$getTransformStyle, model, mapNode)),
+											_1: {ctor: '[]'}
 										}
 									}
 								}
@@ -10087,14 +10119,7 @@ var _user$project$MapSvg$genSvg = F2(
 				_0: _elm_lang$svg$Svg_Attributes$class('svg'),
 				_1: {
 					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$transform(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'scale(',
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								_elm_lang$core$Basics$toString(model.svgScale),
-								')'))),
+					_0: _elm_lang$svg$Svg_Attributes$transform('scale(5)'),
 					_1: {ctor: '[]'}
 				}
 			},
@@ -10481,7 +10506,39 @@ var _user$project$MapView$view = function (model) {
 															_0: _elm_lang$html$Html$text('StartConnect'),
 															_1: {ctor: '[]'}
 														}),
-													_1: {ctor: '[]'}
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$button,
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html_Events$onClick(
+																	_user$project$MapMsg$ZoomChange(1.0)),
+																_1: {ctor: '[]'}
+															},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('[ + ]'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$button,
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html_Events$onClick(
+																		_user$project$MapMsg$ZoomChange(-1.0)),
+																	_1: {ctor: '[]'}
+																},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('[ - ]'),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {ctor: '[]'}
+														}
+													}
 												}
 											}),
 										_1: {
@@ -10749,9 +10806,16 @@ var _user$project$Update$updateHelp = F2(
 						toolbarText: 'Select the first node to create connector'
 					});
 			default:
+				var _p12 = _p0._0;
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{svgScale: model.svgScale + _p0._0});
+					{
+						svgScale: model.svgScale + _p12,
+						toolbarText: A2(
+							_elm_lang$core$Basics_ops['++'],
+							'Scale : ',
+							_elm_lang$core$Basics$toString(model.svgScale + _p12))
+					});
 		}
 	});
 var _user$project$Update$update = F2(
