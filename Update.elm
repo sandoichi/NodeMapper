@@ -32,7 +32,7 @@ updateHelp msg model =
           { model | nodes = model.nodes |> List.map (\n ->
             case n.id == sn.id of
               True -> 
-                UpdateHelpers.calculatePosition {x=d.x,y=d.y} model.offSet
+                UpdateHelpers.calculatePosition model {x=d.x,y=d.y} 
                 |> \{x,y} -> { n | px = x, py = y } 
               False -> n) }
         Nothing ->  model

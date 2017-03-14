@@ -24,8 +24,8 @@ view model =
                     div [ class "toolbarButtons" ] [
                       button [ onClick (CreateNode InitNode) ] [ text "Add" ]
                       ,button [ onClick StartConnecting ] [ text "StartConnect" ]
-                      ,button [ onClick (ZoomChange 1.0) ] [ text "[ + ]" ]
-                      ,button [ onClick (ZoomChange -1.0) ] [ text "[ - ]" ]
+                      ,button [ onClick (ZoomChange 0.2) ] [ text "[ + ]" ]
+                      ,button [ onClick (ZoomChange -0.2) ] [ text "[ - ]" ]
                     ]
                     ,div [ class "toolbarText" ] [ text model.toolbarText ]
                     ]

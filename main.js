@@ -9889,8 +9889,12 @@ var _user$project$MapSvg$connectorsContainsId = F2(
 				},
 				connectors));
 	});
-var _user$project$MapSvg$genConnectorGraphic = F2(
-	function (start, end) {
+var _user$project$MapSvg$getConnectorEndPoint = F2(
+	function (nodePoint, scale) {
+		return _elm_lang$core$Basics$toFloat(nodePoint) * scale;
+	});
+var _user$project$MapSvg$genConnectorGraphic = F3(
+	function (start, end, model) {
 		return A2(
 			_elm_lang$svg$Svg$line,
 			{
@@ -9899,19 +9903,23 @@ var _user$project$MapSvg$genConnectorGraphic = F2(
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$svg$Svg_Attributes$x1(
-						_elm_lang$core$Basics$toString(start.px)),
+						_elm_lang$core$Basics$toString(
+							A2(_user$project$MapSvg$getConnectorEndPoint, start.px, model.svgScale))),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$svg$Svg_Attributes$y1(
-							_elm_lang$core$Basics$toString(start.py)),
+							_elm_lang$core$Basics$toString(
+								A2(_user$project$MapSvg$getConnectorEndPoint, start.py, model.svgScale))),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$svg$Svg_Attributes$x2(
-								_elm_lang$core$Basics$toString(end.px)),
+								_elm_lang$core$Basics$toString(
+									A2(_user$project$MapSvg$getConnectorEndPoint, end.px, model.svgScale))),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$svg$Svg_Attributes$y2(
-									_elm_lang$core$Basics$toString(end.py)),
+									_elm_lang$core$Basics$toString(
+										A2(_user$project$MapSvg$getConnectorEndPoint, end.py, model.svgScale))),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -9920,20 +9928,21 @@ var _user$project$MapSvg$genConnectorGraphic = F2(
 			},
 			{ctor: '[]'});
 	});
-var _user$project$MapSvg$genConnectors = F2(
-	function (node, connectedNodes) {
+var _user$project$MapSvg$genConnectors = F3(
+	function (node, model, connectedNodes) {
 		return A2(
 			_elm_lang$core$List$map,
 			function (x) {
-				return A2(_user$project$MapSvg$genConnectorGraphic, node, x);
+				return A3(_user$project$MapSvg$genConnectorGraphic, node, x, model);
 			},
 			connectedNodes);
 	});
-var _user$project$MapSvg$genConnectorsMap = F2(
-	function (node, nodes) {
-		return A2(
+var _user$project$MapSvg$genConnectorsMap = F3(
+	function (node, nodes, model) {
+		return A3(
 			_user$project$MapSvg$genConnectors,
 			node,
+			model,
 			A2(
 				_elm_lang$core$List$filter,
 				function (x) {
@@ -9941,61 +9950,50 @@ var _user$project$MapSvg$genConnectorsMap = F2(
 				},
 				nodes));
 	});
-var _user$project$MapSvg$mapConnectors = function (nodes) {
-	return _elm_lang$core$List$concat(
-		A2(
-			_elm_lang$core$List$map,
-			function (x) {
-				return A2(_user$project$MapSvg$genConnectorsMap, x, nodes);
-			},
+var _user$project$MapSvg$mapConnectors = F2(
+	function (nodes, model) {
+		return _elm_lang$core$List$concat(
 			A2(
-				_elm_lang$core$List$filter,
+				_elm_lang$core$List$map,
 				function (x) {
-					return !_elm_lang$core$Native_Utils.eq(
-						x.connectors,
-						{ctor: '[]'});
+					return A3(_user$project$MapSvg$genConnectorsMap, x, nodes, model);
 				},
-				nodes)));
-};
+				A2(
+					_elm_lang$core$List$filter,
+					function (x) {
+						return !_elm_lang$core$Native_Utils.eq(
+							x.connectors,
+							{ctor: '[]'});
+					},
+					nodes)));
+	});
 var _user$project$MapSvg$getTransformStyle = F2(
 	function (model, node) {
 		return A2(
 			_elm_lang$core$Basics_ops['++'],
-			'transform: translate(',
+			'translate(-50 -50)',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Basics$toString(node.px),
+				' scale(',
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					'px,',
+					_elm_lang$core$Basics$toString(model.svgScale),
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						_elm_lang$core$Basics$toString(node.py),
+						')',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							'px)',
+							' translate(',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								' scale(',
+								_elm_lang$core$Basics$toString(node.px),
 								A2(
 									_elm_lang$core$Basics_ops['++'],
-									_elm_lang$core$Basics$toString(model.svgScale),
+									' ',
 									A2(
 										_elm_lang$core$Basics_ops['++'],
-										')',
-										A2(
-											_elm_lang$core$Basics_ops['++'],
-											' translate(',
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												_elm_lang$core$Basics$toString(0 - node.px),
-												A2(
-													_elm_lang$core$Basics_ops['++'],
-													'px,',
-													A2(
-														_elm_lang$core$Basics_ops['++'],
-														_elm_lang$core$Basics$toString(0 - node.py),
-														'px)'))))))))))));
+										_elm_lang$core$Basics$toString(node.py),
+										')'))))))));
 	});
 var _user$project$MapSvg$Regular = {ctor: 'Regular'};
 var _user$project$MapSvg$Selected = {ctor: 'Selected'};
@@ -10029,7 +10027,12 @@ var _user$project$MapSvg$genGraphic = F2(
 								{ctor: '_Tuple2', _0: x, _1: mapNode});
 						},
 						_elm_lang$mouse$Mouse$position)),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$transform(
+						A2(_user$project$MapSvg$getTransformStyle, model, mapNode)),
+					_1: {ctor: '[]'}
+				}
 			},
 			{
 				ctor: '::',
@@ -10061,12 +10064,7 @@ var _user$project$MapSvg$genGraphic = F2(
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$svg$Svg_Attributes$ry('5'),
-										_1: {
-											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$style(
-												A2(_user$project$MapSvg$getTransformStyle, model, mapNode)),
-											_1: {ctor: '[]'}
-										}
+										_1: {ctor: '[]'}
 									}
 								}
 							}
@@ -10082,12 +10080,10 @@ var _user$project$MapSvg$genGraphic = F2(
 							_0: _elm_lang$svg$Svg_Attributes$class('text'),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$x(
-									_elm_lang$core$Basics$toString(mapNode.px + 5)),
+								_0: _elm_lang$svg$Svg_Attributes$x('10'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$y(
-										_elm_lang$core$Basics$toString(mapNode.py + 40)),
+									_0: _elm_lang$svg$Svg_Attributes$y('20'),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -10126,7 +10122,7 @@ var _user$project$MapSvg$genSvg = F2(
 			A2(
 				_elm_lang$core$List$append,
 				A2(_user$project$MapSvg$mapNodeList, nodes, model),
-				_user$project$MapSvg$mapConnectors(nodes)));
+				A2(_user$project$MapSvg$mapConnectors, nodes, model)));
 	});
 
 var _user$project$UIHelper$getSvgPanel = function (model) {
@@ -10513,7 +10509,7 @@ var _user$project$MapView$view = function (model) {
 															{
 																ctor: '::',
 																_0: _elm_lang$html$Html_Events$onClick(
-																	_user$project$MapMsg$ZoomChange(1.0)),
+																	_user$project$MapMsg$ZoomChange(0.2)),
 																_1: {ctor: '[]'}
 															},
 															{
@@ -10528,7 +10524,7 @@ var _user$project$MapView$view = function (model) {
 																{
 																	ctor: '::',
 																	_0: _elm_lang$html$Html_Events$onClick(
-																		_user$project$MapMsg$ZoomChange(-1.0)),
+																		_user$project$MapMsg$ZoomChange(-0.2)),
 																	_1: {ctor: '[]'}
 																},
 																{
@@ -10577,18 +10573,18 @@ var _user$project$UpdateHelpers$getOffset = F2(
 		if (_p0.ctor === 'Just') {
 			return _p0._0;
 		} else {
-			return {x: pos.x, y: pos.y};
+			return {x: pos.x - 50, y: pos.y - 50};
 		}
 	});
 var _user$project$UpdateHelpers$calculatePosition = F2(
-	function (mousePos, offSet) {
-		var _p1 = offSet;
-		if (_p1.ctor === 'Just') {
-			var _p2 = _p1._0;
-			return {x: mousePos.x - _p2.x, y: mousePos.y - _p2.y};
-		} else {
-			return {x: mousePos.x, y: mousePos.y};
-		}
+	function (model, mousePos) {
+		var offSet = A2(_user$project$UpdateHelpers$getOffset, model, mousePos);
+		return {
+			x: _elm_lang$core$Basics$round(
+				_elm_lang$core$Basics$toFloat(mousePos.x - offSet.x) / model.svgScale),
+			y: _elm_lang$core$Basics$round(
+				_elm_lang$core$Basics$toFloat(mousePos.y - offSet.y) / model.svgScale)
+		};
 	});
 
 var _user$project$Update$updateHelp = F2(
@@ -10621,8 +10617,8 @@ var _user$project$Update$updateHelp = F2(
 										}(
 											A2(
 												_user$project$UpdateHelpers$calculatePosition,
-												{x: _p5.x, y: _p5.y},
-												model.offSet));
+												model,
+												{x: _p5.x, y: _p5.y}));
 									} else {
 										return n;
 									}

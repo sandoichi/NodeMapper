@@ -28,6 +28,7 @@ getNodeType node model =
 genGraphic : MapNode -> Model -> Svg Msg
 genGraphic mapNode model =
       g [ on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position))
+          ,transform (getTransformStyle model mapNode)
         ] [ 
               rect [
                   class ("rect " ++ case getNodeType mapNode model of
@@ -37,36 +38,37 @@ genGraphic mapNode model =
                   ,Svg.Attributes.height "100" 
                   ,rx "5"
                   ,ry "5"
-                  --,x (toString mapNode.px)
-                  --,y (toString mapNode.py)
-                  ,Svg.Attributes.style (getTransformStyle model mapNode)
                   ] [] 
               ,Svg.text_ [ 
                   class "text"
-                  ,x (toString (mapNode.px + 5))
-                  ,y (toString (mapNode.py + 40))
+                  ,x "10"
+                  ,y "20"
               ] [ Html.text mapNode.displayText ] 
           ]
 
 getTransformStyle : Model -> MapNode -> String
 getTransformStyle model node =
-  "transform: translate(" ++ (toString node.px) ++ "px," ++ (toString node.py) ++ "px)"
-    ++ " scale(" ++ (toString model.svgScale) ++ ")"
-    ++ " translate(" ++ (toString -node.px) ++ "px," ++ (toString -node.py) ++ "px)"
+  "translate(-50 -50)"
+  ++ " scale(" ++ (toString model.svgScale) ++ ")"
+  ++ " translate(" ++ (toString node.px) ++ " " ++ (toString node.py) ++ ")"
 
-genConnectorGraphic : MapNode -> MapNode -> Svg Msg
-genConnectorGraphic start end =
+genConnectorGraphic : MapNode -> MapNode -> Model -> Svg Msg
+genConnectorGraphic start end model =
     line [
         class "connectorLine"
-        ,x1 (toString start.px)
-        ,y1 (toString start.py)
-        ,x2 (toString end.px)
-        ,y2 (toString end.py)
+        ,x1 (toString (getConnectorEndPoint start.px model.svgScale))
+        ,y1 (toString (getConnectorEndPoint start.py model.svgScale))
+        ,x2 (toString (getConnectorEndPoint end.px model.svgScale))
+        ,y2 (toString (getConnectorEndPoint end.py model.svgScale))
         ] []
 
-genConnectors : MapNode -> List MapNode -> List (Svg Msg)
-genConnectors node connectedNodes = 
-    List.map (\x -> genConnectorGraphic node x) connectedNodes
+getConnectorEndPoint : Int -> Float -> Float
+getConnectorEndPoint nodePoint scale =
+  (toFloat nodePoint * scale)
+
+genConnectors : MapNode -> Model -> List MapNode -> List (Svg Msg)
+genConnectors node model connectedNodes = 
+    List.map (\x -> genConnectorGraphic node x model) connectedNodes
 
 connectorsContainsId : List Connector -> Int -> Bool
 connectorsContainsId connectors id =
@@ -74,28 +76,28 @@ connectorsContainsId connectors id =
     |> List.map (\x -> x.nodeId)
     |> List.member id
 
-genConnectorsMap : MapNode -> List MapNode -> List (Svg Msg)
-genConnectorsMap node nodes =
+genConnectorsMap : MapNode -> List MapNode -> Model -> List (Svg Msg)
+genConnectorsMap node nodes model =
     nodes
     |> List.filter (\x -> connectorsContainsId node.connectors x.id)
-    |> genConnectors node
+    |> genConnectors node model
 
 mapNodeList : List MapNode -> Model -> List (Svg Msg)
 mapNodeList nodes model =
     List.map (\x -> genGraphic x model) nodes
 
-mapConnectors : List MapNode -> List (Svg Msg)
-mapConnectors nodes =
+mapConnectors : List MapNode -> Model -> List (Svg Msg)
+mapConnectors nodes model =
     nodes 
     |> List.filter (\x -> x.connectors /= [])
-    |> List.map (\x -> genConnectorsMap x nodes) 
+    |> List.map (\x -> genConnectorsMap x nodes model) 
     |> List.concat
 
 genSvg : List MapNode -> Model -> Html Msg
 genSvg nodes model =
     svg [ class "svg" 
       ,transform ("scale(5)")
-    ] (List.append (mapNodeList nodes model) (mapConnectors nodes))
+    ] (List.append (mapNodeList nodes model) (mapConnectors nodes model))
 
 
 
