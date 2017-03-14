@@ -25,6 +25,7 @@ type alias Model = {
   ,offSet : Maybe { x : Int, y : Int }
   ,actionState : ActionState
   ,toolbarText : String
+  ,svgScale : Float
 }
 
 
@@ -38,6 +39,7 @@ init = ({
   ,offSet = Nothing
   ,actionState = Idle 
   ,toolbarText = ""
+  ,svgScale = 1.0
    }, Cmd.none)     
 
 

@@ -9446,6 +9446,9 @@ var _user$project$MapMsg$DisplayTxt = function (a) {
 	return {ctor: 'DisplayTxt', _0: a};
 };
 var _user$project$MapMsg$InitNode = {ctor: 'InitNode'};
+var _user$project$MapMsg$ZoomChange = function (a) {
+	return {ctor: 'ZoomChange', _0: a};
+};
 var _user$project$MapMsg$DoNothing = {ctor: 'DoNothing'};
 var _user$project$MapMsg$CreateConnector = function (a) {
 	return {ctor: 'CreateConnector', _0: a};
@@ -9467,9 +9470,9 @@ var _user$project$MapMsg$CreateNode = function (a) {
 	return {ctor: 'CreateNode', _0: a};
 };
 
-var _user$project$MapModel$Model = F8(
-	function (a, b, c, d, e, f, g, h) {
-		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, toolbarText: h};
+var _user$project$MapModel$Model = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, toolbarText: h, svgScale: i};
 	});
 var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
 var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
@@ -9492,7 +9495,8 @@ var _user$project$MapModel$init = {
 		dragNode: _elm_lang$core$Maybe$Nothing,
 		offSet: _elm_lang$core$Maybe$Nothing,
 		actionState: _user$project$MapModel$Idle,
-		toolbarText: ''
+		toolbarText: '',
+		svgScale: 1.0
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
@@ -9873,6 +9877,9 @@ var _user$project$ConnectorUI$getNodeConnectionPanel = function (model) {
 		});
 };
 
+var _user$project$MapSvg$wheelZoom = function (delta) {
+	return _user$project$MapMsg$ZoomChange(delta);
+};
 var _user$project$MapSvg$connectorsContainsId = F2(
 	function (connectors, id) {
 		return A2(
@@ -10078,7 +10085,18 @@ var _user$project$MapSvg$genSvg = F2(
 			{
 				ctor: '::',
 				_0: _elm_lang$svg$Svg_Attributes$class('svg'),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$transform(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'scale(',
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								_elm_lang$core$Basics$toString(model.svgScale),
+								')'))),
+					_1: {ctor: '[]'}
+				}
 			},
 			A2(
 				_elm_lang$core$List$append,
@@ -10722,7 +10740,7 @@ var _user$project$Update$updateHelp = F2(
 									})
 							});
 				}
-			default:
+			case 'StartConnecting':
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
@@ -10730,6 +10748,10 @@ var _user$project$Update$updateHelp = F2(
 						connectorData: _user$project$Connectors$getPanelInit(0),
 						toolbarText: 'Select the first node to create connector'
 					});
+			default:
+				return _elm_lang$core$Native_Utils.update(
+					model,
+					{svgScale: model.svgScale + _p0._0});
 		}
 	});
 var _user$project$Update$update = F2(

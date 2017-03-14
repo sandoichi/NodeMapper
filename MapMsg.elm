@@ -22,4 +22,5 @@ type Msg =
   | StartConnecting
   | CreateConnector Connectors.Event
   | DoNothing
+  | ZoomChange Float
 

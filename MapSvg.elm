@@ -86,4 +86,14 @@ mapConnectors nodes =
 
 genSvg : List MapNode -> Model -> Html Msg
 genSvg nodes model =
-    svg [ class "svg" ] (List.append (mapNodeList nodes model) (mapConnectors nodes))
+    svg [ class "svg" 
+      ,transform ("scale(" ++ (toString model.svgScale) ++ ")")
+      , on "mousewheel" (Decode.map (\x -> wheelZoom x))
+    ] (List.append (mapNodeList nodes model) (mapConnectors nodes))
+
+wheelZoom : Float -> Msg
+wheelZoom delta  = 
+  ZoomChange delta 
+
+  
+

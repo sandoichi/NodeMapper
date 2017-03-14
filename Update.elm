@@ -93,5 +93,6 @@ updateHelp msg model =
         { model | actionState = ConnectingNodes Waiting
           ,connectorData = Connectors.getPanelInit 0
           ,toolbarText = "Select the first node to create connector" }
+    ZoomChange x -> { model | svgScale = model.svgScale + x }
 
 
