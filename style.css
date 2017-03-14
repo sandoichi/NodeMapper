@@ -1,37 +1,63 @@
+body { background-color: #0A0A0A; }
+
 .divMainContainer {
-            background-color : #2B2B2B;
-            overflow : auto;
-            min-height : 700px;
+            background-color : #1F1F1F;
+            overflow : hidden;
             color : #CCCCCC;
             border : 2px solid teal; 
+            height: 98%;
+            width: 98%;
+            margin: auto;
         }         
+
+.toolbar {
+    color: orange;
+    padding: 10px;
+    font-size: 10px;
+    border-bottom: 1px solid #787878;
+    overflow: auto;
+}
+
+.toolbarText {
+    display: inline block;
+    margin: auto;
+    text-align: center;
+    font-size: 14;
+}
+
+.toolbarButtons {
+    float: left;
+    text-align: center;
+}
 
 .divLeftPanel {
             width : 275px;
-            border-right : 1px solid #787878; 
             float : left; 
+            padding-top: 5px;
       }
 
 .divRightPanel {
-            border : 5px solid green ;
             width : auto ;
             overflow : auto ;
+            border-left : 1px solid #787878; 
         }
 
 .divSvgPanel {
-            height : 625px;
-            border : 2px solid orange ;
+            height: 3000px;
+            width: 3000px;
         }
 
 .svg {
     height : 100%;
     width: 100%;
+    background-color: #21190B;
   }
  
 .divPropertyPanel {
-            height : 275px ;
+            position: absolute;
+            bottom: 0;
+            height : 200px ;
             border-top : 1px solid #787878;
-            border : 2px solid yellow ;
         }
 
 .debugPanel {
@@ -57,21 +83,26 @@
 
 
 .svg .rect {
-    fill: orange;
+    fill: #070629;
+    stroke: lime;
+    stroke-width: 2px;
+    -webkit-touch-callout: none;
+    -webkit-user-select:none;
+    -khtml-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -o-user-select:none;
+    user-select:none;
 }
 
-.svg .selectedPrimary {
-    stroke: teal;
-    stroke-width: 5px;
-}
-
-.svg .selectedSecondary {
+.svg .selected {
     stroke: yellow;
-    stroke-width: 5px;
+    stroke-width: 3px;
 }
 
 .svg .text {
-    fill: green;
+    font-size: 17px;
+    fill: lime;
     -webkit-touch-callout: none;
     -webkit-user-select:none;
     -khtml-user-select:none;

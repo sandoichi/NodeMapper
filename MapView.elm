@@ -14,15 +14,19 @@ view model =
     [ 
         div [ class "divMainContainer" ] [ 
             div [ class "divLeftPanel" ] [ 
-                div [] [
-                    text "Map Nodes"
-                    ,button [ onClick (ChangeMode Create) ] [ text "Add" ]
-                    ,button [ onClick (AddConnector 5) ] [ text "Connect" ] ]
+                div [] [ text "Map Nodes" ]
                 ,div [] (List.map (\x -> 
-                    div (getLeftPanelNodeAttributes model x SelectNode) 
-                        [text (x.displayText ++ " | x: " ++ (toString x.px) ++ " y: " ++ (toString x.py))]) model.nodes) 
-                , debugPanel model
+                    div (getLeftPanelNodeAttributes model x) [ text x.displayText ]) model.nodes) 
+                ,getPropertyPanel model
             ]
-            ,div [ class "divRightPanel" ] [ getSvgPanel model, getPropertyPanel model ]
+            ,div [ class "divRightPanel" ] [ 
+                div [ class "toolbar" ] [
+                    div [ class "toolbarButtons" ] [
+                      button [ onClick (CreateNode InitNode) ] [ text "Add" ]
+                      ,button [ onClick StartConnecting ] [ text "StartConnect" ]
+                    ]
+                    ,div [ class "toolbarText" ] [ text model.toolbarText ]
+                    ]
+                ,getSvgPanel model ]
         ] 
     ]

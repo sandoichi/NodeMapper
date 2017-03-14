@@ -9468,7 +9468,7 @@ var _user$project$MapMsg$CreateNode = function (a) {
 
 var _user$project$MapModel$Model = F8(
 	function (a, b, c, d, e, f, g, h) {
-		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, toolbarText: h};
+		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, lastMsg: h};
 	});
 var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
 var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
@@ -9491,7 +9491,7 @@ var _user$project$MapModel$init = {
 		dragNode: _elm_lang$core$Maybe$Nothing,
 		offSet: _elm_lang$core$Maybe$Nothing,
 		actionState: _user$project$MapModel$Idle,
-		toolbarText: ''
+		lastMsg: _elm_lang$core$Maybe$Nothing
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
@@ -10366,56 +10366,30 @@ var _user$project$MapView$view = function (model) {
 									{
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$div,
+											_elm_lang$html$Html$button,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('toolbarButtons'),
+												_0: _elm_lang$html$Html_Events$onClick(
+													_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
 												_1: {ctor: '[]'}
 											},
 											{
 												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$button,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(
-															_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Add'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$button,
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
-															_1: {ctor: '[]'}
-														},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('StartConnect'),
-															_1: {ctor: '[]'}
-														}),
-													_1: {ctor: '[]'}
-												}
+												_0: _elm_lang$html$Html$text('Add'),
+												_1: {ctor: '[]'}
 											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$div,
+												_elm_lang$html$Html$button,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('toolbarText'),
+													_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
 													_1: {ctor: '[]'}
 												},
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text(model.toolbarText),
+													_0: _elm_lang$html$Html$text('StartConnect'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {ctor: '[]'}
@@ -10434,273 +10408,10 @@ var _user$project$MapView$view = function (model) {
 		});
 };
 
-var _user$project$UpdateHelpers$getOffset = F2(
-	function (model, pos) {
-		var _p0 = model.offSet;
-		if (_p0.ctor === 'Just') {
-			return _p0._0;
-		} else {
-			return {x: pos.x, y: pos.y};
-		}
-	});
-var _user$project$UpdateHelpers$calculatePosition = F2(
-	function (mousePos, offSet) {
-		var _p1 = offSet;
-		if (_p1.ctor === 'Just') {
-			var _p2 = _p1._0;
-			return {x: mousePos.x - _p2.x, y: mousePos.y - _p2.y};
-		} else {
-			return {x: mousePos.x, y: mousePos.y};
-		}
-	});
-
-var _user$project$Update$updateHelp = F2(
-	function (msg, model) {
-		var nod = model.nodeData.node;
-		var ndata = model.nodeData;
-		var con = model.connectorData.connector;
-		var cdata = model.connectorData;
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'DragAt':
-				var _p5 = _p0._0;
-				var _p1 = model.dragNode;
-				if (_p1.ctor === 'Just') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							nodes: A2(
-								_elm_lang$core$List$map,
-								function (n) {
-									var _p2 = _elm_lang$core$Native_Utils.eq(n.id, _p1._0.id);
-									if (_p2 === true) {
-										return function (_p3) {
-											var _p4 = _p3;
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{px: _p4.x, py: _p4.y});
-										}(
-											A2(
-												_user$project$UpdateHelpers$calculatePosition,
-												{x: _p5.x, y: _p5.y},
-												model.offSet));
-									} else {
-										return n;
-									}
-								},
-								model.nodes)
-						});
-				} else {
-					return model;
-				}
-			case 'DragEnd':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{dragNode: _elm_lang$core$Maybe$Nothing});
-			case 'InspectNode':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						actionState: _user$project$MapModel$InspectingNode(_p0._0)
-					});
-			case 'SelectNode':
-				var _p8 = _p0._0._1;
-				var _p6 = model.actionState;
-				if (_p6.ctor === 'ConnectingNodes') {
-					var _p7 = _p6._0;
-					switch (_p7.ctor) {
-						case 'Waiting':
-							return _elm_lang$core$Native_Utils.update(
-								model,
-								{
-									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$FirstSelected),
-									toolbarText: 'Select the second node to create connector',
-									connectorData: _elm_lang$core$Native_Utils.update(
-										cdata,
-										{nodeId: _p8.id})
-								});
-						case 'FirstSelected':
-							return _elm_lang$core$Native_Utils.update(
-								model,
-								{
-									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$SecondSelected),
-									toolbarText: 'Set connector properties in property panel',
-									connectorData: _elm_lang$core$Native_Utils.update(
-										cdata,
-										{
-											connector: _elm_lang$core$Native_Utils.update(
-												con,
-												{nodeId: _p8.id})
-										})
-								});
-						default:
-							return _elm_lang$core$Native_Utils.update(
-								model,
-								{
-									actionState: _user$project$MapModel$InspectingNode(_p8)
-								});
-					}
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							actionState: _user$project$MapModel$InspectingNode(_p8),
-							offSet: _elm_lang$core$Maybe$Just(
-								A2(_user$project$UpdateHelpers$getOffset, model, _p0._0._0)),
-							dragNode: _elm_lang$core$Maybe$Just(_p8)
-						});
-				}
-			case 'CreateConnector':
-				var _p9 = _p0._0;
-				switch (_p9.ctor) {
-					case 'InitConnector':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								connectorData: _user$project$Connectors$getPanelInit(0)
-							});
-					case 'ExitChanged':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								connectorData: _elm_lang$core$Native_Utils.update(
-									cdata,
-									{
-										connector: _elm_lang$core$Native_Utils.update(
-											con,
-											{exitSide: _p9._0})
-									})
-							});
-					case 'EnterChanged':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								connectorData: _elm_lang$core$Native_Utils.update(
-									cdata,
-									{
-										connector: _elm_lang$core$Native_Utils.update(
-											con,
-											{exitSide: _p9._0})
-									})
-							});
-					case 'CostChanged':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								connectorData: _elm_lang$core$Native_Utils.update(
-									cdata,
-									{
-										connector: _elm_lang$core$Native_Utils.update(
-											con,
-											{cost: _p9._0})
-									})
-							});
-					default:
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$Idle,
-								toolbarText: 'Connector successfully created',
-								nodes: A2(
-									_elm_lang$core$List$map,
-									function (n) {
-										var _p10 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
-										if (_p10 === true) {
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{
-													connectors: {ctor: '::', _0: con, _1: n.connectors}
-												});
-										} else {
-											return n;
-										}
-									},
-									model.nodes)
-							});
-				}
-			case 'CreateNode':
-				var _p11 = _p0._0;
-				switch (_p11.ctor) {
-					case 'InitNode':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$CreatingNode,
-								toolbarText: 'Set node properties in property panel',
-								nodeData: _user$project$MapNode$getPanelInit(model.nodeCounter + 1)
-							});
-					case 'DisplayTxt':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								nodeData: _elm_lang$core$Native_Utils.update(
-									ndata,
-									{
-										node: _elm_lang$core$Native_Utils.update(
-											nod,
-											{displayText: _p11._0})
-									})
-							});
-					default:
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								nodeCounter: model.nodeCounter + 1,
-								toolbarText: 'Node successfully created',
-								actionState: _user$project$MapModel$InspectingNode(nod),
-								nodes: A2(
-									_elm_lang$core$List$append,
-									model.nodes,
-									{
-										ctor: '::',
-										_0: nod,
-										_1: {ctor: '[]'}
-									})
-							});
-				}
-			default:
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$Waiting),
-						connectorData: _user$project$Connectors$getPanelInit(0),
-						toolbarText: 'Select the first node to create connector'
-					});
-		}
-	});
-var _user$project$Update$update = F2(
-	function (msg, model) {
-		return {
-			ctor: '_Tuple2',
-			_0: A2(_user$project$Update$updateHelp, msg, model),
-			_1: _elm_lang$core$Platform_Cmd$none
-		};
-	});
-
-var _user$project$Main$subscriptions = function (model) {
-	var _p0 = model.dragNode;
-	if (_p0.ctor === 'Just') {
-		return _elm_lang$core$Platform_Sub$batch(
-			{
-				ctor: '::',
-				_0: _elm_lang$mouse$Mouse$moves(_user$project$MapMsg$DragAt),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$mouse$Mouse$ups(_user$project$MapMsg$DragEnd),
-					_1: {ctor: '[]'}
-				}
-			});
-	} else {
-		return _elm_lang$core$Platform_Sub$none;
-	}
-};
-var _user$project$Main$main = _elm_lang$html$Html$program(
-	{init: _user$project$MapModel$init, view: _user$project$MapView$view, update: _user$project$Update$update, subscriptions: _user$project$Main$subscriptions})();
-
 var Elm = {};
-Elm['Main'] = Elm['Main'] || {};
-if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', undefined);
+Elm['MapView'] = Elm['MapView'] || {};
+if (typeof _user$project$MapView$main !== 'undefined') {
+    _user$project$MapView$main(Elm['MapView'], 'MapView', undefined);
 }
 
 if (typeof define === "function" && define['amd'])

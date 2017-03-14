@@ -2,30 +2,42 @@ module MapModel exposing (..)
 
 import MapMsg exposing (..)
 import MapNode exposing (..)
+import Connectors
+
+type ConnectorState =
+  Waiting
+  | FirstSelected
+  | SecondSelected
+
+type ActionState =
+  Idle
+  | ConnectingNodes ConnectorState
+  | CreatingNode
+  | InspectingNode MapNode
 
 
 type alias Model = { 
-    editMode : EditMode
-    ,nodes : List MapNode 
-    ,selectedNode : Maybe MapNode
-    ,selectedNode2 : Maybe MapNode
-    ,nodeCounter : Int
-    ,dragNode : Bool
-    ,offSet : Maybe { x : Int, y : Int }
-    ,tempNode : Maybe MapNode
+  nodes : List MapNode 
+  ,connectorData : Connectors.UIPanelData
+  ,nodeData : MapNode.UIPanelData
+  ,nodeCounter : Int
+  ,dragNode : Maybe MapNode
+  ,offSet : Maybe { x : Int, y : Int }
+  ,actionState : ActionState
+  ,toolbarText : String
 }
 
+
 init : ( Model, Cmd Msg )
-init =
-   ({
-       editMode = Normal
-       ,nodes = []
-       ,selectedNode = Nothing
-       ,selectedNode2 = Nothing
-       ,nodeCounter = 0
-       ,dragNode = False
-       ,offSet = Nothing
-       ,tempNode = Nothing
+init = ({
+   nodes = []
+  ,connectorData = Connectors.getPanelInit 0
+  ,nodeData = MapNode.getPanelInit 0
+  ,nodeCounter = 0
+  ,dragNode = Nothing
+  ,offSet = Nothing
+  ,actionState = Idle 
+  ,toolbarText = ""
    }, Cmd.none)     
 
 
