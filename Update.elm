@@ -25,6 +25,7 @@ updateHelp msg model =
     ndata = model.nodeData
     nod = model.nodeData.node in
   case msg of
+    DoNothing -> model
     DragAt ({x,y} as d) ->
       case model.dragNode of
         Just sn ->

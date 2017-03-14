@@ -21,4 +21,5 @@ type Msg =
   | DragEnd Position
   | StartConnecting
   | CreateConnector Connectors.Event
+  | DoNothing
 

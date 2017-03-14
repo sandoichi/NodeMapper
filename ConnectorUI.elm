@@ -41,10 +41,15 @@ bothSelectedPanel c =
       span [ class "propValue" ] [ select [ onInput (\x -> 
         (CreateConnector (EnterChanged (stringToSide x))))] (getSideOptions c.entrySide) ] ]
     ,div [] [ span [ class "propName" ] [ text "Cost: " ], 
-      span [ class "propValue" ] [ input [ onInput (\x -> 
-        (CreateConnector (CostChanged x)))] ] ]
+      span [ class "propValue" ] [ input [ onInput getCostValue ] [] ] ]
     ,div [] [ button [ onClick (CreateConnector FinishConnector) ] [ text "Create Connector" ] ] 
   ]
+
+getCostValue : String -> Msg
+getCostValue s = 
+  case String.toInt s of
+    Ok i -> CreateConnector (CostChanged i)
+    Err e -> DoNothing
 
 nodeConnectorList : MapNode -> List (Html Msg)
 nodeConnectorList node =
@@ -53,6 +58,7 @@ nodeConnectorList node =
     text node.displayText
     ,text (getSideText x.exitSide)
     ,text (" " ++ (getSideText x.entrySide) ++ " " )
+    ,text (" C: " ++ (toString x.cost))
     ])
 
 getSideOptions : Side -> List (Html Msg)
