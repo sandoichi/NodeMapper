@@ -9446,6 +9446,7 @@ var _user$project$MapMsg$DisplayTxt = function (a) {
 	return {ctor: 'DisplayTxt', _0: a};
 };
 var _user$project$MapMsg$InitNode = {ctor: 'InitNode'};
+var _user$project$MapMsg$DoNothing = {ctor: 'DoNothing'};
 var _user$project$MapMsg$CreateConnector = function (a) {
 	return {ctor: 'CreateConnector', _0: a};
 };
@@ -9626,12 +9627,29 @@ var _user$project$ConnectorUI$nodeConnectorList = function (node) {
 										_elm_lang$core$Basics_ops['++'],
 										_user$project$ConnectorUI$getSideText(x.entrySide),
 										' '))),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										' C: ',
+										_elm_lang$core$Basics$toString(x.cost))),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				});
 		},
 		node.connectors);
+};
+var _user$project$ConnectorUI$getCostValue = function (s) {
+	var _p3 = _elm_lang$core$String$toInt(s);
+	if (_p3.ctor === 'Ok') {
+		return _user$project$MapMsg$CreateConnector(
+			_user$project$Connectors$CostChanged(_p3._0));
+	} else {
+		return _user$project$MapMsg$DoNothing;
+	}
 };
 var _user$project$ConnectorUI$bothSelectedPanel = function (c) {
 	return A2(
@@ -9745,21 +9763,65 @@ var _user$project$ConnectorUI$bothSelectedPanel = function (c) {
 						{
 							ctor: '::',
 							_0: A2(
-								_elm_lang$html$Html$button,
+								_elm_lang$html$Html$span,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(
-										_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
+									_0: _elm_lang$html$Html_Attributes$class('propName'),
 									_1: {ctor: '[]'}
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Create Connector'),
+									_0: _elm_lang$html$Html$text('Cost: '),
 									_1: {ctor: '[]'}
 								}),
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$span,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('propValue'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$input,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onInput(_user$project$ConnectorUI$getCostValue),
+												_1: {ctor: '[]'}
+											},
+											{ctor: '[]'}),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$button,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onClick(
+											_user$project$MapMsg$CreateConnector(_user$project$Connectors$FinishConnector)),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Create Connector'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
@@ -9781,10 +9843,10 @@ var _user$project$ConnectorUI$waitingPanel = A2(
 		_1: {ctor: '[]'}
 	});
 var _user$project$ConnectorUI$determineConnectorPanel = function (model) {
-	var _p3 = model.actionState;
-	if (_p3.ctor === 'ConnectingNodes') {
-		var _p4 = _p3._0;
-		switch (_p4.ctor) {
+	var _p4 = model.actionState;
+	if (_p4.ctor === 'ConnectingNodes') {
+		var _p5 = _p4._0;
+		switch (_p5.ctor) {
 			case 'Waiting':
 				return _user$project$ConnectorUI$waitingPanel;
 			case 'FirstSelected':
@@ -10462,6 +10524,8 @@ var _user$project$Update$updateHelp = F2(
 		var cdata = model.connectorData;
 		var _p0 = msg;
 		switch (_p0.ctor) {
+			case 'DoNothing':
+				return model;
 			case 'DragAt':
 				var _p5 = _p0._0;
 				var _p1 = model.dragNode;
