@@ -9423,8 +9423,8 @@ var _user$project$MapNode$getInit = function (identifier) {
 	return {
 		id: identifier,
 		displayText: 'NewNode',
-		px: 5,
-		py: 5,
+		px: 0,
+		py: 0,
 		connectors: {ctor: '[]'}
 	};
 };
@@ -9891,7 +9891,7 @@ var _user$project$MapSvg$connectorsContainsId = F2(
 	});
 var _user$project$MapSvg$getConnectorEndPoint = F2(
 	function (nodePoint, scale) {
-		return _elm_lang$core$Basics$toFloat(nodePoint) * scale;
+		return (_elm_lang$core$Basics$toFloat(nodePoint) * scale) + (50 * scale);
 	});
 var _user$project$MapSvg$genConnectorGraphic = F3(
 	function (start, end, model) {
@@ -10113,11 +10113,7 @@ var _user$project$MapSvg$genSvg = F2(
 			{
 				ctor: '::',
 				_0: _elm_lang$svg$Svg_Attributes$class('svg'),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$transform('scale(5)'),
-					_1: {ctor: '[]'}
-				}
+				_1: {ctor: '[]'}
 			},
 			A2(
 				_elm_lang$core$List$append,

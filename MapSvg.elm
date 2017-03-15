@@ -64,7 +64,7 @@ genConnectorGraphic start end model =
 
 getConnectorEndPoint : Int -> Float -> Float
 getConnectorEndPoint nodePoint scale =
-  (toFloat nodePoint * scale)
+  (toFloat nodePoint * scale) + (50 * scale)
 
 genConnectors : MapNode -> Model -> List MapNode -> List (Svg Msg)
 genConnectors node model connectedNodes = 
@@ -96,7 +96,6 @@ mapConnectors nodes model =
 genSvg : List MapNode -> Model -> Html Msg
 genSvg nodes model =
     svg [ class "svg" 
-      ,transform ("scale(5)")
     ] (List.append (mapNodeList nodes model) (mapConnectors nodes model))
 
 
