@@ -64,7 +64,7 @@ updateHelp msg model =
         ExitChanged s ->
           { model | connectorData = { cdata | connector = { con | exitSide = s } } }
         EnterChanged s ->
-          { model | connectorData = { cdata | connector = { con | exitSide = s } } }
+          { model | connectorData = { cdata | connector = { con | entrySide = s } } }
         CostChanged cost ->
           { model | connectorData = { cdata | connector = { con | cost = cost } } }
         FinishConnector ->

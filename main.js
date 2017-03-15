@@ -9901,8 +9901,43 @@ var _user$project$MapSvg$connectorsContainsId = F2(
 				},
 				connectors));
 	});
+var _user$project$MapSvg$calculateConnectorPoint = F2(
+	function (model, side) {
+		var full = model.nodeSize;
+		var half = _elm_lang$core$Basics$round(
+			_elm_lang$core$Basics$toFloat(model.nodeSize) / 2);
+		var _p0 = side;
+		switch (_p0.ctor) {
+			case 'Top':
+				return {x: half, y: 0};
+			case 'Bottom':
+				return {x: half, y: full};
+			case 'Left':
+				return {x: 0, y: half};
+			default:
+				return {x: full, y: half};
+		}
+	});
 var _user$project$MapSvg$genConnectorGraphic = F3(
 	function (start, end, model) {
+		var matchingCon = _elm_lang$core$List$head(
+			A2(
+				_elm_lang$core$List$filter,
+				function (x) {
+					return _elm_lang$core$Native_Utils.eq(x.nodeId, end.id);
+				},
+				start.connectors));
+		var conSides = function () {
+			var _p1 = matchingCon;
+			if (_p1.ctor === 'Just') {
+				var _p2 = _p1._0;
+				return {exitSide: _p2.exitSide, entrySide: _p2.entrySide};
+			} else {
+				return {exitSide: _user$project$Connectors$Top, entrySide: _user$project$Connectors$Bottom};
+			}
+		}();
+		var startPos = A2(_user$project$MapSvg$calculateConnectorPoint, model, conSides.exitSide);
+		var endPos = A2(_user$project$MapSvg$calculateConnectorPoint, model, conSides.entrySide);
 		return A2(
 			_elm_lang$svg$Svg$line,
 			{
@@ -9911,19 +9946,19 @@ var _user$project$MapSvg$genConnectorGraphic = F3(
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$svg$Svg_Attributes$x1(
-						_elm_lang$core$Basics$toString(start.px)),
+						_elm_lang$core$Basics$toString(start.px + startPos.x)),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$svg$Svg_Attributes$y1(
-							_elm_lang$core$Basics$toString(start.py)),
+							_elm_lang$core$Basics$toString(start.py + startPos.y)),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$svg$Svg_Attributes$x2(
-								_elm_lang$core$Basics$toString(end.px)),
+								_elm_lang$core$Basics$toString(end.px + endPos.x)),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$svg$Svg_Attributes$y2(
-									_elm_lang$core$Basics$toString(end.py)),
+									_elm_lang$core$Basics$toString(end.py + endPos.y)),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -9975,10 +10010,10 @@ var _user$project$MapSvg$Regular = {ctor: 'Regular'};
 var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
 	function (node, model) {
-		var _p0 = model.actionState;
-		if (_p0.ctor === 'InspectingNode') {
-			var _p1 = _elm_lang$core$Native_Utils.eq(_p0._0.id, node.id);
-			if (_p1 === true) {
+		var _p3 = model.actionState;
+		if (_p3.ctor === 'InspectingNode') {
+			var _p4 = _elm_lang$core$Native_Utils.eq(_p3._0.id, node.id);
+			if (_p4 === true) {
 				return _user$project$MapSvg$Selected;
 			} else {
 				return _user$project$MapSvg$Regular;
@@ -10015,8 +10050,8 @@ var _user$project$MapSvg$genGraphic = F2(
 									_elm_lang$core$Basics_ops['++'],
 									'rect ',
 									function () {
-										var _p2 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
-										if (_p2.ctor === 'Selected') {
+										var _p5 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
+										if (_p5.ctor === 'Selected') {
 											return 'selected';
 										} else {
 											return '';
@@ -10708,7 +10743,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										connector: _elm_lang$core$Native_Utils.update(
 											con,
-											{exitSide: _p9._0})
+											{entrySide: _p9._0})
 									})
 							});
 					case 'CostChanged':

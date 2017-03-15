@@ -47,13 +47,38 @@ genGraphic mapNode model =
 
 genConnectorGraphic : MapNode -> MapNode -> Model -> Svg Msg
 genConnectorGraphic start end model =
-    line [
-        class "connectorLine"
-        ,x1 (toString start.px)
-        ,y1 (toString start.py)
-        ,x2 (toString end.px)
-        ,y2 (toString end.py)
-        ] []
+  let
+    matchingCon =
+      start.connectors
+      |> List.filter (\x -> x.nodeId == end.id)
+      |> List.head
+
+    conSides =
+      case matchingCon of
+        Just x -> { exitSide = x.exitSide, entrySide = x.entrySide }  
+        Nothing -> { exitSide = Top, entrySide = Bottom }
+
+    startPos = calculateConnectorPoint model conSides.exitSide
+    endPos = calculateConnectorPoint model conSides.entrySide in
+
+  line [
+    class "connectorLine"
+    ,x1 (toString (start.px + startPos.x))
+    ,y1 (toString (start.py + startPos.y))
+    ,x2 (toString (end.px + endPos.x))
+    ,y2 (toString (end.py + endPos.y))
+    ] []
+
+calculateConnectorPoint : Model -> Side -> {x:Int,y:Int}
+calculateConnectorPoint model side =
+  let
+    half = round (toFloat model.nodeSize / 2) 
+    full = model.nodeSize in
+  case side of
+    Top -> { x = half, y = 0 }
+    Bottom -> { x = half, y = full }
+    Left -> { x = 0, y = half }
+    Right -> { x = full, y = half }
 
 genConnectors : MapNode -> Model -> List MapNode -> List (Svg Msg)
 genConnectors node model connectedNodes = 
