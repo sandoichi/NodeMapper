@@ -22,10 +22,10 @@ type alias Model = {
   ,nodeData : MapNode.UIPanelData
   ,nodeCounter : Int
   ,dragNode : Maybe MapNode
-  ,offSet : Maybe { x : Int, y : Int }
   ,actionState : ActionState
   ,toolbarText : String
   ,svgScale : Float
+  ,nodeSize : Int
 }
 
 
@@ -36,10 +36,10 @@ init = ({
   ,nodeData = MapNode.getPanelInit 0
   ,nodeCounter = 0
   ,dragNode = Nothing
-  ,offSet = Nothing
   ,actionState = Idle 
   ,toolbarText = ""
   ,svgScale = 1.0
+  ,nodeSize = 100
    }, Cmd.none)     
 
 

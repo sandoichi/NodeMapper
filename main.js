@@ -9423,8 +9423,8 @@ var _user$project$MapNode$getInit = function (identifier) {
 	return {
 		id: identifier,
 		displayText: 'NewNode',
-		px: 0,
-		py: 0,
+		px: 50,
+		py: 50,
 		connectors: {ctor: '[]'}
 	};
 };
@@ -9472,7 +9472,7 @@ var _user$project$MapMsg$CreateNode = function (a) {
 
 var _user$project$MapModel$Model = F9(
 	function (a, b, c, d, e, f, g, h, i) {
-		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, offSet: f, actionState: g, toolbarText: h, svgScale: i};
+		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, actionState: f, toolbarText: g, svgScale: h, nodeSize: i};
 	});
 var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
 var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
@@ -9493,10 +9493,10 @@ var _user$project$MapModel$init = {
 		nodeData: _user$project$MapNode$getPanelInit(0),
 		nodeCounter: 0,
 		dragNode: _elm_lang$core$Maybe$Nothing,
-		offSet: _elm_lang$core$Maybe$Nothing,
 		actionState: _user$project$MapModel$Idle,
 		toolbarText: '',
-		svgScale: 1.0
+		svgScale: 1.0,
+		nodeSize: 100
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
@@ -9877,6 +9877,18 @@ var _user$project$ConnectorUI$getNodeConnectionPanel = function (model) {
 		});
 };
 
+var _user$project$MapSvg$calcViewBox = function (model) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'0 0 ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(3000 / model.svgScale),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' ',
+				_elm_lang$core$Basics$toString(3000 / model.svgScale))));
+};
 var _user$project$MapSvg$connectorsContainsId = F2(
 	function (connectors, id) {
 		return A2(
@@ -9889,10 +9901,6 @@ var _user$project$MapSvg$connectorsContainsId = F2(
 				},
 				connectors));
 	});
-var _user$project$MapSvg$getConnectorEndPoint = F2(
-	function (nodePoint, scale) {
-		return (_elm_lang$core$Basics$toFloat(nodePoint) * scale) + (50 * scale);
-	});
 var _user$project$MapSvg$genConnectorGraphic = F3(
 	function (start, end, model) {
 		return A2(
@@ -9903,23 +9911,19 @@ var _user$project$MapSvg$genConnectorGraphic = F3(
 				_1: {
 					ctor: '::',
 					_0: _elm_lang$svg$Svg_Attributes$x1(
-						_elm_lang$core$Basics$toString(
-							A2(_user$project$MapSvg$getConnectorEndPoint, start.px, model.svgScale))),
+						_elm_lang$core$Basics$toString(start.px)),
 					_1: {
 						ctor: '::',
 						_0: _elm_lang$svg$Svg_Attributes$y1(
-							_elm_lang$core$Basics$toString(
-								A2(_user$project$MapSvg$getConnectorEndPoint, start.py, model.svgScale))),
+							_elm_lang$core$Basics$toString(start.py)),
 						_1: {
 							ctor: '::',
 							_0: _elm_lang$svg$Svg_Attributes$x2(
-								_elm_lang$core$Basics$toString(
-									A2(_user$project$MapSvg$getConnectorEndPoint, end.px, model.svgScale))),
+								_elm_lang$core$Basics$toString(end.px)),
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$svg$Svg_Attributes$y2(
-									_elm_lang$core$Basics$toString(
-										A2(_user$project$MapSvg$getConnectorEndPoint, end.py, model.svgScale))),
+									_elm_lang$core$Basics$toString(end.py)),
 								_1: {ctor: '[]'}
 							}
 						}
@@ -9967,34 +9971,6 @@ var _user$project$MapSvg$mapConnectors = F2(
 					},
 					nodes)));
 	});
-var _user$project$MapSvg$getTransformStyle = F2(
-	function (model, node) {
-		return A2(
-			_elm_lang$core$Basics_ops['++'],
-			'translate(-50 -50)',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				' scale(',
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					_elm_lang$core$Basics$toString(model.svgScale),
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						')',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							' translate(',
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								_elm_lang$core$Basics$toString(node.px),
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									' ',
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										_elm_lang$core$Basics$toString(node.py),
-										')'))))))));
-	});
 var _user$project$MapSvg$Regular = {ctor: 'Regular'};
 var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
@@ -10015,56 +9991,63 @@ var _user$project$MapSvg$genGraphic = F2(
 	function (mapNode, model) {
 		return A2(
 			_elm_lang$svg$Svg$g,
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html_Events$on,
-					'mousedown',
-					A2(
-						_elm_lang$core$Json_Decode$map,
-						function (x) {
-							return _user$project$MapMsg$SelectNode(
-								{ctor: '_Tuple2', _0: x, _1: mapNode});
-						},
-						_elm_lang$mouse$Mouse$position)),
-				_1: {
-					ctor: '::',
-					_0: _elm_lang$svg$Svg_Attributes$transform(
-						A2(_user$project$MapSvg$getTransformStyle, model, mapNode)),
-					_1: {ctor: '[]'}
-				}
-			},
+			{ctor: '[]'},
 			{
 				ctor: '::',
 				_0: A2(
 					_elm_lang$svg$Svg$rect,
 					{
 						ctor: '::',
-						_0: _elm_lang$svg$Svg_Attributes$class(
+						_0: A2(
+							_elm_lang$html$Html_Events$on,
+							'mousedown',
 							A2(
-								_elm_lang$core$Basics_ops['++'],
-								'rect ',
-								function () {
-									var _p2 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
-									if (_p2.ctor === 'Selected') {
-										return 'selected';
-									} else {
-										return '';
-									}
-								}())),
+								_elm_lang$core$Json_Decode$map,
+								function (x) {
+									return _user$project$MapMsg$SelectNode(
+										{ctor: '_Tuple2', _0: x, _1: mapNode});
+								},
+								_elm_lang$mouse$Mouse$position)),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$width('100'),
+							_0: _elm_lang$svg$Svg_Attributes$class(
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'rect ',
+									function () {
+										var _p2 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
+										if (_p2.ctor === 'Selected') {
+											return 'selected';
+										} else {
+											return '';
+										}
+									}())),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$height('100'),
+								_0: _elm_lang$svg$Svg_Attributes$width(
+									_elm_lang$core$Basics$toString(model.nodeSize)),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$rx('5'),
+									_0: _elm_lang$svg$Svg_Attributes$height(
+										_elm_lang$core$Basics$toString(model.nodeSize)),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$ry('5'),
-										_1: {ctor: '[]'}
+										_0: _elm_lang$svg$Svg_Attributes$rx('5'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$ry('5'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$x(
+													_elm_lang$core$Basics$toString(mapNode.px)),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$y(
+														_elm_lang$core$Basics$toString(mapNode.py)),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
 									}
 								}
 							}
@@ -10077,14 +10060,29 @@ var _user$project$MapSvg$genGraphic = F2(
 						_elm_lang$svg$Svg$text_,
 						{
 							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$class('text'),
+							_0: A2(
+								_elm_lang$html$Html_Events$on,
+								'mousedown',
+								A2(
+									_elm_lang$core$Json_Decode$map,
+									function (x) {
+										return _user$project$MapMsg$SelectNode(
+											{ctor: '_Tuple2', _0: x, _1: mapNode});
+									},
+									_elm_lang$mouse$Mouse$position)),
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$x('10'),
+								_0: _elm_lang$svg$Svg_Attributes$class('text'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$y('20'),
-									_1: {ctor: '[]'}
+									_0: _elm_lang$svg$Svg_Attributes$x(
+										_elm_lang$core$Basics$toString(mapNode.px + 10)),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$y(
+											_elm_lang$core$Basics$toString(mapNode.py + 20)),
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						},
@@ -10113,7 +10111,12 @@ var _user$project$MapSvg$genSvg = F2(
 			{
 				ctor: '::',
 				_0: _elm_lang$svg$Svg_Attributes$class('svg'),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$viewBox(
+						_user$project$MapSvg$calcViewBox(model)),
+					_1: {ctor: '[]'}
+				}
 			},
 			A2(
 				_elm_lang$core$List$append,
@@ -10345,7 +10348,7 @@ var _user$project$UIHelper$propertyPanelCreate = function (node) {
 			}
 		});
 };
-var _user$project$UIHelper$getLeftPanelNodeAttributes = F2(
+var _user$project$UIHelper$getSidePanelNodeAttributes = F2(
 	function (model, node) {
 		return {
 			ctor: '::',
@@ -10404,42 +10407,97 @@ var _user$project$MapView$view = function (model) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('divLeftPanel'),
+							_0: _elm_lang$html$Html_Attributes$class('toolbar'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
 							_0: A2(
 								_elm_lang$html$Html$div,
-								{ctor: '[]'},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Map Nodes'),
+									_0: _elm_lang$html$Html_Attributes$class('toolbarButtons'),
 									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$button,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Events$onClick(
+												_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Add'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$button,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('StartConnect'),
+												_1: {ctor: '[]'}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$button,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Events$onClick(
+														_user$project$MapMsg$ZoomChange(0.2)),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('[ + ]'),
+													_1: {ctor: '[]'}
+												}),
+											_1: {
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$button,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Events$onClick(
+															_user$project$MapMsg$ZoomChange(-0.2)),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('[ - ]'),
+														_1: {ctor: '[]'}
+													}),
+												_1: {ctor: '[]'}
+											}
+										}
+									}
 								}),
 							_1: {
 								ctor: '::',
 								_0: A2(
 									_elm_lang$html$Html$div,
-									{ctor: '[]'},
-									A2(
-										_elm_lang$core$List$map,
-										function (x) {
-											return A2(
-												_elm_lang$html$Html$div,
-												A2(_user$project$UIHelper$getLeftPanelNodeAttributes, model, x),
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(x.displayText),
-													_1: {ctor: '[]'}
-												});
-										},
-										model.nodes)),
-								_1: {
-									ctor: '::',
-									_0: _user$project$UIHelper$getPropertyPanel(model),
-									_1: {ctor: '[]'}
-								}
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('toolbarText'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(model.toolbarText),
+										_1: {ctor: '[]'}
+									}),
+								_1: {ctor: '[]'}
 							}
 						}),
 					_1: {
@@ -10448,138 +10506,79 @@ var _user$project$MapView$view = function (model) {
 							_elm_lang$html$Html$div,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('divRightPanel'),
+								_0: _elm_lang$html$Html_Attributes$class('divMapPanel'),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$div,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('toolbar'),
-										_1: {ctor: '[]'}
-									},
-									{
+								_0: _user$project$UIHelper$getSvgPanel(model),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('divSidePanel'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$div,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Map Nodes'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {
 										ctor: '::',
 										_0: A2(
 											_elm_lang$html$Html$div,
-											{
-												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('toolbarButtons'),
-												_1: {ctor: '[]'}
-											},
-											{
-												ctor: '::',
-												_0: A2(
-													_elm_lang$html$Html$button,
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html_Events$onClick(
-															_user$project$MapMsg$CreateNode(_user$project$MapMsg$InitNode)),
-														_1: {ctor: '[]'}
-													},
-													{
-														ctor: '::',
-														_0: _elm_lang$html$Html$text('Add'),
-														_1: {ctor: '[]'}
-													}),
-												_1: {
-													ctor: '::',
-													_0: A2(
-														_elm_lang$html$Html$button,
+											{ctor: '[]'},
+											A2(
+												_elm_lang$core$List$map,
+												function (x) {
+													return A2(
+														_elm_lang$html$Html$div,
+														A2(_user$project$UIHelper$getSidePanelNodeAttributes, model, x),
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html_Events$onClick(_user$project$MapMsg$StartConnecting),
+															_0: _elm_lang$html$Html$text(x.displayText),
 															_1: {ctor: '[]'}
-														},
-														{
-															ctor: '::',
-															_0: _elm_lang$html$Html$text('StartConnect'),
-															_1: {ctor: '[]'}
-														}),
-													_1: {
-														ctor: '::',
-														_0: A2(
-															_elm_lang$html$Html$button,
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html_Events$onClick(
-																	_user$project$MapMsg$ZoomChange(0.2)),
-																_1: {ctor: '[]'}
-															},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('[ + ]'),
-																_1: {ctor: '[]'}
-															}),
-														_1: {
-															ctor: '::',
-															_0: A2(
-																_elm_lang$html$Html$button,
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html_Events$onClick(
-																		_user$project$MapMsg$ZoomChange(-0.2)),
-																	_1: {ctor: '[]'}
-																},
-																{
-																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('[ - ]'),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {ctor: '[]'}
-														}
-													}
-												}
-											}),
+														});
+												},
+												model.nodes)),
 										_1: {
 											ctor: '::',
-											_0: A2(
-												_elm_lang$html$Html$div,
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html_Attributes$class('toolbarText'),
-													_1: {ctor: '[]'}
-												},
-												{
-													ctor: '::',
-													_0: _elm_lang$html$Html$text(model.toolbarText),
-													_1: {ctor: '[]'}
-												}),
+											_0: _user$project$UIHelper$getPropertyPanel(model),
 											_1: {ctor: '[]'}
 										}
-									}),
-								_1: {
-									ctor: '::',
-									_0: _user$project$UIHelper$getSvgPanel(model),
-									_1: {ctor: '[]'}
-								}
-							}),
-						_1: {ctor: '[]'}
+									}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}
 				}),
 			_1: {ctor: '[]'}
 		});
 };
 
-var _user$project$UpdateHelpers$getOffset = F2(
-	function (model, pos) {
-		var _p0 = model.offSet;
-		if (_p0.ctor === 'Just') {
-			return _p0._0;
-		} else {
-			return {x: pos.x - 50, y: pos.y - 50};
-		}
-	});
+var _user$project$UpdateHelpers$getOffSet = function (model) {
+	return _elm_lang$core$Basics$round(
+		_elm_lang$core$Basics$toFloat(model.nodeSize) / 2);
+};
 var _user$project$UpdateHelpers$calculatePosition = F2(
 	function (model, mousePos) {
-		var offSet = A2(_user$project$UpdateHelpers$getOffset, model, mousePos);
 		return {
 			x: _elm_lang$core$Basics$round(
-				_elm_lang$core$Basics$toFloat(mousePos.x - offSet.x) / model.svgScale),
+				_elm_lang$core$Basics$toFloat(
+					mousePos.x - _user$project$UpdateHelpers$getOffSet(model)) / model.svgScale),
 			y: _elm_lang$core$Basics$round(
-				_elm_lang$core$Basics$toFloat(mousePos.y - offSet.y) / model.svgScale)
+				_elm_lang$core$Basics$toFloat(
+					mousePos.y - _user$project$UpdateHelpers$getOffSet(model)) / model.svgScale)
 		};
 	});
 
@@ -10676,8 +10675,6 @@ var _user$project$Update$updateHelp = F2(
 						model,
 						{
 							actionState: _user$project$MapModel$InspectingNode(_p8),
-							offSet: _elm_lang$core$Maybe$Just(
-								A2(_user$project$UpdateHelpers$getOffset, model, _p0._0._0)),
 							dragNode: _elm_lang$core$Maybe$Just(_p8)
 						});
 				}

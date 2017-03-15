@@ -27,44 +27,33 @@ getNodeType node model =
 
 genGraphic : MapNode -> Model -> Svg Msg
 genGraphic mapNode model =
-      g [ on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position))
-          ,transform (getTransformStyle model mapNode)
-        ] [ 
-              rect [
-                  class ("rect " ++ case getNodeType mapNode model of
-                            Selected -> "selected"
-                            Regular -> "")
-                  ,Svg.Attributes.width "100"
-                  ,Svg.Attributes.height "100" 
-                  ,rx "5"
-                  ,ry "5"
-                  ] [] 
-              ,Svg.text_ [ 
-                  class "text"
-                  ,x "10"
-                  ,y "20"
-              ] [ Html.text mapNode.displayText ] 
-          ]
-
-getTransformStyle : Model -> MapNode -> String
-getTransformStyle model node =
-  "translate(-50 -50)"
-  ++ " scale(" ++ (toString model.svgScale) ++ ")"
-  ++ " translate(" ++ (toString node.px) ++ " " ++ (toString node.py) ++ ")"
+  g [ ] [ 
+    rect [on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position)) 
+      ,class ("rect " ++ case getNodeType mapNode model of
+        Selected -> "selected"
+        Regular -> "")
+      ,Svg.Attributes.width (toString model.nodeSize)
+      ,Svg.Attributes.height (toString model.nodeSize)
+      ,rx "5"
+      ,ry "5"
+      ,x (toString mapNode.px)
+      ,y (toString mapNode.py)
+      ] [] 
+  ,Svg.text_ [ on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position)) 
+      ,class "text"
+      ,x (toString (mapNode.px+10))
+      ,y (toString (mapNode.py+20))
+  ] [ Html.text mapNode.displayText ] ]
 
 genConnectorGraphic : MapNode -> MapNode -> Model -> Svg Msg
 genConnectorGraphic start end model =
     line [
         class "connectorLine"
-        ,x1 (toString (getConnectorEndPoint start.px model.svgScale))
-        ,y1 (toString (getConnectorEndPoint start.py model.svgScale))
-        ,x2 (toString (getConnectorEndPoint end.px model.svgScale))
-        ,y2 (toString (getConnectorEndPoint end.py model.svgScale))
+        ,x1 (toString start.px)
+        ,y1 (toString start.py)
+        ,x2 (toString end.px)
+        ,y2 (toString end.py)
         ] []
-
-getConnectorEndPoint : Int -> Float -> Float
-getConnectorEndPoint nodePoint scale =
-  (toFloat nodePoint * scale) + (50 * scale)
 
 genConnectors : MapNode -> Model -> List MapNode -> List (Svg Msg)
 genConnectors node model connectedNodes = 
@@ -96,22 +85,10 @@ mapConnectors nodes model =
 genSvg : List MapNode -> Model -> Html Msg
 genSvg nodes model =
     svg [ class "svg" 
+      ,viewBox (calcViewBox model)
     ] (List.append (mapNodeList nodes model) (mapConnectors nodes model))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+calcViewBox : Model -> String
+calcViewBox model =
+  "0 0 " ++ (toString (3000 / model.svgScale)) ++ " " ++ (toString (3000 / model.svgScale))
 

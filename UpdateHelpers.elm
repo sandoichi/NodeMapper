@@ -5,14 +5,9 @@ import Mouse exposing (Position)
 
 calculatePosition : Model -> {x:Int,y:Int} -> {x:Int,y:Int}
 calculatePosition model mousePos =
-  let
-    offSet = getOffset model mousePos in
-    { x = round (toFloat (mousePos.x - offSet.x) / model.svgScale)
-    ,y = round (toFloat (mousePos.y - offSet.y) / model.svgScale) }
+    { x = round (toFloat (mousePos.x - (getOffSet model)) / model.svgScale)
+    ,y = round (toFloat (mousePos.y - (getOffSet model)) / model.svgScale) }
 
-getOffset : Model -> Position -> Position
-getOffset model pos =
-  case model.offSet of
-    Just x -> x
-    Nothing ->
-      {x=pos.x - 50,y=pos.y - 50}
+getOffSet : Model -> Int
+getOffSet model =
+  round (toFloat model.nodeSize / 2)

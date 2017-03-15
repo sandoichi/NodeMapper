@@ -16,7 +16,6 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   ( updateHelp msg model, Cmd.none )
 
-
 updateHelp : Msg -> Model -> Model
 updateHelp msg model =
   let 
@@ -56,7 +55,6 @@ updateHelp msg model =
               { model | actionState = InspectingNode node }
         _ ->
           { model | actionState = InspectingNode node 
-           ,offSet = Just (UpdateHelpers.getOffset model pos)
            ,dragNode = Just node
           }
     CreateConnector evt ->
