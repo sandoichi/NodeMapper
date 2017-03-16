@@ -16,7 +16,6 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   ( updateHelp msg model, Cmd.none )
 
-
 updateHelp : Msg -> Model -> Model
 updateHelp msg model =
   let 
@@ -32,7 +31,7 @@ updateHelp msg model =
           { model | nodes = model.nodes |> List.map (\n ->
             case n.id == sn.id of
               True -> 
-                UpdateHelpers.calculatePosition {x=d.x,y=d.y} model.offSet
+                UpdateHelpers.calculatePosition model {x=d.x,y=d.y} 
                 |> \{x,y} -> { n | px = x, py = y } 
               False -> n) }
         Nothing ->  model
@@ -56,7 +55,6 @@ updateHelp msg model =
               { model | actionState = InspectingNode node }
         _ ->
           { model | actionState = InspectingNode node 
-           ,offSet = Just (UpdateHelpers.getOffset model pos)
            ,dragNode = Just node
           }
     CreateConnector evt ->
@@ -66,7 +64,7 @@ updateHelp msg model =
         ExitChanged s ->
           { model | connectorData = { cdata | connector = { con | exitSide = s } } }
         EnterChanged s ->
-          { model | connectorData = { cdata | connector = { con | exitSide = s } } }
+          { model | connectorData = { cdata | connector = { con | entrySide = s } } }
         CostChanged cost ->
           { model | connectorData = { cdata | connector = { con | cost = cost } } }
         FinishConnector ->
@@ -90,8 +88,10 @@ updateHelp msg model =
             ,actionState = InspectingNode nod
             ,nodes = List.append model.nodes [ nod ] }
     StartConnecting ->
-        { model | actionState = ConnectingNodes Waiting
-          ,connectorData = Connectors.getPanelInit 0
-          ,toolbarText = "Select the first node to create connector" }
+      { model | actionState = ConnectingNodes Waiting
+        ,connectorData = Connectors.getPanelInit 0
+        ,toolbarText = "Select the first node to create connector" }
+    ZoomChange x -> { model | svgScale = model.svgScale + x 
+      ,toolbarText = "Scale : " ++ (toString (model.svgScale + x)) }
 
 

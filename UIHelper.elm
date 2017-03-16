@@ -18,8 +18,8 @@ getPropertyPanel model =
     ConnectingNodes x -> getNodeConnectionPanel model
     _ -> propertyPanelNormal
 
-getLeftPanelNodeAttributes : Model -> MapNode -> List (Attribute Msg)
-getLeftPanelNodeAttributes model node =
+getSidePanelNodeAttributes : Model -> MapNode -> List (Attribute Msg)
+getSidePanelNodeAttributes model node =
   [ onClick (InspectNode node)
   , class (case model.actionState of
     InspectingNode x ->

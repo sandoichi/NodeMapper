@@ -17,8 +17,8 @@ getInit identifier =
   {
     id = identifier
     ,displayText = "NewNode"
-    ,px = 5
-    ,py = 5
+    ,px = 50
+    ,py = 50
     ,connectors = []
   }
 
