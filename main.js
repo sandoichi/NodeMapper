@@ -9959,7 +9959,11 @@ var _user$project$MapSvg$genConnectorGraphic = F3(
 								ctor: '::',
 								_0: _elm_lang$svg$Svg_Attributes$y2(
 									_elm_lang$core$Basics$toString(end.py + endPos.y)),
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$markerEnd('url(#arrow)'),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}
@@ -10153,10 +10157,67 @@ var _user$project$MapSvg$genSvg = F2(
 					_1: {ctor: '[]'}
 				}
 			},
-			A2(
-				_elm_lang$core$List$append,
-				A2(_user$project$MapSvg$mapNodeList, nodes, model),
-				A2(_user$project$MapSvg$mapConnectors, nodes, model)));
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$defs,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$marker,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$id('arrow'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$markerWidth('10'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$markerHeight('10'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$refX('9'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$refY('3'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$orient('auto'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$svg$Svg_Attributes$markerUnits('strokeWidth'),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$svg$Svg$path,
+									{
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$d('M0,0 L0,6 L9,3 z'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$fill('#f00'),
+											_1: {ctor: '[]'}
+										}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}),
+				_1: A2(
+					_elm_lang$core$List$append,
+					A2(_user$project$MapSvg$mapNodeList, nodes, model),
+					A2(_user$project$MapSvg$mapConnectors, nodes, model))
+			});
 	});
 
 var _user$project$UIHelper$getSvgPanel = function (model) {
