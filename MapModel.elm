@@ -15,17 +15,27 @@ type ActionState =
   | CreatingNode
   | InspectingNode MapNode
 
+type DragState =
+  DragNothing
+  | Node MapNode
+  | MapPan
+
+type alias SvgPanData = {
+  svgPos : {x:Int,y:Int}  
+  ,panStart : {x:Int,y:Int}  
+}
 
 type alias Model = { 
   nodes : List MapNode 
   ,connectorData : Connectors.UIPanelData
   ,nodeData : MapNode.UIPanelData
   ,nodeCounter : Int
-  ,dragNode : Maybe MapNode
+  ,dragState : DragState
   ,actionState : ActionState
   ,toolbarText : String
   ,svgScale : Float
   ,nodeSize : Int
+  ,panData : SvgPanData
 }
 
 
@@ -35,11 +45,12 @@ init = ({
   ,connectorData = Connectors.getPanelInit 0
   ,nodeData = MapNode.getPanelInit 0
   ,nodeCounter = 0
-  ,dragNode = Nothing
+  ,dragState = DragNothing
   ,actionState = Idle 
   ,toolbarText = ""
   ,svgScale = 1.0
   ,nodeSize = 100
+  ,panData = { svgPos = {x=0,y=0}, panStart = {x=0,y=0}}
    }, Cmd.none)     
 
 

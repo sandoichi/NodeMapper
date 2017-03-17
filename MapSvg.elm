@@ -110,13 +110,18 @@ mapConnectors nodes model =
 
 genSvg : List MapNode -> Model -> Html Msg
 genSvg nodes model =
-    svg [ class "svg" ,viewBox (calcViewBox model) ] 
+    svg [ class "svg" ,viewBox (calcViewBox model) 
+      ,on "mousedown" (Decode.map StartPan Mouse.position) ] 
       (defs [] [
         marker [ id "arrow", markerWidth "10", markerHeight "10"
           ,refX "9", refY "3", orient "auto", markerUnits "strokeWidth" ] 
           [ Svg.path [ d "M0,0 L0,6 L9,3 z", fill "#f00" ] [] ] ]
       ::(List.append (mapNodeList nodes model) (mapConnectors nodes model)))
+
 calcViewBox : Model -> String
 calcViewBox model =
-  "0 0 " ++ (toString (3000 / model.svgScale)) ++ " " ++ (toString (3000 / model.svgScale))
+  toString model.panData.svgPos.x ++ " " 
+  ++ toString model.panData.svgPos.y ++ " " 
+  ++ (toString (3000 / model.svgScale)) ++ " " 
+  ++ (toString (3000 / model.svgScale))
 

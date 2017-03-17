@@ -11,3 +11,10 @@ calculatePosition model mousePos =
 getOffSet : Model -> Int
 getOffSet model =
   round (toFloat model.nodeSize / 2)
+
+getSvgPos : Model -> {x:Int,y:Int} -> {x:Int,y:Int}
+getSvgPos model mousePos = 
+  let
+    adjustedPos = calculatePosition model mousePos in 
+  { x = model.panData.svgPos.x - (adjustedPos.x - model.panData.panStart.x)
+  , y = model.panData.svgPos.y - (adjustedPos.y - model.panData.panStart.y) }

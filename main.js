@@ -9460,6 +9460,9 @@ var _user$project$MapMsg$DragEnd = function (a) {
 var _user$project$MapMsg$DragAt = function (a) {
 	return {ctor: 'DragAt', _0: a};
 };
+var _user$project$MapMsg$StartPan = function (a) {
+	return {ctor: 'StartPan', _0: a};
+};
 var _user$project$MapMsg$InspectNode = function (a) {
 	return {ctor: 'InspectNode', _0: a};
 };
@@ -9470,10 +9473,31 @@ var _user$project$MapMsg$CreateNode = function (a) {
 	return {ctor: 'CreateNode', _0: a};
 };
 
-var _user$project$MapModel$Model = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, actionState: f, toolbarText: g, svgScale: h, nodeSize: i};
+var _user$project$MapModel$SvgPanData = F2(
+	function (a, b) {
+		return {svgPos: a, panStart: b};
 	});
+var _user$project$MapModel$Model = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragState: e, actionState: f, toolbarText: g, svgScale: h, nodeSize: i, panData: j};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
 var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
 var _user$project$MapModel$Waiting = {ctor: 'Waiting'};
@@ -9485,6 +9509,11 @@ var _user$project$MapModel$ConnectingNodes = function (a) {
 	return {ctor: 'ConnectingNodes', _0: a};
 };
 var _user$project$MapModel$Idle = {ctor: 'Idle'};
+var _user$project$MapModel$MapPan = {ctor: 'MapPan'};
+var _user$project$MapModel$Node = function (a) {
+	return {ctor: 'Node', _0: a};
+};
+var _user$project$MapModel$DragNothing = {ctor: 'DragNothing'};
 var _user$project$MapModel$init = {
 	ctor: '_Tuple2',
 	_0: {
@@ -9492,11 +9521,15 @@ var _user$project$MapModel$init = {
 		connectorData: _user$project$Connectors$getPanelInit(0),
 		nodeData: _user$project$MapNode$getPanelInit(0),
 		nodeCounter: 0,
-		dragNode: _elm_lang$core$Maybe$Nothing,
+		dragState: _user$project$MapModel$DragNothing,
 		actionState: _user$project$MapModel$Idle,
 		toolbarText: '',
 		svgScale: 1.0,
-		nodeSize: 100
+		nodeSize: 100,
+		panData: {
+			svgPos: {x: 0, y: 0},
+			panStart: {x: 0, y: 0}
+		}
 	},
 	_1: _elm_lang$core$Platform_Cmd$none
 };
@@ -9880,14 +9913,23 @@ var _user$project$ConnectorUI$getNodeConnectionPanel = function (model) {
 var _user$project$MapSvg$calcViewBox = function (model) {
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
-		'0 0 ',
+		_elm_lang$core$Basics$toString(model.panData.svgPos.x),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			_elm_lang$core$Basics$toString(3000 / model.svgScale),
+			' ',
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				' ',
-				_elm_lang$core$Basics$toString(3000 / model.svgScale))));
+				_elm_lang$core$Basics$toString(model.panData.svgPos.y),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$Basics$toString(3000 / model.svgScale),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							' ',
+							_elm_lang$core$Basics$toString(3000 / model.svgScale)))))));
 };
 var _user$project$MapSvg$connectorsContainsId = F2(
 	function (connectors, id) {
@@ -10154,7 +10196,14 @@ var _user$project$MapSvg$genSvg = F2(
 					ctor: '::',
 					_0: _elm_lang$svg$Svg_Attributes$viewBox(
 						_user$project$MapSvg$calcViewBox(model)),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html_Events$on,
+							'mousedown',
+							A2(_elm_lang$core$Json_Decode$map, _user$project$MapMsg$StartPan, _elm_lang$mouse$Mouse$position)),
+						_1: {ctor: '[]'}
+					}
 				}
 			},
 			{
@@ -10677,6 +10726,11 @@ var _user$project$UpdateHelpers$calculatePosition = F2(
 					mousePos.y - _user$project$UpdateHelpers$getOffSet(model)) / model.svgScale)
 		};
 	});
+var _user$project$UpdateHelpers$getSvgPos = F2(
+	function (model, mousePos) {
+		var adjustedPos = A2(_user$project$UpdateHelpers$calculatePosition, model, mousePos);
+		return {x: model.panData.svgPos.x - (adjustedPos.x - model.panData.panStart.x), y: model.panData.svgPos.y - (adjustedPos.y - model.panData.panStart.y)};
+	});
 
 var _user$project$Update$updateHelp = F2(
 	function (msg, model) {
@@ -10688,41 +10742,66 @@ var _user$project$Update$updateHelp = F2(
 		switch (_p0.ctor) {
 			case 'DoNothing':
 				return model;
-			case 'DragAt':
-				var _p5 = _p0._0;
-				var _p1 = model.dragNode;
-				if (_p1.ctor === 'Just') {
+			case 'StartPan':
+				var _p1 = model.dragState;
+				if (_p1.ctor === 'DragNothing') {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							nodes: A2(
-								_elm_lang$core$List$map,
-								function (n) {
-									var _p2 = _elm_lang$core$Native_Utils.eq(n.id, _p1._0.id);
-									if (_p2 === true) {
-										return function (_p3) {
-											var _p4 = _p3;
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{px: _p4.x, py: _p4.y});
-										}(
-											A2(
-												_user$project$UpdateHelpers$calculatePosition,
-												model,
-												{x: _p5.x, y: _p5.y}));
-									} else {
-										return n;
-									}
-								},
-								model.nodes)
+							dragState: _user$project$MapModel$MapPan,
+							panData: {
+								svgPos: model.panData.svgPos,
+								panStart: A2(_user$project$UpdateHelpers$calculatePosition, model, _p0._0)
+							}
 						});
 				} else {
 					return model;
 				}
+			case 'DragAt':
+				var _p6 = _p0._0;
+				var _p2 = model.dragState;
+				switch (_p2.ctor) {
+					case 'Node':
+						return _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								nodes: A2(
+									_elm_lang$core$List$map,
+									function (n) {
+										var _p3 = _elm_lang$core$Native_Utils.eq(n.id, _p2._0.id);
+										if (_p3 === true) {
+											return function (_p4) {
+												var _p5 = _p4;
+												return _elm_lang$core$Native_Utils.update(
+													n,
+													{px: _p5.x, py: _p5.y});
+											}(
+												A2(
+													_user$project$UpdateHelpers$calculatePosition,
+													model,
+													{x: _p6.x, y: _p6.y}));
+										} else {
+											return n;
+										}
+									},
+									model.nodes)
+							});
+					case 'MapPan':
+						return _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								panData: {
+									panStart: A2(_user$project$UpdateHelpers$calculatePosition, model, _p6),
+									svgPos: A2(_user$project$UpdateHelpers$getSvgPos, model, _p6)
+								}
+							});
+					default:
+						return model;
+				}
 			case 'DragEnd':
 				return _elm_lang$core$Native_Utils.update(
 					model,
-					{dragNode: _elm_lang$core$Maybe$Nothing});
+					{dragState: _user$project$MapModel$DragNothing});
 			case 'InspectNode':
 				return _elm_lang$core$Native_Utils.update(
 					model,
@@ -10730,11 +10809,11 @@ var _user$project$Update$updateHelp = F2(
 						actionState: _user$project$MapModel$InspectingNode(_p0._0)
 					});
 			case 'SelectNode':
-				var _p8 = _p0._0._1;
-				var _p6 = model.actionState;
-				if (_p6.ctor === 'ConnectingNodes') {
-					var _p7 = _p6._0;
-					switch (_p7.ctor) {
+				var _p9 = _p0._0._1;
+				var _p7 = model.actionState;
+				if (_p7.ctor === 'ConnectingNodes') {
+					var _p8 = _p7._0;
+					switch (_p8.ctor) {
 						case 'Waiting':
 							return _elm_lang$core$Native_Utils.update(
 								model,
@@ -10743,7 +10822,7 @@ var _user$project$Update$updateHelp = F2(
 									toolbarText: 'Select the second node to create connector',
 									connectorData: _elm_lang$core$Native_Utils.update(
 										cdata,
-										{nodeId: _p8.id})
+										{nodeId: _p9.id})
 								});
 						case 'FirstSelected':
 							return _elm_lang$core$Native_Utils.update(
@@ -10756,27 +10835,27 @@ var _user$project$Update$updateHelp = F2(
 										{
 											connector: _elm_lang$core$Native_Utils.update(
 												con,
-												{nodeId: _p8.id})
+												{nodeId: _p9.id})
 										})
 								});
 						default:
 							return _elm_lang$core$Native_Utils.update(
 								model,
 								{
-									actionState: _user$project$MapModel$InspectingNode(_p8)
+									actionState: _user$project$MapModel$InspectingNode(_p9)
 								});
 					}
 				} else {
 					return _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							actionState: _user$project$MapModel$InspectingNode(_p8),
-							dragNode: _elm_lang$core$Maybe$Just(_p8)
+							actionState: _user$project$MapModel$InspectingNode(_p9),
+							dragState: _user$project$MapModel$Node(_p9)
 						});
 				}
 			case 'CreateConnector':
-				var _p9 = _p0._0;
-				switch (_p9.ctor) {
+				var _p10 = _p0._0;
+				switch (_p10.ctor) {
 					case 'InitConnector':
 						return _elm_lang$core$Native_Utils.update(
 							model,
@@ -10792,7 +10871,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										connector: _elm_lang$core$Native_Utils.update(
 											con,
-											{exitSide: _p9._0})
+											{exitSide: _p10._0})
 									})
 							});
 					case 'EnterChanged':
@@ -10804,7 +10883,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										connector: _elm_lang$core$Native_Utils.update(
 											con,
-											{entrySide: _p9._0})
+											{entrySide: _p10._0})
 									})
 							});
 					case 'CostChanged':
@@ -10816,7 +10895,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										connector: _elm_lang$core$Native_Utils.update(
 											con,
-											{cost: _p9._0})
+											{cost: _p10._0})
 									})
 							});
 					default:
@@ -10828,8 +10907,8 @@ var _user$project$Update$updateHelp = F2(
 								nodes: A2(
 									_elm_lang$core$List$map,
 									function (n) {
-										var _p10 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
-										if (_p10 === true) {
+										var _p11 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
+										if (_p11 === true) {
 											return _elm_lang$core$Native_Utils.update(
 												n,
 												{
@@ -10843,8 +10922,8 @@ var _user$project$Update$updateHelp = F2(
 							});
 				}
 			case 'CreateNode':
-				var _p11 = _p0._0;
-				switch (_p11.ctor) {
+				var _p12 = _p0._0;
+				switch (_p12.ctor) {
 					case 'InitNode':
 						return _elm_lang$core$Native_Utils.update(
 							model,
@@ -10862,7 +10941,7 @@ var _user$project$Update$updateHelp = F2(
 									{
 										node: _elm_lang$core$Native_Utils.update(
 											nod,
-											{displayText: _p11._0})
+											{displayText: _p12._0})
 									})
 							});
 					default:
@@ -10891,15 +10970,15 @@ var _user$project$Update$updateHelp = F2(
 						toolbarText: 'Select the first node to create connector'
 					});
 			default:
-				var _p12 = _p0._0;
+				var _p13 = _p0._0;
 				return _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						svgScale: model.svgScale + _p12,
+						svgScale: model.svgScale + _p13,
 						toolbarText: A2(
 							_elm_lang$core$Basics_ops['++'],
 							'Scale : ',
-							_elm_lang$core$Basics$toString(model.svgScale + _p12))
+							_elm_lang$core$Basics$toString(model.svgScale + _p13))
 					});
 		}
 	});
@@ -10913,8 +10992,10 @@ var _user$project$Update$update = F2(
 	});
 
 var _user$project$Main$subscriptions = function (model) {
-	var _p0 = model.dragNode;
-	if (_p0.ctor === 'Just') {
+	var _p0 = model.dragState;
+	if (_p0.ctor === 'DragNothing') {
+		return _elm_lang$core$Platform_Sub$none;
+	} else {
 		return _elm_lang$core$Platform_Sub$batch(
 			{
 				ctor: '::',
@@ -10925,8 +11006,6 @@ var _user$project$Main$subscriptions = function (model) {
 					_1: {ctor: '[]'}
 				}
 			});
-	} else {
-		return _elm_lang$core$Platform_Sub$none;
 	}
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(

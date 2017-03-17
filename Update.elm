@@ -25,18 +25,27 @@ updateHelp msg model =
     nod = model.nodeData.node in
   case msg of
     DoNothing -> model
+    StartPan ({x,y} as d) ->
+      case model.dragState of
+        DragNothing ->
+          { model | dragState = MapPan
+            ,panData = { svgPos = model.panData.svgPos
+            ,panStart = UpdateHelpers.calculatePosition model d } }
+        _ -> model
     DragAt ({x,y} as d) ->
-      case model.dragNode of
-        Just sn ->
+      case model.dragState of
+        Node sn ->
           { model | nodes = model.nodes |> List.map (\n ->
             case n.id == sn.id of
               True -> 
                 UpdateHelpers.calculatePosition model {x=d.x,y=d.y} 
                 |> \{x,y} -> { n | px = x, py = y } 
               False -> n) }
-        Nothing ->  model
+        MapPan -> {model | panData = { panStart =  UpdateHelpers.calculatePosition model d  
+           ,svgPos = UpdateHelpers.getSvgPos model d } }
+        DragNothing -> model
     DragEnd _ ->
-      { model | dragNode = Nothing }
+      { model | dragState = DragNothing }
     InspectNode n -> 
       { model | actionState = InspectingNode n }
     SelectNode (({x, y} as pos), node) ->
@@ -55,8 +64,7 @@ updateHelp msg model =
               { model | actionState = InspectingNode node }
         _ ->
           { model | actionState = InspectingNode node 
-           ,dragNode = Just node
-          }
+           ,dragState = Node node }
     CreateConnector evt ->
       case evt of
         InitConnector -> 
