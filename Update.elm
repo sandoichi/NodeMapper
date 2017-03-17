@@ -30,7 +30,7 @@ updateHelp msg model =
         DragNothing ->
           { model | dragState = MapPan
             ,panData = { svgPos = model.panData.svgPos
-            ,panStart = UpdateHelpers.calculatePosition model d } }
+            ,panStart = UpdateHelpers.calculatePanPosition model d } }
         _ -> model
     DragAt ({x,y} as d) ->
       case model.dragState of
@@ -38,10 +38,10 @@ updateHelp msg model =
           { model | nodes = model.nodes |> List.map (\n ->
             case n.id == sn.id of
               True -> 
-                UpdateHelpers.calculatePosition model {x=d.x,y=d.y} 
+                UpdateHelpers.calculateNodeClickPosition model {x=d.x,y=d.y} 
                 |> \{x,y} -> { n | px = x, py = y } 
               False -> n) }
-        MapPan -> {model | panData = { panStart =  UpdateHelpers.calculatePosition model d  
+        MapPan -> {model | panData = { panStart =  UpdateHelpers.calculatePanPosition model d  
            ,svgPos = UpdateHelpers.getSvgPos model d } }
         DragNothing -> model
     DragEnd _ ->

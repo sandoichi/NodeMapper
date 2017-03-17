@@ -10715,21 +10715,35 @@ var _user$project$UpdateHelpers$getOffSet = function (model) {
 	return _elm_lang$core$Basics$round(
 		_elm_lang$core$Basics$toFloat(model.nodeSize) / 2);
 };
-var _user$project$UpdateHelpers$calculatePosition = F2(
+var _user$project$UpdateHelpers$divideByScale = F2(
+	function (model, coord) {
+		return _elm_lang$core$Basics$round(
+			_elm_lang$core$Basics$toFloat(coord) / model.svgScale);
+	});
+var _user$project$UpdateHelpers$calculatePanPosition = F2(
 	function (model, mousePos) {
 		return {
 			x: _elm_lang$core$Basics$round(
-				_elm_lang$core$Basics$toFloat(
-					mousePos.x - _user$project$UpdateHelpers$getOffSet(model)) / model.svgScale),
+				_elm_lang$core$Basics$toFloat(mousePos.x) / model.svgScale),
 			y: _elm_lang$core$Basics$round(
-				_elm_lang$core$Basics$toFloat(
-					mousePos.y - _user$project$UpdateHelpers$getOffSet(model)) / model.svgScale)
+				_elm_lang$core$Basics$toFloat(mousePos.y) / model.svgScale)
 		};
 	});
 var _user$project$UpdateHelpers$getSvgPos = F2(
 	function (model, mousePos) {
-		var adjustedPos = A2(_user$project$UpdateHelpers$calculatePosition, model, mousePos);
+		var adjustedPos = A2(_user$project$UpdateHelpers$calculatePanPosition, model, mousePos);
 		return {x: model.panData.svgPos.x - (adjustedPos.x - model.panData.panStart.x), y: model.panData.svgPos.y - (adjustedPos.y - model.panData.panStart.y)};
+	});
+var _user$project$UpdateHelpers$calculateNodeClickPosition = F2(
+	function (model, mousePos) {
+		var fy = _elm_lang$core$Basics$toFloat(
+			mousePos.y + A2(_user$project$UpdateHelpers$divideByScale, model, model.panData.svgPos.y)) / model.svgScale;
+		var fx = _elm_lang$core$Basics$toFloat(
+			mousePos.x + A2(_user$project$UpdateHelpers$divideByScale, model, model.panData.svgPos.x)) / model.svgScale;
+		return {
+			x: _elm_lang$core$Basics$round(fx),
+			y: _elm_lang$core$Basics$round(fy)
+		};
 	});
 
 var _user$project$Update$updateHelp = F2(
@@ -10751,7 +10765,7 @@ var _user$project$Update$updateHelp = F2(
 							dragState: _user$project$MapModel$MapPan,
 							panData: {
 								svgPos: model.panData.svgPos,
-								panStart: A2(_user$project$UpdateHelpers$calculatePosition, model, _p0._0)
+								panStart: A2(_user$project$UpdateHelpers$calculatePanPosition, model, _p0._0)
 							}
 						});
 				} else {
@@ -10777,7 +10791,7 @@ var _user$project$Update$updateHelp = F2(
 													{px: _p5.x, py: _p5.y});
 											}(
 												A2(
-													_user$project$UpdateHelpers$calculatePosition,
+													_user$project$UpdateHelpers$calculateNodeClickPosition,
 													model,
 													{x: _p6.x, y: _p6.y}));
 										} else {
@@ -10791,7 +10805,7 @@ var _user$project$Update$updateHelp = F2(
 							model,
 							{
 								panData: {
-									panStart: A2(_user$project$UpdateHelpers$calculatePosition, model, _p6),
+									panStart: A2(_user$project$UpdateHelpers$calculatePanPosition, model, _p6),
 									svgPos: A2(_user$project$UpdateHelpers$getSvgPos, model, _p6)
 								}
 							});
