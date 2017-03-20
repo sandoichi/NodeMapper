@@ -10712,13 +10712,12 @@ var _user$project$MapView$view = function (model) {
 };
 
 var _user$project$UpdateHelpers$getOffSet = function (model) {
-	return _elm_lang$core$Basics$round(
-		_elm_lang$core$Basics$toFloat(model.nodeSize) / 2);
+	return (_elm_lang$core$Basics$toFloat(model.nodeSize) / 2) * model.svgScale;
 };
 var _user$project$UpdateHelpers$divideByScale = F2(
 	function (model, coord) {
 		return _elm_lang$core$Basics$round(
-			_elm_lang$core$Basics$toFloat(coord) / model.svgScale);
+			_elm_lang$core$Basics$toFloat(coord) * model.svgScale);
 	});
 var _user$project$UpdateHelpers$calculatePanPosition = F2(
 	function (model, mousePos) {
@@ -10741,8 +10740,10 @@ var _user$project$UpdateHelpers$calculateNodeClickPosition = F2(
 		var fx = _elm_lang$core$Basics$toFloat(
 			mousePos.x + A2(_user$project$UpdateHelpers$divideByScale, model, model.panData.svgPos.x)) / model.svgScale;
 		return {
-			x: _elm_lang$core$Basics$round(fx),
-			y: _elm_lang$core$Basics$round(fy)
+			x: _elm_lang$core$Basics$round(
+				fx - _user$project$UpdateHelpers$getOffSet(model)),
+			y: _elm_lang$core$Basics$round(
+				fy - _user$project$UpdateHelpers$getOffSet(model))
 		};
 	});
 
