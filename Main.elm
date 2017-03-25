@@ -16,11 +16,8 @@ main =
 -- SUBSCRIPTIONS
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  case model.dragNode of
-    Just x -> 
-        Sub.batch [ Mouse.moves DragAt, Mouse.ups DragEnd ]
-
-    _ ->
-      Sub.none
-
+  case model.dragState of
+    DragNothing -> Sub.none
+    _ -> 
+      Sub.batch [ Mouse.moves DragAt, Mouse.ups DragEnd ]
 

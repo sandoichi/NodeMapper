@@ -17,6 +17,7 @@ type Msg =
   CreateNode CreationEvent
   | SelectNode (Position, MapNode)
   | InspectNode MapNode
+  | StartPan Position
   | DragAt Position
   | DragEnd Position
   | StartConnecting
