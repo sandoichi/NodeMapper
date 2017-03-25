@@ -22,7 +22,6 @@ getInit identifier =
     ,connectors = []
   }
 
-
 type alias UIPanelData = { 
   node : MapNode
 }

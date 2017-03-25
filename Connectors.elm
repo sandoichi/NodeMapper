@@ -41,3 +41,4 @@ getPanelInit id =
     nodeId = 0
     ,connector = getInit id
   }
+
