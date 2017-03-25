@@ -9472,7 +9472,7 @@ var _user$project$MapMsg$CreateNode = function (a) {
 
 var _user$project$MapModel$Model = F9(
 	function (a, b, c, d, e, f, g, h, i) {
-		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, dragNode: e, actionState: f, toolbarText: g, svgScale: h, nodeSize: i};
+		return {nodes: a, connectorData: b, nodeData: c, nodeCounter: d, draggingNode: e, actionState: f, toolbarText: g, svgScale: h, nodeSize: i};
 	});
 var _user$project$MapModel$SecondSelected = {ctor: 'SecondSelected'};
 var _user$project$MapModel$FirstSelected = {ctor: 'FirstSelected'};
@@ -9492,7 +9492,7 @@ var _user$project$MapModel$init = {
 		connectorData: _user$project$Connectors$getPanelInit(0),
 		nodeData: _user$project$MapNode$getPanelInit(0),
 		nodeCounter: 0,
-		dragNode: _elm_lang$core$Maybe$Nothing,
+		draggingNode: _elm_lang$core$Maybe$Nothing,
 		actionState: _user$project$MapModel$Idle,
 		toolbarText: '',
 		svgScale: 1.0,
@@ -9876,6 +9876,33 @@ var _user$project$ConnectorUI$getNodeConnectionPanel = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+
+var _user$project$ConnectorsEventHandling$updateCost = F2(
+	function (cost, con) {
+		return _elm_lang$core$Native_Utils.update(
+			con,
+			{cost: cost});
+	});
+var _user$project$ConnectorsEventHandling$updateEntry = F2(
+	function (side, con) {
+		return _elm_lang$core$Native_Utils.update(
+			con,
+			{entrySide: side});
+	});
+var _user$project$ConnectorsEventHandling$updateExit = F2(
+	function (side, con) {
+		return _elm_lang$core$Native_Utils.update(
+			con,
+			{exitSide: side});
+	});
+var _user$project$ConnectorsEventHandling$updatePDConnector = F2(
+	function (pd, f) {
+		return _elm_lang$core$Native_Utils.update(
+			pd,
+			{
+				connector: f(pd.connector)
+			});
+	});
 
 var _user$project$MapSvg$calcViewBox = function (model) {
 	return A2(
@@ -10601,6 +10628,49 @@ var _user$project$MapView$view = function (model) {
 		});
 };
 
+var _user$project$NodeEventHandling$updateNodeInList = F3(
+	function (nodes, id, f) {
+		return A2(
+			_elm_lang$core$List$map,
+			function (n) {
+				var _p0 = _elm_lang$core$Native_Utils.eq(n.id, id);
+				if (_p0 === true) {
+					return f(n);
+				} else {
+					return n;
+				}
+			},
+			nodes);
+	});
+var _user$project$NodeEventHandling$addConnector = F2(
+	function (con, node) {
+		return _elm_lang$core$Native_Utils.update(
+			node,
+			{
+				connectors: {ctor: '::', _0: con, _1: node.connectors}
+			});
+	});
+var _user$project$NodeEventHandling$move = F2(
+	function (pos, node) {
+		return _elm_lang$core$Native_Utils.update(
+			node,
+			{px: pos.x, py: pos.y});
+	});
+var _user$project$NodeEventHandling$updateDisplayText = F2(
+	function (text, node) {
+		return _elm_lang$core$Native_Utils.update(
+			node,
+			{displayText: text});
+	});
+var _user$project$NodeEventHandling$updatePDNode = F2(
+	function (pd, f) {
+		return _elm_lang$core$Native_Utils.update(
+			pd,
+			{
+				node: f(pd.node)
+			});
+	});
+
 var _user$project$UpdateHelpers$getOffSet = function (model) {
 	return _elm_lang$core$Basics$round(
 		_elm_lang$core$Basics$toFloat(model.nodeSize) / 2);
@@ -10617,229 +10687,231 @@ var _user$project$UpdateHelpers$calculatePosition = F2(
 		};
 	});
 
-var _user$project$Update$updateHelp = F2(
-	function (msg, model) {
+var _user$project$ModelEventHandling$selectNode = F2(
+	function (model, node) {
 		var nod = model.nodeData.node;
 		var ndata = model.nodeData;
 		var con = model.connectorData.connector;
 		var cdata = model.connectorData;
+		var _p0 = model.actionState;
+		if (_p0.ctor === 'ConnectingNodes') {
+			var _p1 = _p0._0;
+			switch (_p1.ctor) {
+				case 'Waiting':
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$FirstSelected),
+							toolbarText: 'Select the second node to create connector',
+							connectorData: _elm_lang$core$Native_Utils.update(
+								cdata,
+								{nodeId: node.id})
+						});
+				case 'FirstSelected':
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$SecondSelected),
+							toolbarText: 'Set connector properties in property panel',
+							connectorData: _elm_lang$core$Native_Utils.update(
+								cdata,
+								{
+									connector: _elm_lang$core$Native_Utils.update(
+										con,
+										{nodeId: node.id})
+								})
+						});
+				default:
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							actionState: _user$project$MapModel$InspectingNode(node)
+						});
+			}
+		} else {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					actionState: _user$project$MapModel$InspectingNode(node),
+					draggingNode: _elm_lang$core$Maybe$Just(node)
+				});
+		}
+	});
+var _user$project$ModelEventHandling$inspectNode = F2(
+	function (model, node) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				actionState: _user$project$MapModel$InspectingNode(node)
+			});
+	});
+var _user$project$ModelEventHandling$dragEnd = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{draggingNode: _elm_lang$core$Maybe$Nothing});
+};
+var _user$project$ModelEventHandling$dragNode = F2(
+	function (model, pos) {
+		var _p2 = model.draggingNode;
+		if (_p2.ctor === 'Just') {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					nodes: A3(
+						_user$project$NodeEventHandling$updateNodeInList,
+						model.nodes,
+						_p2._0.id,
+						_user$project$NodeEventHandling$move(pos))
+				});
+		} else {
+			return model;
+		}
+	});
+var _user$project$ModelEventHandling$updateConData = F2(
+	function (model, pd) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{connectorData: pd});
+	});
+var _user$project$ModelEventHandling$finishConnector = function (model) {
+	var cdata = model.connectorData;
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			actionState: _user$project$MapModel$Idle,
+			toolbarText: 'Connector successfully created',
+			nodes: A3(
+				_user$project$NodeEventHandling$updateNodeInList,
+				model.nodes,
+				cdata.nodeId,
+				_user$project$NodeEventHandling$addConnector(cdata.connector))
+		});
+};
+var _user$project$ModelEventHandling$initConnectorData = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			connectorData: _user$project$Connectors$getPanelInit(0)
+		});
+};
+var _user$project$ModelEventHandling$startConnecting = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$Waiting),
+			connectorData: _user$project$Connectors$getPanelInit(0),
+			toolbarText: 'Select the first node to create connector'
+		});
+};
+var _user$project$ModelEventHandling$finishNode = function (model) {
+	var ndata = model.nodeData;
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			nodeCounter: model.nodeCounter + 1,
+			toolbarText: 'Node successfully created',
+			actionState: _user$project$MapModel$InspectingNode(ndata.node),
+			nodes: A2(
+				_elm_lang$core$List$append,
+				model.nodes,
+				{
+					ctor: '::',
+					_0: ndata.node,
+					_1: {ctor: '[]'}
+				})
+		});
+};
+var _user$project$ModelEventHandling$updateNodeData = F2(
+	function (model, pd) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{nodeData: pd});
+	});
+var _user$project$ModelEventHandling$initNodeData = function (model) {
+	return _elm_lang$core$Native_Utils.update(
+		model,
+		{
+			actionState: _user$project$MapModel$CreatingNode,
+			toolbarText: 'Set node properties in property panel',
+			nodeData: _user$project$MapNode$getPanelInit(model.nodeCounter + 1)
+		});
+};
+var _user$project$ModelEventHandling$zoomChange = F2(
+	function (model, x) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				svgScale: model.svgScale + x,
+				toolbarText: A2(
+					_elm_lang$core$Basics_ops['++'],
+					'Scale : ',
+					_elm_lang$core$Basics$toString(model.svgScale + x))
+			});
+	});
+
+var _user$project$Update$updateHelp = F2(
+	function (msg, model) {
+		var upPDNode = _user$project$NodeEventHandling$updatePDNode(model.nodeData);
+		var upPDCon = _user$project$ConnectorsEventHandling$updatePDConnector(model.connectorData);
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'DoNothing':
 				return model;
 			case 'DragAt':
-				var _p5 = _p0._0;
-				var _p1 = model.dragNode;
-				if (_p1.ctor === 'Just') {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							nodes: A2(
-								_elm_lang$core$List$map,
-								function (n) {
-									var _p2 = _elm_lang$core$Native_Utils.eq(n.id, _p1._0.id);
-									if (_p2 === true) {
-										return function (_p3) {
-											var _p4 = _p3;
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{px: _p4.x, py: _p4.y});
-										}(
-											A2(
-												_user$project$UpdateHelpers$calculatePosition,
-												model,
-												{x: _p5.x, y: _p5.y}));
-									} else {
-										return n;
-									}
-								},
-								model.nodes)
-						});
-				} else {
-					return model;
-				}
+				return A2(
+					_user$project$ModelEventHandling$dragNode,
+					model,
+					A2(_user$project$UpdateHelpers$calculatePosition, model, _p0._0));
 			case 'DragEnd':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{dragNode: _elm_lang$core$Maybe$Nothing});
+				return _user$project$ModelEventHandling$dragEnd(model);
 			case 'InspectNode':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						actionState: _user$project$MapModel$InspectingNode(_p0._0)
-					});
+				return A2(_user$project$ModelEventHandling$inspectNode, model, _p0._0);
 			case 'SelectNode':
-				var _p8 = _p0._0._1;
-				var _p6 = model.actionState;
-				if (_p6.ctor === 'ConnectingNodes') {
-					var _p7 = _p6._0;
-					switch (_p7.ctor) {
-						case 'Waiting':
-							return _elm_lang$core$Native_Utils.update(
-								model,
-								{
-									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$FirstSelected),
-									toolbarText: 'Select the second node to create connector',
-									connectorData: _elm_lang$core$Native_Utils.update(
-										cdata,
-										{nodeId: _p8.id})
-								});
-						case 'FirstSelected':
-							return _elm_lang$core$Native_Utils.update(
-								model,
-								{
-									actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$SecondSelected),
-									toolbarText: 'Set connector properties in property panel',
-									connectorData: _elm_lang$core$Native_Utils.update(
-										cdata,
-										{
-											connector: _elm_lang$core$Native_Utils.update(
-												con,
-												{nodeId: _p8.id})
-										})
-								});
-						default:
-							return _elm_lang$core$Native_Utils.update(
-								model,
-								{
-									actionState: _user$project$MapModel$InspectingNode(_p8)
-								});
-					}
-				} else {
-					return _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							actionState: _user$project$MapModel$InspectingNode(_p8),
-							dragNode: _elm_lang$core$Maybe$Just(_p8)
-						});
-				}
+				return A2(_user$project$ModelEventHandling$selectNode, model, _p0._0._1);
 			case 'CreateConnector':
-				var _p9 = _p0._0;
-				switch (_p9.ctor) {
+				var _p1 = _p0._0;
+				switch (_p1.ctor) {
 					case 'InitConnector':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								connectorData: _user$project$Connectors$getPanelInit(0)
-							});
+						return _user$project$ModelEventHandling$initConnectorData(model);
 					case 'ExitChanged':
-						return _elm_lang$core$Native_Utils.update(
+						return A2(
+							_user$project$ModelEventHandling$updateConData,
 							model,
-							{
-								connectorData: _elm_lang$core$Native_Utils.update(
-									cdata,
-									{
-										connector: _elm_lang$core$Native_Utils.update(
-											con,
-											{exitSide: _p9._0})
-									})
-							});
+							upPDCon(
+								_user$project$ConnectorsEventHandling$updateExit(_p1._0)));
 					case 'EnterChanged':
-						return _elm_lang$core$Native_Utils.update(
+						return A2(
+							_user$project$ModelEventHandling$updateConData,
 							model,
-							{
-								connectorData: _elm_lang$core$Native_Utils.update(
-									cdata,
-									{
-										connector: _elm_lang$core$Native_Utils.update(
-											con,
-											{entrySide: _p9._0})
-									})
-							});
+							upPDCon(
+								_user$project$ConnectorsEventHandling$updateEntry(_p1._0)));
 					case 'CostChanged':
-						return _elm_lang$core$Native_Utils.update(
+						return A2(
+							_user$project$ModelEventHandling$updateConData,
 							model,
-							{
-								connectorData: _elm_lang$core$Native_Utils.update(
-									cdata,
-									{
-										connector: _elm_lang$core$Native_Utils.update(
-											con,
-											{cost: _p9._0})
-									})
-							});
+							upPDCon(
+								_user$project$ConnectorsEventHandling$updateCost(_p1._0)));
 					default:
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$Idle,
-								toolbarText: 'Connector successfully created',
-								nodes: A2(
-									_elm_lang$core$List$map,
-									function (n) {
-										var _p10 = _elm_lang$core$Native_Utils.eq(n.id, cdata.nodeId);
-										if (_p10 === true) {
-											return _elm_lang$core$Native_Utils.update(
-												n,
-												{
-													connectors: {ctor: '::', _0: con, _1: n.connectors}
-												});
-										} else {
-											return n;
-										}
-									},
-									model.nodes)
-							});
+						return _user$project$ModelEventHandling$finishConnector(model);
 				}
 			case 'CreateNode':
-				var _p11 = _p0._0;
-				switch (_p11.ctor) {
+				var _p2 = _p0._0;
+				switch (_p2.ctor) {
 					case 'InitNode':
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								actionState: _user$project$MapModel$CreatingNode,
-								toolbarText: 'Set node properties in property panel',
-								nodeData: _user$project$MapNode$getPanelInit(model.nodeCounter + 1)
-							});
+						return _user$project$ModelEventHandling$initNodeData(model);
 					case 'DisplayTxt':
-						return _elm_lang$core$Native_Utils.update(
+						return A2(
+							_user$project$ModelEventHandling$updateNodeData,
 							model,
-							{
-								nodeData: _elm_lang$core$Native_Utils.update(
-									ndata,
-									{
-										node: _elm_lang$core$Native_Utils.update(
-											nod,
-											{displayText: _p11._0})
-									})
-							});
+							upPDNode(
+								_user$project$NodeEventHandling$updateDisplayText(_p2._0)));
 					default:
-						return _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								nodeCounter: model.nodeCounter + 1,
-								toolbarText: 'Node successfully created',
-								actionState: _user$project$MapModel$InspectingNode(nod),
-								nodes: A2(
-									_elm_lang$core$List$append,
-									model.nodes,
-									{
-										ctor: '::',
-										_0: nod,
-										_1: {ctor: '[]'}
-									})
-							});
+						return _user$project$ModelEventHandling$finishNode(model);
 				}
 			case 'StartConnecting':
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						actionState: _user$project$MapModel$ConnectingNodes(_user$project$MapModel$Waiting),
-						connectorData: _user$project$Connectors$getPanelInit(0),
-						toolbarText: 'Select the first node to create connector'
-					});
+				return _user$project$ModelEventHandling$startConnecting(model);
 			default:
-				var _p12 = _p0._0;
-				return _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						svgScale: model.svgScale + _p12,
-						toolbarText: A2(
-							_elm_lang$core$Basics_ops['++'],
-							'Scale : ',
-							_elm_lang$core$Basics$toString(model.svgScale + _p12))
-					});
+				return A2(_user$project$ModelEventHandling$zoomChange, model, _p0._0);
 		}
 	});
 var _user$project$Update$update = F2(
@@ -10852,7 +10924,7 @@ var _user$project$Update$update = F2(
 	});
 
 var _user$project$Main$subscriptions = function (model) {
-	var _p0 = model.dragNode;
+	var _p0 = model.draggingNode;
 	if (_p0.ctor === 'Just') {
 		return _elm_lang$core$Platform_Sub$batch(
 			{

@@ -1,16 +1,13 @@
 module Update exposing (..)
 
-import UIHelper exposing (..)
 import Connectors exposing (..)
-import ConnectorUI exposing (..)
+import ConnectorsEventHandling exposing (..)
+import NodeEventHandling exposing (..)
 import MapNode exposing (..)
 import MapModel exposing (..)
 import MapMsg exposing (..)
-import UpdateHelpers
-
-import Html exposing (..)
-import Html.Attributes exposing (..)
-import Mouse exposing (Position)
+import UpdateHelpers exposing (..)
+import ModelEventHandling exposing (..)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
@@ -18,80 +15,41 @@ update msg model =
 
 updateHelp : Msg -> Model -> Model
 updateHelp msg model =
-  let 
-    cdata = model.connectorData
-    con = model.connectorData.connector
-    ndata = model.nodeData
-    nod = model.nodeData.node in
+  let
+    upPDCon = updatePDConnector model.connectorData
+    upPDNode = updatePDNode model.nodeData in
   case msg of
     DoNothing -> model
-    DragAt ({x,y} as d) ->
-      case model.dragNode of
-        Just sn ->
-          { model | nodes = model.nodes |> List.map (\n ->
-            case n.id == sn.id of
-              True -> 
-                UpdateHelpers.calculatePosition model {x=d.x,y=d.y} 
-                |> \{x,y} -> { n | px = x, py = y } 
-              False -> n) }
-        Nothing ->  model
-    DragEnd _ ->
-      { model | dragNode = Nothing }
+    DragAt d -> 
+      dragNode model (calculatePosition model d)
+    DragEnd _ -> 
+      dragEnd model
     InspectNode n -> 
-      { model | actionState = InspectingNode n }
-    SelectNode (({x, y} as pos), node) ->
-      case model.actionState of
-        ConnectingNodes x ->
-          case x of
-            Waiting -> 
-              { model | actionState = ConnectingNodes FirstSelected
-                ,toolbarText = "Select the second node to create connector"
-                ,connectorData = { cdata | nodeId = node.id } }
-            FirstSelected -> 
-              { model | actionState = ConnectingNodes SecondSelected
-                ,toolbarText = "Set connector properties in property panel"
-                ,connectorData = { cdata | connector = { con | nodeId = node.id } } }
-            SecondSelected -> 
-              { model | actionState = InspectingNode node }
-        _ ->
-          { model | actionState = InspectingNode node 
-           ,dragNode = Just node
-          }
+      inspectNode model n
+    SelectNode (pos, node) -> 
+      selectNode model node
     CreateConnector evt ->
       case evt of
         InitConnector -> 
-          { model | connectorData = Connectors.getPanelInit 0 }
+          initConnectorData model
         ExitChanged s ->
-          { model | connectorData = { cdata | connector = { con | exitSide = s } } }
+          updateConData model (upPDCon (updateExit s))
         EnterChanged s ->
-          { model | connectorData = { cdata | connector = { con | entrySide = s } } }
+          updateConData model (upPDCon (updateEntry s))
         CostChanged cost ->
-          { model | connectorData = { cdata | connector = { con | cost = cost } } }
+          updateConData model (upPDCon (updateCost cost))
         FinishConnector ->
-          { model | actionState = Idle 
-            ,toolbarText = "Connector successfully created" 
-            ,nodes = model.nodes |> List.map (\n ->
-             case n.id == cdata.nodeId of
-               True -> { n | connectors = con::(n.connectors) } 
-               False -> n) }
+          finishConnector model
     CreateNode e ->
       case e of
         InitNode ->
-          { model | actionState = CreatingNode
-            ,toolbarText = "Set node properties in property panel"
-            ,nodeData = MapNode.getPanelInit (model.nodeCounter + 1) }
+          initNodeData model
         DisplayTxt s ->
-          { model | nodeData = { ndata | node = { nod | displayText = s } } }
+          updateNodeData model (upPDNode (updateDisplayText s))
         FinishNode -> 
-          { model | nodeCounter = model.nodeCounter + 1
-            ,toolbarText = "Node successfully created" 
-            ,actionState = InspectingNode nod
-            ,nodes = List.append model.nodes [ nod ] }
+          finishNode model
     StartConnecting ->
-      { model | actionState = ConnectingNodes Waiting
-        ,connectorData = Connectors.getPanelInit 0
-        ,toolbarText = "Select the first node to create connector" }
-    ZoomChange x -> { model | svgScale = model.svgScale + x 
-      ,toolbarText = "Scale : " ++ (toString (model.svgScale + x)) }
-
+      startConnecting model
+    ZoomChange x ->  
+      zoomChange model x
 

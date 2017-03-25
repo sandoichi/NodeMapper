@@ -21,13 +21,12 @@ type alias Model = {
   ,connectorData : Connectors.UIPanelData
   ,nodeData : MapNode.UIPanelData
   ,nodeCounter : Int
-  ,dragNode : Maybe MapNode
+  ,draggingNode : Maybe MapNode
   ,actionState : ActionState
   ,toolbarText : String
   ,svgScale : Float
   ,nodeSize : Int
 }
-
 
 init : ( Model, Cmd Msg )
 init = ({
@@ -35,11 +34,10 @@ init = ({
   ,connectorData = Connectors.getPanelInit 0
   ,nodeData = MapNode.getPanelInit 0
   ,nodeCounter = 0
-  ,dragNode = Nothing
+  ,draggingNode = Nothing
   ,actionState = Idle 
   ,toolbarText = ""
   ,svgScale = 1.0
   ,nodeSize = 100
    }, Cmd.none)     
-
 
