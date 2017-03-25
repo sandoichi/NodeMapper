@@ -10,6 +10,14 @@ type alias MapNode = {
   ,px : Int
   ,py : Int
   ,connectors : List Connector
+  ,sideRegions : List SideRegion
+}
+
+type SideState = Normal | Hover
+
+type alias SideRegion = {
+  state : SideState
+  ,side : Side
 }
 
 getInit : Int -> MapNode
@@ -20,6 +28,11 @@ getInit identifier =
     ,px = 50
     ,py = 50
     ,connectors = []
+    ,sideRegions = [
+      {state = Normal, side = Top} 
+      ,{state = Normal, side = Left} 
+      ,{state = Normal, side = Right} 
+      ,{state = Normal, side = Bottom} ]
   }
 
 type alias UIPanelData = { 

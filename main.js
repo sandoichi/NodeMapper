@@ -9419,13 +9419,43 @@ var _user$project$Connectors$ExitChanged = function (a) {
 };
 var _user$project$Connectors$InitConnector = {ctor: 'InitConnector'};
 
+var _user$project$MapNode$MapNode = F6(
+	function (a, b, c, d, e, f) {
+		return {id: a, displayText: b, px: c, py: d, connectors: e, sideRegions: f};
+	});
+var _user$project$MapNode$SideRegion = F2(
+	function (a, b) {
+		return {state: a, side: b};
+	});
+var _user$project$MapNode$UIPanelData = function (a) {
+	return {node: a};
+};
+var _user$project$MapNode$Hover = {ctor: 'Hover'};
+var _user$project$MapNode$Normal = {ctor: 'Normal'};
 var _user$project$MapNode$getInit = function (identifier) {
 	return {
 		id: identifier,
 		displayText: 'NewNode',
 		px: 50,
 		py: 50,
-		connectors: {ctor: '[]'}
+		connectors: {ctor: '[]'},
+		sideRegions: {
+			ctor: '::',
+			_0: {state: _user$project$MapNode$Normal, side: _user$project$Connectors$Top},
+			_1: {
+				ctor: '::',
+				_0: {state: _user$project$MapNode$Normal, side: _user$project$Connectors$Left},
+				_1: {
+					ctor: '::',
+					_0: {state: _user$project$MapNode$Normal, side: _user$project$Connectors$Right},
+					_1: {
+						ctor: '::',
+						_0: {state: _user$project$MapNode$Normal, side: _user$project$Connectors$Bottom},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		}
 	};
 };
 var _user$project$MapNode$getPanelInit = function (id) {
@@ -9433,19 +9463,20 @@ var _user$project$MapNode$getPanelInit = function (id) {
 		node: _user$project$MapNode$getInit(id)
 	};
 };
-var _user$project$MapNode$MapNode = F5(
-	function (a, b, c, d, e) {
-		return {id: a, displayText: b, px: c, py: d, connectors: e};
-	});
-var _user$project$MapNode$UIPanelData = function (a) {
-	return {node: a};
-};
 
 var _user$project$MapMsg$FinishNode = {ctor: 'FinishNode'};
 var _user$project$MapMsg$DisplayTxt = function (a) {
 	return {ctor: 'DisplayTxt', _0: a};
 };
 var _user$project$MapMsg$InitNode = {ctor: 'InitNode'};
+var _user$project$MapMsg$StopHoverSideRegion = F2(
+	function (a, b) {
+		return {ctor: 'StopHoverSideRegion', _0: a, _1: b};
+	});
+var _user$project$MapMsg$HoverSideRegion = F2(
+	function (a, b) {
+		return {ctor: 'HoverSideRegion', _0: a, _1: b};
+	});
 var _user$project$MapMsg$ZoomChange = function (a) {
 	return {ctor: 'ZoomChange', _0: a};
 };
@@ -10079,14 +10110,118 @@ var _user$project$MapSvg$mapConnectors = F2(
 					},
 					nodes)));
 	});
+var _user$project$MapSvg$getSideRegionPos = F3(
+	function (node, sideRegion, model) {
+		var full = model.nodeSize;
+		var half = _elm_lang$core$Basics$round(
+			_elm_lang$core$Basics$toFloat(model.nodeSize) / 2);
+		var _p3 = sideRegion.side;
+		switch (_p3.ctor) {
+			case 'Top':
+				return {x: half + node.px, y: node.py};
+			case 'Bottom':
+				return {x: half + node.px, y: full + node.py};
+			case 'Left':
+				return {x: node.px, y: half + node.py};
+			default:
+				return {x: full + node.px, y: half + node.py};
+		}
+	});
+var _user$project$MapSvg$getSideRegionClass = function (sideRegion) {
+	var _p4 = sideRegion.state;
+	if (_p4.ctor === 'Normal') {
+		return 'sideRegionNormal';
+	} else {
+		return 'sideRegionHover';
+	}
+};
+var _user$project$MapSvg$genSideRegions = F2(
+	function (node, model) {
+		var _p5 = model.actionState;
+		if (_p5.ctor === 'ConnectingNodes') {
+			return A2(
+				_elm_lang$core$List$map,
+				function (r) {
+					var pos = A3(_user$project$MapSvg$getSideRegionPos, node, r, model);
+					return A2(
+						_elm_lang$svg$Svg$rect,
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html_Events$on,
+								'mouseenter',
+								A2(
+									_elm_lang$core$Json_Decode$map,
+									function (x) {
+										return A2(_user$project$MapMsg$HoverSideRegion, node, r);
+									},
+									_elm_lang$mouse$Mouse$position)),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html_Events$on,
+									'mouseleave',
+									A2(
+										_elm_lang$core$Json_Decode$map,
+										function (x) {
+											return A2(_user$project$MapMsg$StopHoverSideRegion, node, r);
+										},
+										_elm_lang$mouse$Mouse$position)),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$class(
+										_user$project$MapSvg$getSideRegionClass(r)),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$width(
+											_elm_lang$core$Basics$toString(
+												_elm_lang$core$Basics$round(
+													_elm_lang$core$Basics$toFloat(model.nodeSize) * 0.4))),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$height(
+												_elm_lang$core$Basics$toString(
+													_elm_lang$core$Basics$round(
+														_elm_lang$core$Basics$toFloat(model.nodeSize) * 0.4))),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$rx('0'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$ry('0'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$svg$Svg_Attributes$x(
+															_elm_lang$core$Basics$toString(pos.x)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$svg$Svg_Attributes$y(
+																_elm_lang$core$Basics$toString(pos.y)),
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						{ctor: '[]'});
+				},
+				node.sideRegions);
+		} else {
+			return {ctor: '[]'};
+		}
+	});
 var _user$project$MapSvg$Regular = {ctor: 'Regular'};
 var _user$project$MapSvg$Selected = {ctor: 'Selected'};
 var _user$project$MapSvg$getNodeType = F2(
 	function (node, model) {
-		var _p3 = model.actionState;
-		if (_p3.ctor === 'InspectingNode') {
-			var _p4 = _elm_lang$core$Native_Utils.eq(_p3._0.id, node.id);
-			if (_p4 === true) {
+		var _p6 = model.actionState;
+		if (_p6.ctor === 'InspectingNode') {
+			var _p7 = _elm_lang$core$Native_Utils.eq(_p6._0.id, node.id);
+			if (_p7 === true) {
 				return _user$project$MapSvg$Selected;
 			} else {
 				return _user$project$MapSvg$Regular;
@@ -10100,108 +10235,117 @@ var _user$project$MapSvg$genGraphic = F2(
 		return A2(
 			_elm_lang$svg$Svg$g,
 			{ctor: '[]'},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$svg$Svg$rect,
-					{
+			_elm_lang$core$List$concat(
+				{
+					ctor: '::',
+					_0: {
 						ctor: '::',
 						_0: A2(
-							_elm_lang$html$Html_Events$on,
-							'mousedown',
-							A2(
-								_elm_lang$core$Json_Decode$map,
-								function (x) {
-									return _user$project$MapMsg$SelectNode(
-										{ctor: '_Tuple2', _0: x, _1: mapNode});
-								},
-								_elm_lang$mouse$Mouse$position)),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$class(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'rect ',
-									function () {
-										var _p5 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
-										if (_p5.ctor === 'Selected') {
-											return 'selected';
-										} else {
-											return '';
-										}
-									}())),
-							_1: {
+							_elm_lang$svg$Svg$rect,
+							{
 								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$width(
-									_elm_lang$core$Basics$toString(model.nodeSize)),
+								_0: A2(
+									_elm_lang$html$Html_Events$on,
+									'mousedown',
+									A2(
+										_elm_lang$core$Json_Decode$map,
+										function (x) {
+											return _user$project$MapMsg$SelectNode(
+												{ctor: '_Tuple2', _0: x, _1: mapNode});
+										},
+										_elm_lang$mouse$Mouse$position)),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$height(
-										_elm_lang$core$Basics$toString(model.nodeSize)),
+									_0: _elm_lang$svg$Svg_Attributes$class(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'rect ',
+											function () {
+												var _p8 = A2(_user$project$MapSvg$getNodeType, mapNode, model);
+												if (_p8.ctor === 'Selected') {
+													return 'selected';
+												} else {
+													return '';
+												}
+											}())),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$rx('5'),
+										_0: _elm_lang$svg$Svg_Attributes$width(
+											_elm_lang$core$Basics$toString(model.nodeSize)),
 										_1: {
 											ctor: '::',
-											_0: _elm_lang$svg$Svg_Attributes$ry('5'),
+											_0: _elm_lang$svg$Svg_Attributes$height(
+												_elm_lang$core$Basics$toString(model.nodeSize)),
 											_1: {
 												ctor: '::',
-												_0: _elm_lang$svg$Svg_Attributes$x(
-													_elm_lang$core$Basics$toString(mapNode.px)),
+												_0: _elm_lang$svg$Svg_Attributes$rx('5'),
 												_1: {
 													ctor: '::',
-													_0: _elm_lang$svg$Svg_Attributes$y(
-														_elm_lang$core$Basics$toString(mapNode.py)),
-													_1: {ctor: '[]'}
+													_0: _elm_lang$svg$Svg_Attributes$ry('5'),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$svg$Svg_Attributes$x(
+															_elm_lang$core$Basics$toString(mapNode.px)),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$svg$Svg_Attributes$y(
+																_elm_lang$core$Basics$toString(mapNode.py)),
+															_1: {ctor: '[]'}
+														}
+													}
 												}
 											}
 										}
 									}
 								}
-							}
-						}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$svg$Svg$text_,
-						{
+							},
+							{ctor: '[]'}),
+						_1: {
 							ctor: '::',
 							_0: A2(
-								_elm_lang$html$Html_Events$on,
-								'mousedown',
-								A2(
-									_elm_lang$core$Json_Decode$map,
-									function (x) {
-										return _user$project$MapMsg$SelectNode(
-											{ctor: '_Tuple2', _0: x, _1: mapNode});
-									},
-									_elm_lang$mouse$Mouse$position)),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$class('text'),
-								_1: {
+								_elm_lang$svg$Svg$text_,
+								{
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$x(
-										_elm_lang$core$Basics$toString(mapNode.px + 10)),
+									_0: A2(
+										_elm_lang$html$Html_Events$on,
+										'mousedown',
+										A2(
+											_elm_lang$core$Json_Decode$map,
+											function (x) {
+												return _user$project$MapMsg$SelectNode(
+													{ctor: '_Tuple2', _0: x, _1: mapNode});
+											},
+											_elm_lang$mouse$Mouse$position)),
 									_1: {
 										ctor: '::',
-										_0: _elm_lang$svg$Svg_Attributes$y(
-											_elm_lang$core$Basics$toString(mapNode.py + 20)),
-										_1: {ctor: '[]'}
+										_0: _elm_lang$svg$Svg_Attributes$class('text'),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$x(
+												_elm_lang$core$Basics$toString(mapNode.px + 10)),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$y(
+													_elm_lang$core$Basics$toString(mapNode.py + 20)),
+												_1: {ctor: '[]'}
+											}
+										}
 									}
-								}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(mapNode.displayText),
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(mapNode.displayText),
+									_1: {ctor: '[]'}
+								}),
 							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			});
+						}
+					},
+					_1: {
+						ctor: '::',
+						_0: A2(_user$project$MapSvg$genSideRegions, mapNode, model),
+						_1: {ctor: '[]'}
+					}
+				}));
 	});
 var _user$project$MapSvg$mapNodeList = F2(
 	function (nodes, model) {
@@ -10752,6 +10896,66 @@ var _user$project$NodeEventHandling$updateNodeInList = F3(
 			},
 			nodes);
 	});
+var _user$project$NodeEventHandling$hoverSide = F3(
+	function (node, region, model) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				nodes: A3(
+					_user$project$NodeEventHandling$updateNodeInList,
+					model.nodes,
+					node.id,
+					function (x) {
+						return _elm_lang$core$Native_Utils.update(
+							x,
+							{
+								sideRegions: A2(
+									_elm_lang$core$List$map,
+									function (r) {
+										var _p1 = _elm_lang$core$Native_Utils.eq(r.side, region.side);
+										if (_p1 === true) {
+											return _elm_lang$core$Native_Utils.update(
+												r,
+												{state: _user$project$MapNode$Hover});
+										} else {
+											return r;
+										}
+									},
+									x.sideRegions)
+							});
+					})
+			});
+	});
+var _user$project$NodeEventHandling$stopHoverSide = F3(
+	function (node, region, model) {
+		return _elm_lang$core$Native_Utils.update(
+			model,
+			{
+				nodes: A3(
+					_user$project$NodeEventHandling$updateNodeInList,
+					model.nodes,
+					node.id,
+					function (x) {
+						return _elm_lang$core$Native_Utils.update(
+							x,
+							{
+								sideRegions: A2(
+									_elm_lang$core$List$map,
+									function (r) {
+										var _p2 = _elm_lang$core$Native_Utils.eq(r.side, region.side);
+										if (_p2 === true) {
+											return _elm_lang$core$Native_Utils.update(
+												r,
+												{state: _user$project$MapNode$Normal});
+										} else {
+											return r;
+										}
+									},
+									x.sideRegions)
+							});
+					})
+			});
+	});
 var _user$project$NodeEventHandling$addConnector = F2(
 	function (con, node) {
 		return _elm_lang$core$Native_Utils.update(
@@ -11067,6 +11271,10 @@ var _user$project$Update$updateHelp = F2(
 				}
 			case 'StartConnecting':
 				return _user$project$ModelEventHandling$startConnecting(model);
+			case 'HoverSideRegion':
+				return A3(_user$project$NodeEventHandling$hoverSide, _p0._0, _p0._1, model);
+			case 'StopHoverSideRegion':
+				return A3(_user$project$NodeEventHandling$stopHoverSide, _p0._0, _p0._1, model);
 			default:
 				return A2(_user$project$ModelEventHandling$zoomChange, model, _p0._0);
 		}
