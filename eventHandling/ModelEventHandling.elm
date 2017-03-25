@@ -4,6 +4,7 @@ import MapModel exposing (..)
 import MapNode exposing (..)
 import NodeEventHandling exposing (..)
 import Connectors
+import UpdateHelpers exposing (..)
 
 zoomChange : Model -> Float -> Model
 zoomChange model x = 
@@ -53,15 +54,26 @@ updateConData : Model -> Connectors.UIPanelData -> Model
 updateConData model pd =
   { model | connectorData = pd }
 
-dragNode : Model -> {x:Int,y:Int} -> Model
-dragNode model pos =
-  case model.draggingNode of
-  Just sn -> { model | nodes = updateNodeInList 
-    model.nodes sn.id (move pos) }
-  Nothing ->  model
+dragAt : Model -> {x:Int,y:Int} -> Model
+dragAt model pos =
+  case model.dragState of
+    Node sn -> { model | nodes = updateNodeInList 
+      model.nodes sn.id (move (calculateNodeClickPosition model pos)) }
+    MapPan -> {model | panData = { panStart = calculatePanPosition model pos
+       ,svgPos = UpdateHelpers.getSvgPos model pos } }
+    DragNothing -> model
 
 dragEnd : Model -> Model
-dragEnd model = { model | draggingNode = Nothing }
+dragEnd model = { model | dragState = DragNothing }
+
+startPan : Model -> {x:Int,y:Int} -> Model
+startPan model pos =
+  case model.dragState of
+    DragNothing ->
+      { model | dragState = MapPan
+        ,panData = { svgPos = model.panData.svgPos
+          ,panStart = calculatePanPosition model pos } }
+    _ -> model
 
 inspectNode : Model -> MapNode -> Model
 inspectNode model node = 
@@ -89,5 +101,5 @@ selectNode model node =
           { model | actionState = InspectingNode node }
     _ ->
       { model | actionState = InspectingNode node 
-       ,draggingNode = Just node }
+       ,dragState = Node node }
 

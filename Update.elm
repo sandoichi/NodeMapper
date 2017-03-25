@@ -20,8 +20,10 @@ updateHelp msg model =
     upPDNode = updatePDNode model.nodeData in
   case msg of
     DoNothing -> model
-    DragAt d -> 
-      dragNode model (calculatePosition model d)
+    StartPan d ->
+      startPan model d
+    DragAt d ->
+      dragAt model d
     DragEnd _ -> 
       dragEnd model
     InspectNode n -> 

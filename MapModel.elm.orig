@@ -30,7 +30,11 @@ type alias Model = {
   ,connectorData : Connectors.UIPanelData
   ,nodeData : MapNode.UIPanelData
   ,nodeCounter : Int
+<<<<<<< HEAD
+  ,draggingNode : Maybe MapNode
+=======
   ,dragState : DragState
+>>>>>>> origin/master
   ,actionState : ActionState
   ,toolbarText : String
   ,svgScale : Float
@@ -44,7 +48,11 @@ init = ({
   ,connectorData = Connectors.getPanelInit 0
   ,nodeData = MapNode.getPanelInit 0
   ,nodeCounter = 0
+<<<<<<< HEAD
+  ,draggingNode = Nothing
+=======
   ,dragState = DragNothing
+>>>>>>> origin/master
   ,actionState = Idle 
   ,toolbarText = ""
   ,svgScale = 1.0
