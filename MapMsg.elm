@@ -24,4 +24,6 @@ type Msg =
   | CreateConnector Connectors.Event
   | DoNothing
   | ZoomChange Float
+  | HoverSideRegion MapNode MapNode.SideRegion
+  | StopHoverSideRegion MapNode MapNode.SideRegion
 

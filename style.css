@@ -102,6 +102,16 @@ body {
     user-select:none;
 }
 
+.svg .sideRegionNormal {
+  fill: red;
+  border: 3px solid orange;
+}
+
+.svg .sideRegionHover {
+  fill: lime;
+  border: 3px solid orange;
+}
+
 .svg .selected {
     stroke: yellow;
     stroke-width: 3px;

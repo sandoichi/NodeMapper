@@ -52,6 +52,10 @@ updateHelp msg model =
           finishNode model
     StartConnecting ->
       startConnecting model
+    HoverSideRegion n s ->
+      hoverSide n s model
+    StopHoverSideRegion n s ->
+      stopHoverSide n s model
     ZoomChange x ->  
       zoomChange model x
 

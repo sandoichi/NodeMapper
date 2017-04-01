@@ -1,1 +1,5 @@
 build-artifacts/
+elm-stuff/packages/
+*.js
+*.swp
+*.orig

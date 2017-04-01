@@ -16,6 +16,9 @@ type NodeType =
     Selected
     | Regular
 
+sideRegionSize : Float
+sideRegionSize = 0.5
+
 getNodeType : MapNode -> Model -> NodeType
 getNodeType node model =
     case model.actionState of
@@ -27,8 +30,8 @@ getNodeType node model =
 
 genGraphic : MapNode -> Model -> Svg Msg
 genGraphic mapNode model =
-  g [ ] [ 
-    rect [on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position)) 
+  g [ ] (List.concat [
+    [ rect [on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position)) 
       ,class ("rect " ++ case getNodeType mapNode model of
         Selected -> "selected"
         Regular -> "")
@@ -37,13 +40,53 @@ genGraphic mapNode model =
       ,rx "5"
       ,ry "5"
       ,x (toString mapNode.px)
-      ,y (toString mapNode.py)
-      ] [] 
+      ,y (toString mapNode.py) ] [] 
   ,Svg.text_ [ on "mousedown" ((Decode.map (\x -> SelectNode (x, mapNode)) Mouse.position)) 
       ,class "text"
       ,x (toString (mapNode.px+10))
-      ,y (toString (mapNode.py+20))
-  ] [ Html.text mapNode.displayText ] ]
+      ,y (toString (mapNode.py+20))] 
+      [ Html.text mapNode.displayText ] ]
+  ,(genSideRegions mapNode model) ] )
+
+genSideRegions : MapNode -> Model -> List (Svg Msg)
+genSideRegions node model =
+  case model.actionState of
+    ConnectingNodes state ->
+      node.sideRegions
+      |> List.map (\r ->
+        let
+          pos = getSideRegionPos node r model in
+        rect [
+          on "mouseenter" (Decode.map (\x -> HoverSideRegion node r) Mouse.position) 
+          ,on "mouseleave" (Decode.map (\x -> StopHoverSideRegion node r) Mouse.position) 
+          ,class (getSideRegionClass r)
+          ,Svg.Attributes.width (toString (round (toFloat model.nodeSize * sideRegionSize)))
+          ,Svg.Attributes.height (toString (round (toFloat model.nodeSize * sideRegionSize)))
+          ,rx "0"
+          ,ry "0"
+          ,x (toString pos.x)
+          ,y (toString pos.y)
+          ] [] )
+    _ -> []
+
+getSideRegionClass : SideRegion -> String
+getSideRegionClass sideRegion =
+  case sideRegion.state of
+    Normal -> "sideRegionNormal"
+    Hover -> "sideRegionHover"
+
+getSideRegionPos : MapNode -> SideRegion -> Model -> {x:Int,y:Int}
+getSideRegionPos node sideRegion model =
+  let
+    halfOffset = round (toFloat model.nodeSize * (sideRegionSize / 2))
+    fullOffset = round (toFloat model.nodeSize * sideRegionSize)
+    half = round (toFloat model.nodeSize / 2)
+    full = model.nodeSize in
+  case sideRegion.side of
+    Top -> { x = half - halfOffset + node.px, y = node.py - fullOffset }
+    Bottom -> { x = half - halfOffset + node.px, y = full + node.py }
+    Left -> { x = node.px - fullOffset, y = half - halfOffset + node.py}
+    Right -> { x = full + node.px, y = half - halfOffset + node.py }
 
 genConnectorGraphic : MapNode -> MapNode -> Model -> Svg Msg
 genConnectorGraphic start end model =
